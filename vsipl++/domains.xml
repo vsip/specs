@@ -1,0 +1,1596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xreflabel="[domains]" xml:id="domains"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Domains and domain operations</title>
+
+  <titleabbrev>domains</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>In this clause, unless otherwise specified, <constant>D</constant>
+      represents a fixed <type>dimension_type</type> greater than
+      <constant>0</constant> and at most
+      <constant>VSIP_MAX_DIMENSION</constant>.</para>
+    </listitem>
+
+    <listitem>
+      <para>An <type>Index&lt;D&gt;</type> represents an element of
+      <inlineequation>
+          <m:math>
+            <m:mstyle displaystyle="true">
+              <m:mrow>
+                <m:msup>
+                  <m:mi>N</m:mi>
+
+                  <m:mi>D</m:mi>
+                </m:msup>
+              </m:mrow>
+            </m:mstyle>
+          </m:math>
+        </inlineequation>, where <inlineequation>
+          <m:math>
+            <m:mstyle displaystyle="true">
+              <m:mrow>
+                <m:mi>N</m:mi>
+              </m:mrow>
+            </m:mstyle>
+          </m:math>
+        </inlineequation> is the set of nonnegative integers and
+      <inlineequation>
+          <m:math>
+            <m:mstyle displaystyle="true">
+              <m:mrow>
+                <m:mi>D</m:mi>
+              </m:mrow>
+            </m:mstyle>
+          </m:math>
+        </inlineequation> is a positive integral dimension. A
+      <type>Domain&lt;D&gt;</type> represents a subset of <inlineequation>
+          <m:math>
+            <m:mstyle displaystyle="true">
+              <m:mrow>
+                <m:msup>
+                  <m:mi>N</m:mi>
+
+                  <m:mi>D</m:mi>
+                </m:msup>
+              </m:mrow>
+            </m:mstyle>
+          </m:math>
+        </inlineequation>.</para>
+    </listitem>
+
+    <listitem>
+      <para>Below, the <type>Domain</type> class template and its
+      one-dimensional specialization are presented. Subsequent subclauses
+      present arithmetic operations on Domains, which facilitate creating
+      subviews of existing views, comparison operators, and the
+      <type>Index</type> class template.</para>
+
+      <para>Header <emphasis>&lt;vsip/domain.hpp&gt;</emphasis>
+      synopsis</para>
+
+      <xi:include href="code/domain.hpp" />
+    </listitem>
+  </orderedlist>
+
+  <section xml:id="domains.definitions">
+    <title>Definitions</title>
+
+    <titleabbrev>domains.definitions</titleabbrev>
+
+    <section xml:id="domains.definitions.subdomain">
+      <title>Subdomain</title>
+
+      <titleabbrev>domains.definitions.subdomain</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>A Domain s is a <emphasis>subdomain</emphasis> of another
+          Domain d if every Index in s is also an Index in d.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="domains.definitions.overlap">
+      <title>Overlapping domains</title>
+
+      <titleabbrev>domains.definitions.overlap</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>Two Domains <emphasis>overlap</emphasis> if there is at least
+          one Index in both Domains.</para>
+        </listitem>
+
+        <listitem>
+          <para>Two Domains <emphasis>exactly overlap</emphasis> if every
+          Index of one Domain is in the other Domain and vice versa.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="domains.definitions.conformant">
+      <title>Conformant domains</title>
+
+      <titleabbrev>domains.definitions.conformant</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><type>Domain&lt;D&gt;</type>s d1 and d2 are <emphasis>element
+          conformant</emphasis> if <code>d1.element_conformant(d2) ==
+          true</code>. [<emphasis>Note: </emphasis> Intuitively, d1 and d2 are
+          element conformant if, for every dimension, they have the same
+          number of indices. ]</para>
+        </listitem>
+
+        <listitem>
+          <para><type>Domain&lt;2&gt;</type>s d1 and d2 are <emphasis>product
+          conformant</emphasis> if <code>d1.product_conformant(d2) ==
+          true</code>. [<emphasis>Note: </emphasis> Product-conformant
+          matrices can be multiplied by each other. d1 and d2 are conformant
+          if the second dimension of d1 has the same length as the first
+          dimension of d2. Product-conformance is not commutative. ]</para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="domains.domain">
+    <title><type>Domain</type></title>
+
+    <titleabbrev>domains.domain</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A <type>Domain</type> object specifies a domain, i.e., a set of
+        Indexes. A Domain is the Cartesian product of one-dimensional
+        <type>Domain&lt;1&gt;</type>s.</para>
+
+        <xi:include href="code/domains-domain.hpp" />
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="domains.domain.template">
+      <title>Template parameter</title>
+
+      <titleabbrev>domains.domain.template</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>dimension_type D</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para><inlineequation>
+                    <m:math>
+                      <m:mstyle displaystyle="true">
+                        <m:mrow>
+                          <m:mn>0</m:mn>
+
+                          <m:mo>&lt;</m:mo>
+
+                          <m:mtext>D</m:mtext>
+
+                          <m:mo>≤</m:mo>
+
+                          <m:mtext>VSIP_MAX_DIMENSION</m:mtext>
+                        </m:mrow>
+                      </m:mstyle>
+                    </m:math>
+                  </inlineequation>. A VSIPL++ implementation must implement
+                <type>Domain&lt;D&gt;</type> for all valid dimensions.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="domains.domain.ordering">
+      <title>Lack of ordering</title>
+
+      <titleabbrev>domains.domain.ordering</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><code>class Domain&lt;D&gt;</code>, for <inlineequation>
+              <m:math>
+                <m:mrow>
+                  <m:mi>D</m:mi>
+
+                  <m:mo>&gt;</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:math>
+            </inlineequation>, does not impose any ordering among its
+          one-dimensional objects.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="domains.domain.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>domains.domain.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Domain</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a D-dimensional empty domain.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Domain</emphasis>(Domain&lt;1&gt; const &amp;, ..., Domain&lt;1&gt; const &amp;) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Notation:</term>
+
+          <listitem>
+            <para>The parameter list contains D “const Domain&lt;1&gt;&amp;”
+            parameters.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a D-dimensional domain that is the Cartesian
+            product of the D given arguments, in the given order. For example,
+            the first argument specifies the permissible set of first
+            coordinates.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Domain</emphasis>(Domain const &amp;d) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a D-dimensional domain.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>The Domain has <code>this-&gt;operator[](0) == d[0]</code>,
+            …, <code>this-&gt;operator[](D-1) == d[D-1]</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain &amp;<emphasis role="bold">operator=</emphasis>(Domain const &amp;d) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Modifies the D-dimensional domain.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>The domain has <code>this-&gt;operator[](0) == d[0]</code>,
+            …, <code>this-&gt;operator[](D-1) == d[D-1]</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><code>*this</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.domain.comparison">
+      <title>Comparison operators</title>
+
+      <titleabbrev>domains.domain.comparison</titleabbrev>
+
+      <synopsis>bool <emphasis role="bold">element_conformant</emphasis>(Domain const &amp;d) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>True if and only if, for all 0 &lt;= dim &lt; D,
+            <code>(*this)[dim].length() == d[dim].length()</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>bool <emphasis role="bold">product_conformant</emphasis>(Domain&lt;2&gt; const &amp;d) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>True if and only if D == 2 and <code>(*this)[1].length() ==
+            d[0].length()</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Product conformance between domains is only possible for
+            <type>Domain&lt;D&gt;</type> objects where D==2; however, this
+            function is defined for <type>Domain&lt;D&gt;</type> objects with
+            other values of <constant>D</constant> to provide a consistent
+            interface among all Domain objects.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.domain.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>domains.domain.accessors</titleabbrev>
+
+      <synopsis>Domain&lt;1&gt; const &amp;<emphasis role="bold">operator[]</emphasis>(dimension_type dim) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>dim</m:mi>
+
+                      <m:mo>&lt;</m:mo>
+
+                      <m:mi>D</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The one-dimensional domain object for the specified
+            dimension.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The number of indices. This is the product of the number of
+            indices for each of its dimensions.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.domain.equality">
+      <title>Equality functions</title>
+
+      <titleabbrev>domains.domain.equality</titleabbrev>
+
+      <xi:include href="code/domains-domain-equality.hpp" />
+
+      <synopsis>template &lt;dimension_type D&gt; 
+bool <emphasis role="bold">operator==</emphasis>(Domain&lt;D&gt; const &amp;dom0, Domain&lt;D&gt; const &amp;dom1) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>true if and only if the Indexes of dom0 are exactly the same
+            as the Indexes of dom1.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes:</term>
+
+          <listitem>
+            <para>Two Domains can be equal even if dom0.first() !=
+            dom1.first(). [<emphasis>Example: </emphasis> Domain&lt;1&gt;(0,
+            1, 16) == Domain&lt;1&gt;(15, -1, 16) because they contain exactly
+            the same indices but in a different order. ]</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;dimension_type D&gt;
+bool <emphasis role="bold">operator!=</emphasis>(Domain&lt;D&gt; const &amp;dom0, Domain&lt;D&gt; const &amp;dom1) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><code>!operator==(dom0, dom1)</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="domains.domainone">
+    <title>Domain&lt;1&gt;</title>
+
+    <titleabbrev>domains.domainone</titleabbrev>
+
+    <orderedlist>
+      <listitem xml:id="domains.domainone.1">
+        <para>A <type>Domain&lt;1&gt;</type> object specifies one
+        <type>dimension_type</type> of a <type>Domain</type> object. This
+        “subscript triplet” specifies the first <type>index_type</type> i, a
+        <type>stride_type</type> s between indices, and the number len of
+        indices together representing indices i, i+s, i+2s, …, i+(len-1)s.
+        [<emphasis>Note: </emphasis> A subscript triplet is similar to Matlab
+        and Fortran 95 ranges and VSIPL view slices. The object maintains the
+        specified subscript triplet even though other triplets may represent
+        the same set of indices. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>The stride may assume any integral value. Using a positive
+        stride yields a sequence of increasing indices. Using a negative
+        stride yields a sequence of decreasing indices. To produce a sequence
+        of repeated indices, use a stride of zero.</para>
+
+        <xi:include href="code/domains-domainone.hpp" />
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="domains.domainone.position">
+      <title>Index position</title>
+
+      <titleabbrev>domains.domainone.position</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The <emphasis>position</emphasis> of an
+          <type>index_type</type> i within a <type>Domain&lt;1&gt;</type> dom
+          is <code>(i - dom.first()) / dom.stride()</code>.</para>
+
+          <para>[<emphasis>Note: </emphasis> Since the index_type is within
+          the Domain&lt;1&gt;, its position is integral, at least zero, and
+          less than the Domain’s length.</para>
+
+          <para>For ordinary C arrays, array indices are numbered 0, 1, …,
+          n-1. When specifying a subscript triplet, the initial value need not
+          be zero and the stride need not be one. Regardless, index_types are
+          ordered. Positions represent this ordering. A subscript triplet with
+          first index_type f, stride_type s between indices, and the number
+          len of indices has index_types f + 0*s, f + 1*s, f + 2*s, …, f +
+          (len-1)*s and positions 0, 1, 2, …, len-1. ]</para>
+
+          <para>[<emphasis>Example: </emphasis> For a Domain&lt;1&gt; object
+          specifying a subscript triplet with first index_type f, stride_type
+          s between indices, and the number len of indices, the position of
+          index_type f is 0 and (assuming len &gt;= 3) of index_type f+2*s, 2.
+          ]</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="domains.domainone.constructors">
+      <title>Constructors</title>
+
+      <titleabbrev>domains.domainone.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Domain</emphasis>(index_type i, stride_type s, length_type len) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>len &gt;= 0</code>. <code>i + (len - 1) * s &gt;=
+            0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a one-dimensional domain with indices i, i + s, i
+            + 2 * s, …, i + (len - 1) * s.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;first() == i</code>, <code>this-&gt;stride()
+            == s</code>, and <code>this-&gt;length() == len</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes:</term>
+
+          <listitem>
+            <para>Negative strides are supported.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Domain</emphasis>(length_type len = <emphasis>0</emphasis>) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><code>Domain(0, 1, len)</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Domain</emphasis>(Domain const &amp;d) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a one-dimensional domain.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;first() == d.first()</code>,
+            <code>this-&gt;stride() == d.stride()</code>, and
+            <code>this-&gt;length() == d.length()</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&amp; <emphasis role="bold">operator=</emphasis>(Domain const &amp;d) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Modifies the one-dimensional domain so
+            <code>this-&gt;first() == d.first()</code>,
+            <code>this-&gt;stride() == d.stride()</code>, and
+            <code>this-&gt;length() == d.length()</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>*this.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.domainone.comparison">
+      <title>Comparison function</title>
+
+      <titleabbrev>domains.domainone.comparison</titleabbrev>
+
+      <synopsis>bool <emphasis role="bold">element_conformant</emphasis>(Domain const &amp;d) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>True if and only if <code>(*this)[0].length() ==
+            d[0].length()</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>bool <emphasis role="bold">product_conformant</emphasis>(Domain&lt;2&gt; const &amp;d) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>false.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Product conformance between domains is only possible for
+            Domain&lt;D&gt; objects where D==2; however, this function is
+            defined to provide a consistent interface among all Domain
+            objects.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.domainone.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>domains.domainone.accessors</titleabbrev>
+
+      <synopsis>Domain&lt;1&gt; const &amp;<emphasis role="bold">operator[]</emphasis>(dimension_type dim) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>dim &lt; 1.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>*this.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This member function provides compatibility with higher
+            dimension Domain types but is otherwise uninteresting.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>index_type <emphasis role="bold">first</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The “first” entry of the subscript triplet. Equivalent to i,
+            as defined in <xref linkend="domains.domainone.1" />.
+            [<emphasis>Note: </emphasis> If the stride is nonnegative, this
+            index is the smallest index represented by the triplet. If the
+            stride is negative, this index is the largest index. ]</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>stride_type <emphasis role="bold">stride</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The stride of the subscript triplet. Equivalent to s, as
+            defined in <xref linkend="domains.domainone.1" />.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">length</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The number of indices in the domain. Equivalent to len, as
+            defined in <xref linkend="domains.domainone.1" />.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><code>this-&gt;length()</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="domains.arithmetic">
+    <title>Arithmetic operations on Domains</title>
+
+    <titleabbrev>domains.arithmetic</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>To facilitate creation of subviews, Domains support integral
+        arithmetic operations. A Domain’s minimal index can be shifted, and
+        its stride can be multiplied. For example, adding the integer one to a
+        domain increments all index components by one.</para>
+
+        <xi:include href="code/domains-arithmetic.hpp" />
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="domains.arithmetic.shift">
+      <title>Shifting the initial index</title>
+
+      <titleabbrev>domains.arithmetic.shift</titleabbrev>
+
+      <synopsis>template &lt;dimension_type D&gt; 
+Domain&lt;D&gt; <emphasis role="bold">operator+</emphasis>(Domain&lt;D&gt; const &amp;dm, index_difference_type difference) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>dm.first() + difference &gt;= 0</code>.
+            <code>dm.first() + difference + dm.stride() * (dm.length() - 1)
+            &gt;= 0</code></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain dom equivalent to dm except having
+            <code>dom[d].first() == dm[d].first()+difference</code> for all
+            <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+
+                      <m:mo>≤</m:mo>
+
+                      <m:mi>d</m:mi>
+
+                      <m:mo>&lt;</m:mo>
+
+                      <m:mi>D</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes:</term>
+
+          <listitem>
+            <para>The resulting domain must have <code>this-&gt;first() &gt;=
+            0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples:</term>
+
+          <listitem>
+            <para><code>Domain&lt;1&gt; d(2,2,2); (d+1).first()</code> yields
+            <code>3</code>. <code>Domain&lt;2&gt;(Domain&lt;1&gt;(3,1,4), 0) +
+            2</code> contains <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">{</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>5</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>6</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>7</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>8</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo stretchy="false">}</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;dimension_type D&gt; 
+Domain&lt;D&gt; <emphasis role="bold">operator+</emphasis>(index_difference_type difference, Domain&lt;D&gt; const &amp;dm) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>dm.first() + difference &gt;= 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>operator+(dm,difference).</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;dimension_type D&gt; 
+Domain&lt;D&gt; <emphasis role="bold">operator-</emphasis>(Domain&lt;D&gt; const &amp;dm, index_difference_type difference) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>dm.first() - difference &gt;= 0</code>.
+            <code>dm.first() + (-difference) + dm.stride() * (dm.length() - 1)
+            &gt;= 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>operator+(dm,-difference).</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.arithmetic.scale">
+      <title>Scaling the stride</title>
+
+      <titleabbrev>domains.arithmetic.scale</titleabbrev>
+
+      <synopsis>template &lt;dimension_type D&gt; 
+Domain&lt;D&gt; <emphasis role="bold">operator</emphasis>*(Domain&lt;D&gt; const &amp;dm, stride_scalar_type str) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>dm.first() + dm.stride() * str * (dm.length() - 1)
+            &gt;= 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain dom equivalent to dm except having
+            <code>dom[d].stride() == dm[d].stride()*str</code> for all
+            <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+
+                      <m:mo>≤</m:mo>
+
+                      <m:mi>d</m:mi>
+
+                      <m:mo>&lt;</m:mo>
+
+                      <m:mi>D</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples:</term>
+
+          <listitem>
+            <para>Domain&lt;1&gt; d(2,3,2); (d*2).stride() yields 6.
+            Domain&lt;2&gt;(Domain&lt;1&gt;(3,1,4), 0) * 2 contains
+            <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">{</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>3</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>5</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>7</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>9</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo stretchy="false">}</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;dimension_type D&gt; 
+Domain&lt;D&gt; <emphasis role="bold">operator*</emphasis>(stride_scalar_type str, Domain&lt;D&gt; const &amp;dm) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>dm.first() + dm.stride() * str * (dm.length() - 1)
+            &gt;= 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>dm * str.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;dimension_type D&gt; 
+Domain&lt;D&gt; <emphasis role="bold">operator/</emphasis>(Domain&lt;D&gt; const&amp; dm, stride_scalar_type str) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain dom equivalent to dm except having
+            <code>dom[d].stride() == dm[d].stride()/str</code> for all
+            <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+
+                      <m:mo>≤</m:mo>
+
+                      <m:mi>d</m:mi>
+
+                      <m:mo>&lt;</m:mo>
+
+                      <m:mi>D</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples:</term>
+
+          <listitem>
+            <para>Domain&lt;1&gt; d(2,3,2); (d/2).stride() yields 1.
+            Domain&lt;2&gt;(Domain&lt;1&gt;(3,4,4), 0) / 2 contains
+            <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">{</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>3</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>5</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>7</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>9</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo stretchy="false">}</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="domains.index">
+    <title>Index</title>
+
+    <titleabbrev>domains.index</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>An Index object specifies an element in a Domain, i.e., an
+        ordered set of coordinates — equivalently an ordered set of
+        index_types.</para>
+
+        <xi:include href="code/domains-index.hpp" />
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="domains.index.correspond">
+      <title>Correspondence</title>
+
+      <titleabbrev>domains.index.correspond</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>Index&lt;D&gt; <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>i</m:mi>
+
+                        <m:mn>0</m:mn>
+                      </m:msub>
+                    </m:mrow>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>i</m:mi>
+
+                        <m:mn>1</m:mn>
+                      </m:msub>
+                    </m:mrow>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mo>…</m:mo>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>i</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mn>1</m:mn>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mrow>
+
+                    <m:mo stretchy="false">)</m:mo>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> and Index&lt;D&gt; <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>j</m:mi>
+
+                        <m:mn>0</m:mn>
+                      </m:msub>
+                    </m:mrow>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>j</m:mi>
+
+                        <m:mn>1</m:mn>
+                      </m:msub>
+                    </m:mrow>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mo>…</m:mo>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>j</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mn>1</m:mn>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mrow>
+
+                    <m:mo stretchy="false">)</m:mo>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> <emphasis>correspond</emphasis> if, for all
+          dimensions <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>d</m:mi>
+
+                    <m:mo>∈</m:mo>
+
+                    <m:mo stretchy="false">[</m:mo>
+
+                    <m:mn>0</m:mn>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mi>D</m:mi>
+
+                    <m:mo stretchy="false">)</m:mo>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation>, the position of <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>i</m:mi>
+
+                      <m:mi>d</m:mi>
+                    </m:msub>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> within its dimension-<inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>d</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> domain is the same as the position of
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>j</m:mi>
+
+                      <m:mi>d</m:mi>
+                    </m:msub>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> within its dimension-<inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>d</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> domain. [<emphasis>Note: </emphasis> Two
+          element-conformant domains have corresponding Indexes. ]</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="domains.index.template">
+      <title>Template parameter</title>
+
+      <titleabbrev>domains.index.template</titleabbrev>
+
+      <synopsis>dimension_type D</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mrow>
+                    <m:mi>0</m:mi>
+
+                    <m:mo>&lt;</m:mo>
+
+                    <m:mi>D</m:mi>
+
+                    <m:mo>≤</m:mo>
+
+                    <m:mi>VSIP_MAX_DIMENSION</m:mi>
+                  </m:mrow>
+                </m:math>
+              </inlineequation>. A VSIPL++ implementation must implement
+            <type>Index&lt;D&gt;</type> for all valid dimensions.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.index.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>domains.index.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Index</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a D-dimensional Index representing
+            <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mo>…</m:mo>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Index</emphasis>(index_type, ..., index_type) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Notation:</term>
+
+          <listitem>
+            <para>The parameter list contains D index_type parameters.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a D-dimensional Index, using parameters in the
+            given order. For example, the first argument specifies the first
+            coordinate.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>index_type and Index&lt;1&gt; are distinct types.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Index</emphasis>(Index const &amp;i) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a D-dimensional Index.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>The index has this-&gt;operator[](0) == i[0], …,
+            this-&gt;operator[](D-1) == i[D-1].</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Index&amp; <emphasis role="bold">operator=</emphasis>(Index const &amp;i) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Modifies the D-dimensional Index.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>The index has <code>this-&gt;operator[](0) == i[0]</code>,
+            …, <code>this-&gt;operator[](D-1) == i[D-1]</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>*this.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.index.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>domains.index.accessors</titleabbrev>
+
+      <synopsis>index <emphasis role="bold">operator[]</emphasis>(dimension_type dim) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>dim</m:mi>
+
+                      <m:mo>&lt;</m:mo>
+
+                      <m:mi>D</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The coordinate for the specified dimension.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="domains.index.equality">
+      <title>Equality functions</title>
+
+      <titleabbrev>domains.index.equality</titleabbrev>
+
+      <xi:include href="code/domains-index-equality.hpp" />
+
+      <synopsis>template &lt;dimension_type D&gt; 
+bool <emphasis role="bold">operator==</emphasis>(Index&lt;D&gt; const &amp;idx0, Index&lt;D&gt; const &amp;idx1) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>true if and only if, for all dimensions <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>d</m:mi>
+
+                      <m:mo>∈</m:mo>
+
+                      <m:mo stretchy="false">[</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mi>D</m:mi>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>, <code>idx0[d] == idx1[d]</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;dimension_type D&gt; 
+bool <emphasis role="bold">operator!=</emphasis>(Index&lt;D&gt; const &amp;idx0, Index&lt;D&gt; const &amp;idx1) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><code>!operator==(idx0, idx1)</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

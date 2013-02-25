@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appendix version="5.0" xml:id="glossary"
+          xmlns="http://docbook.org/ns/docbook"
+          xmlns:ns5="http://www.w3.org/1998/Math/MathML"
+          xmlns:ns4="http://www.w3.org/1999/xhtml"
+          xmlns:ns3="http://www.w3.org/2000/svg"
+          xmlns:ns2="http://www.w3.org/1999/xlink"
+          xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Glossary</title>
+
+  <variablelist>
+    <varlistentry>
+      <term>Admitted</term>
+
+      <listitem>
+        <para>Block state where the data array (memory) and associated views
+        are available for VSIPL computations, and not available for user I/O
+        or access.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Attribute</term>
+
+      <listitem>
+        <para>Characteristic or state of an object, such as admitted/released,
+        stride, or length.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Binary Function</term>
+
+      <listitem>
+        <para>A function with two input arguments.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Block</term>
+
+      <listitem>
+        <para>A data storage abstraction representing contiguous data elements
+        consisting of a data array and a VSIPL block object.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Block Object</term>
+
+      <listitem>
+        <para>Descriptor for a data array and its attributes, including a
+        reference to the data array, the state of the block, data type and
+        size.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Block Offset</term>
+
+      <listitem>
+        <para>The number of elements from the start of a block. A view with a
+        block offset of zero starts at the beginning of the block.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Boolean</term>
+
+      <listitem>
+        <para>Used to represent the values of true and false, where false is
+        always zero, and true is non-zero.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Bound</term>
+
+      <listitem>
+        <para>A view or block is bound to a data array if it references the
+        data array.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Cloned View</term>
+
+      <listitem>
+        <para>An exact duplicate of a view object.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Column</term>
+
+      <listitem>
+        <para>Rightmost dimension in a matrix.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Column Stride</term>
+
+      <listitem>
+        <para>The number of block elements between successive elements within
+        a column.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Complex Block</term>
+
+      <listitem>
+        <para>Block containing only complex elements. There are two formats
+        for released complex blocks – split and interleaved. The complex data
+        format for admitted complex blocks are not specified by this
+        standard.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Conformant Views</term>
+
+      <listitem>
+        <para>Views that are the correct shape/size for a given
+        computation.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>const Object</term>
+
+      <listitem>
+        <para>An object that is not modified by the function, although data
+        referenced by the const object may be modified.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Create</term>
+
+      <listitem>
+        <para>To allocate memory for an object and initialize it (if
+        appropriate).</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Data Array</term>
+
+      <listitem>
+        <para>Memory where data is stored.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Derived Block</term>
+
+      <listitem>
+        <para>A real block derived from a complex block. Note that the only
+        way to create a derived block is to create a derived view of the real
+        or complex component of a split complex view. In all other cases,
+        retrieving the block from a view returns a reference to the original
+        block.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Derived View</term>
+
+      <listitem>
+        <para>A derived view is a view created using a VSIPL function whose
+        arguments include another view (a parent view). The derived view's
+        data is some subset of the parent view's data. The data subset depends
+        on the function call, and is physically co-located in memory with the
+        parent view's data.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Destroy</term>
+
+      <listitem>
+        <para>To release the memory allocated to an object.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Development Library</term>
+
+      <listitem>
+        <para>An implementation of VSIPL that maximizes error reporting at the
+        possible expense of performance.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Domain</term>
+
+      <listitem>
+        <para>The set of all valid input values to a function.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Element</term>
+
+      <listitem>
+        <para>The atomic portion of data associated with a block or a view.
+        For example, an element of a complex block of precision double is a
+        complex number of precision double; for a view of type float an
+        element is a single float number.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Hermitian Transpose</term>
+
+      <listitem>
+        <para>Conjugate transpose.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Hint</term>
+
+      <listitem>
+        <para>Information provided by the user to some VSIPL functions to aid
+        optimization. Hints are optional and may be ignored by the
+        implementation. Wrong hints may result in incorrect behavior.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Implementor</term>
+
+      <listitem>
+        <para>The individual or group creating a VSIPL implementation.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>In-Place</term>
+
+      <listitem>
+        <para>A type of algorithm implementation in which the memory used to
+        hold the input to an algorithm is overwritten (completely or
+        partially) with the output data.  Often referred to in the context of
+        an FFT algorithm.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Interleaved Complex</term>
+
+      <listitem>
+        <para>Storage format for user data arrays where the real and complex
+        element components alternate in physical memory.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Kernel</term>
+
+      <listitem>
+        <para>The filter vector used in a FIR filter, or the vector or matrix
+        used as the weights in a convolution.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Length</term>
+
+      <listitem>
+        <para>Number of elements in a view along a view dimension.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>M-ary Function</term>
+
+      <listitem>
+        <para>A function with M arguments.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Matrix</term>
+
+      <listitem>
+        <para>A two dimensional view.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>N-ary Function</term>
+
+      <listitem>
+        <para>A null-ary function without input arguments (for by-element
+        functions, function of element index, not element value).</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Opaque</term>
+
+      <listitem>
+        <para>An opaque object may not be manipulated by simple assignment
+        statements. Its attributes must be set/retrieved through access
+        functions. All VSIPL objects are opaque.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Out-of-place</term>
+
+      <listitem>
+        <para>If none of the output views in a function call overlap the input
+        views, the function is considered out-of-place.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Overlapped</term>
+
+      <listitem>
+        <para>Indicates that two or more views or blocks share one or more
+        memory locations.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Portable Precision</term>
+
+      <listitem>
+        <para>A data type with a guarantee of a specified minimum precision or
+        an exact precision on all supported implementations.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Production Library</term>
+
+      <listitem>
+        <para>A VSIPL implementation that maximizes performance at the
+        possible expense of not detecting user errors.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Range</term>
+
+      <listitem>
+        <para>Valid output values from a function.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Real Block</term>
+
+      <listitem>
+        <para>A block containing only real elements.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Region of Support</term>
+
+      <listitem>
+        <para>For neighborhood operations (i.e. FIR filtering, convolution,
+        …), the non-zero values in the kernel, or the output. [ 3x3 FIR filter
+        has a “kernel region of support” of 3x3.]</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Released</term>
+
+      <listitem>
+        <para>Block state where the associated data array is available for
+        user I/O and application access, but not available for VSIPL
+        computations.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Varlistentry</term>
+
+      <listitem>
+        <para>Left-most dimension of a matrix.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Varlistentry Stride</term>
+
+      <listitem>
+        <para>The number of block elements between successive elements within
+        a varlistentry.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Split Complex</term>
+
+      <listitem>
+        <para>Storage format for released complex blocks where the real
+        element components are stored in one physically contiguous data array,
+        and the imaginary components are stored in a separate physically
+        contiguous data array.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Stride</term>
+
+      <listitem>
+        <para>Distance between successive elements of the block data array in
+        a view along a view dimension. Strides can be positive, negative, or
+        zero.  </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Subview</term>
+
+      <listitem>
+        <para>A derived view that describes a subset of the data from the
+        original view, and is the same type as the original view.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Tensor</term>
+
+      <listitem>
+        <para>An n-dimensional matrix. VSIPL only supports 3 dimensional
+        tensors (3-tensor). The three dimensions are referred to as X, Y and
+        Z.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Ternary Function</term>
+
+      <listitem>
+        <para>A function with 3 input arguments.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Unary Function</term>
+
+      <listitem>
+        <para>A function with a single input argument.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>User Block</term>
+
+      <listitem>
+        <para>A block which is associated with user data arrays. User blocks
+        are created in the released state and may be admitted and
+        released.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>User Data Array</term>
+
+      <listitem>
+        <para>Memory that has been allocated by the application for the
+        storage of data using some functionality not part of the VSIPL
+        standard.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Vector</term>
+
+      <listitem>
+        <para>A one dimensional view.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>View</term>
+
+      <listitem>
+        <para>A portion of a block, and a view object describing it. The view
+        object has structural information allowing the data to be interpreted
+        as a one, two or three-dimensional array for arithmetic
+        processing.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>View Dimension</term>
+
+      <listitem>
+        <para>A view represents a one, two, or three dimensional data
+        organization termed respectively a vector, matrix or tensor. A view
+        dimension represents one of the standard directions of these data
+        representations.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>View Object</term>
+
+      <listitem>
+        <para>A description of a portion of a block including structural
+        information that allows the data to be interpreted as a one, two or
+        three-dimensional array for arithmetic processing. Attributes of the
+        view object include offset, stride(s) and length(s).</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>VSIPL Block</term>
+
+      <listitem>
+        <para>Block referencing or bound to VSIPL data. A VSIPL block is
+        created in the admitted state and may not be released.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>VSIPL Data Array</term>
+
+      <listitem>
+        <para>Memory that has been allocated for the storage of data using
+        some functionality that is part of the VSIPL standard.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</appendix>

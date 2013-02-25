@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section version="5.0" xml:id="concepts" xmlns="http://docbook.org/ns/docbook"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/1999/xhtml"
+         xmlns:ns4="http://www.w3.org/1998/Math/MathML"
+         xmlns:ns3="http://www.w3.org/2000/svg"
+         xmlns:ns="http://docbook.org/ns/docbook">
+  <title>Basic VSIPL Concepts</title>
+
+  <section>
+    <title>General Library Design Principles</title>
+
+    <para>The purpose of the Vector, Signal, and Image Processing Library
+    (VSIPL) standard is to support portable, high performance application
+    programs. The standard is based upon existing libraries that have evolved
+    and matured over decades of scientific and engineering computing. A layer
+    of abstraction is added to support portability across diverse memory and
+    processor architectures. The primary design focus of the standard has been
+    embedded signal processing platforms. Enhanced portability of workstation
+    applications is a side benefit.</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Elements are stored in one dimensional data arrays, which appear
+        to the application programmer as a single contiguous block of
+        memory.</para>
+      </listitem>
+
+      <listitem>
+        <para>Data arrays can be viewed as either real or complex vectors,
+        matrices, or tensors.</para>
+      </listitem>
+
+      <listitem>
+        <para>All operations on data arrays are performed indirectly through
+        view objects, each of which specify a particular view of a data array
+        with a particular offset, length(s) and stride(s).</para>
+      </listitem>
+
+      <listitem>
+        <para>In general, the application programmer cannot combine operators
+        in a single statement to evaluate expressions. Operators which return
+        scalar may be combined, but most operators will return a view type or
+        are void and may not be combined.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Operators are restricted to views of a data array that can be
+    specified by an offset, lengths and strides. Views that are more arbitrary
+    are converted into these simple views by functions like gather and back
+    again by functions like scatter. VSIPL does not support triangular or
+    sparse matrices very well, though future extensions might address
+    these.</para>
+
+    <para>The main difference between the proposed VSIPL standard and existing
+    libraries is a cleaner encapsulation of the above principles through an
+    “object-based” design. All of the view attributes are encapsulated in
+    opaque objects <footnote>
+        <para>Object opacity is achieved through the technique of “incomplete
+        typedef,” described in the section on implementation.</para>
+      </footnote>. The object can only be created, accessed and destroyed via
+    library functions, which reference it via a pointer.</para>
+  </section>
+
+  <section>
+    <title>Memory Management</title>
+
+    <para>The management of memory is important to efficient algorithm
+    development. This is especially true in embedded systems, many of which
+    are memory limited. In VSIPL, memory management is handled by the
+    implementation. This section describes VSIPL memory management and how the
+    user interacts with VSIPL objects.</para>
+
+    <section>
+      <title>Terminology</title>
+
+      <para>The terms user data, VSIPL data, admitted, and released are used
+      throughout this document when describing memory allocation. It is
+      important that the reader understand the terms that are defined in this
+      section below, and in the Glossary above.</para>
+    </section>
+
+    <section>
+      <title>Object Memory Allocation</title>
+
+      <para>All objects in VSIPL consist of abstract data types (ADT) which
+      contain attributes defining the underlying data accessed by the object.
+      Certain of the attributes are accessible to the application programmer
+      via access functions; however, there may be any number of attributes
+      assigned by the VSIPL library developer for its internal use. Each time
+      an object is defined, memory must be allocated for the ADT. All VSIPL
+      objects are allocated by VSIPL library functions. There is no method by
+      which the application programmer may allocate space for these objects
+      outside of VSIPL.</para>
+
+      <para>Most VSIPL objects are relatively small and of fixed size;
+      however, some of the objects created for signal processing or linear
+      algebra may allocate large workspaces.</para>
+    </section>
+
+    <section>
+      <title>Data Memory Allocation</title>
+
+      <para>A data array is an area of memory where data is stored. Data
+      arrays in VSIPL exist in one of two logical data spaces. These are the
+      user data space, and VSIPL data space. VSIPL functions may only operate
+      on data in VSIPL space. User supplied functions may only operate on data
+      in user space. Data may be moved between these logical spaces. Depending
+      on the specific implementation, this move may incur actual data movement
+      penalties or may simply be a bookkeeping procedure. The user should
+      consider the data in VSIPL space to be inaccessible except through VSIPL
+      functions.</para>
+
+      <para>A data array allocated by the application, using any method not
+      part of the VSIPL standard, is considered to be a user data array. The
+      application has a pointer to the user data array and knowledge of its
+      type and size. Therefore the application can access a user data array
+      directly using pointers, although it is not always correct to do
+      so.</para>
+
+      <para>A data array allocated by a VSIPL function call is referred to as
+      a VSIPL data array. The user has no proper method to retrieve a pointer
+      to such a data array; it may only be accessed via VSIPL function
+      calls.</para>
+
+      <para>Users may access data arrays in VSIPL space using an entity
+      referred to as a block. The data array associated with a block is a
+      contiguous series of elements of a given type. There is one block type
+      for each type of data processed by VSIPL.</para>
+
+      <para>There are two categories of blocks, user blocks and VSIPL blocks.
+      A user block is one that has been associated with a user data array. A
+      VSIPL block is one that has been associated with a VSIPL data array. The
+      data array referenced by the block is referred to as being “bound” to
+      the block. The user must provide a pointer to the associated data for a
+      user block. The VSIPL library will allocate space for the data
+      associated with a VSIPL block. Blocks can also be created without any
+      data and then associated with data in user space. The process of
+      associating user space data with a block is called “binding.” A block
+      which does not have data bound to it may not be used, as there is no
+      data to operate on.</para>
+
+      <para>A block that has been associated with data may exist in one of two
+      states, admitted and released. The data in an admitted block is in the
+      logical VSIPL data space, and the data in a released block is in the
+      logical user data space. The process of moving data from the logical
+      user data space to the logical VSIPL data space is called admission; the
+      reverse process is called release.</para>
+
+      <para>Data in an admitted block is owned by the VSIPL library, and VSIPL
+      functions operate on this data under the assumption that the data will
+      only be modified using VSIPL functions. VSIPL blocks are always in the
+      admitted state. User blocks may be in an admitted state. User data in an
+      admitted block shall not be operated on except by VSIPL functions.
+      Direct manipulation of user data bound to an admitted block via pointers
+      to the allocated memory is incorrect and may cause erroneous
+      behavior.</para>
+
+      <para>Data in a released block may be accessed by the user, but VSIPL
+      functions should not perform computation on it. User blocks are created
+      in the released state. The block must be admitted to VSIPL before VSIPL
+      functions can operate on the data bound to the block. A user block may
+      be admitted for use by VSIPL and released when direct access to the data
+      is needed by the application program. A VSIPL block may not be
+      released.</para>
+
+      <para>Blocks represent logically contiguous data areas in memory
+      (physical layout is undefined for VSIPL space), but users often wish to
+      operate on non-contiguous sub-sets of these data areas. To provide
+      support for such operations, VSIPL requires that users operate on the
+      data in a block through another object type called a view. Views allow
+      the user to specify noncontiguous subsets of a data array and inform
+      VSIPL how the data will be accessed (for example, as a vector or
+      matrix). When creating a vector view, the user specifies an offset into
+      the block, a view length, and a stride value which specifies the number
+      of elements (defined in the type of the block) to advance between each
+      access. Thus, for a block whose corresponding data array contains four
+      elements, a view with an offset value of zero, a stride of two, and a
+      length of two represents a logical data set consisting of members zero
+      and two of the original block. For a matrix view, stride and length
+      parameters are specified in each dimension, and a single offset is
+      specified. By varying the stride, row-major or column-major matrices can
+      be created.</para>
+
+      <para>A block may have any number of views created on it: this allows
+      the user to use vector views to access particular rows or columns of a
+      matrix view, for example. Since the blocks are typed, views are also
+      typed; however, because views also include usage information (e.g.
+      vector or matrix), there are multiple view types for each block type
+      corresponding to how the data will be accessed. These types are
+      immutable; thus for example, a block cannot have both integer and float
+      views associated with it. This would not be useful in any event because
+      the data layout inside VSIPL space is vendor specific.</para>
+
+      <para>New views of a block may be created directly using a block object,
+      or indirectly using a previously created view of the block. Except for
+      finding the real or imaginary view of a complex view all views may be
+      created directly using the block object.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Structure of a VSIPL application</title>
+
+    <para>Although there are a number of ways to program an application, the
+    basic VSIPL program consists of the following sequence:</para>
+
+    <informalfigure>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/structure.svg" format="SVG" scale="60"/>
+        </imageobject>
+        <imageobject>
+          <imagedata fileref="images/structure.png" format="PNG" scale="60"/>
+        </imageobject>
+      </mediaobject>
+    </informalfigure>
+
+    <para>A VSIPL program must initialize the VSIPL library with a call to
+    vsip_init before calling any other VSIPL function. Any program that uses
+    VSIPL and that terminates must call vsip_finalize before terminating. See
+    the Support chapter for additional conditions and restrictions on these
+    functions.</para>
+  </section>
+</section>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xreflabel="[serialization]"
+         xml:id="serialization" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Serialization</title>
+
+  <titleabbrev>serialization</titleabbrev>
+
+  <para>Header <emphasis>&lt;vsip/serialization.hpp&gt;</emphasis>
+  synopsis:</para>
+
+  <xi:include href="code/serialization.hpp" />
+
+  <section xml:id="serialization.desc">
+    <title>Descriptor</title>
+
+    <titleabbrev>serialization.desc</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>[u]int<emphasis>N</emphasis>_type type aliases are introduced
+        that are referring to equivalent exact-width integral types as defined
+        in the C99 standard.</para>
+      </listitem>
+
+      <listitem>
+        <para>Descriptor objects hold all information about data that is
+        necessary to identify and instantiate block types that are able to
+        bind to that data as user-storage.</para>
+
+        <synopsis>struct Descriptor
+{
+  uint64_type value_type;
+  uint8_type dimensions;
+  uint8_type storage_format;
+  uint64_type size[3];
+  int64_type stride[3];
+  uint64_type storage_size;
+};</synopsis>
+      </listitem>
+    </orderedlist>
+
+    <section>
+      <title>Members</title>
+
+      <titleabbrev>serialization.desc.members</titleabbrev>
+
+      <synopsis>uint64_type value_type;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>A numeric encoding for the value-type held in the
+            data.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>uint8_type dimensions;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The dimensionality of the data.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>uint8_type storage_format;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The data's storage-format.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>uint64_type size[3];</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The sizes of the data, in number-of-elements.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>int64_type stride[3];</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The strides of the data.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>uint64_type storage_size;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The storage size (requirement) of the data, in bytes.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title>Type_info</title>
+
+      <titleabbrev>serialization.desc.type_info</titleabbrev>
+
+      <synopsis>template &lt;typename T&gt;
+struct type_info
+{
+  static uint64_type const value = <emphasis>unspecified</emphasis>;
+};</synopsis>
+
+      <orderedlist>
+        <listitem>
+          <para>The type_info provides a mapping from (C++) types to numeric
+          type encoding.</para>
+        </listitem>
+
+        <listitem>
+          <para>The numeric range 0 - 65535 is reserved for built-in types,
+          while values &gt;= 65536 represent user-defined types.</para>
+        </listitem>
+
+        <listitem>
+          <para>The only specializations which must be supported are
+          <type>scalar_f</type>, <type>cscalar_f</type>, and
+          <type>scalar_i</type>. </para>
+        </listitem>
+
+        <listitem>
+          <para>Users may register other types by specializing
+          <type>type_info</type>. Example:</para>
+
+          <programlisting>struct Pixel;
+namespace vsip
+{
+namespace serialization
+{
+template &lt;&gt; struct type_info&lt;Pixel&gt;
+{
+  static uint64_type const value = 65536;
+};
+}
+}</programlisting>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="serialization.func">
+    <title>Functions</title>
+
+    <titleabbrev>serialization.func</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para><synopsis>template &lt;typename B, unsigned S, typename L&gt;
+void describe_data(vsip::dda::Data&lt;B, S, L&gt; const &amp;data, Descriptor &amp;info);</synopsis><variablelist>
+            <varlistentry>
+              <term>Effects:</term>
+
+              <listitem>
+                <para>Fills out the <parameter>info</parameter> argument from
+                information in <parameter>data</parameter>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Example:</term>
+
+              <listitem>
+                <programlisting>Dense&lt;2&gt; block = ...;
+dda::Data&lt;Dense&lt;2&gt;, dda::in&gt; data(block);
+serialization::Descriptor info;
+serialization::describe_data(data, info);
+process_remotely(data.ptr(), info);</programlisting>
+              </listitem>
+            </varlistentry>
+          </variablelist></para>
+      </listitem>
+
+      <listitem>
+        <synopsis>template &lt;typename B&gt;
+void describe_user_storage(B const &amp;block, Descriptor &amp;info);</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para><parameter>block</parameter> to be a block with
+              user-storage.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Effects:</term>
+
+            <listitem>
+              <para>Fills out the <parameter>info</parameter> argument from
+              the user-storage held by <parameter>block</parameter>.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Example:</term>
+
+            <listitem>
+              <programlisting>Dense&lt;2&gt; block = ...; // assume block to be a user-storage block
+float *data;
+block.release(true, data);
+serialization::Descriptor info;
+serialization::describe_user_storage(block, info);
+process_remotely(data, info);</programlisting>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>template &lt;typename B&gt;
+bool is_compatible(Descriptor const &amp;info);</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Effects:</term>
+
+            <listitem>
+              <para>Reports whether data described by
+              <parameter>info</parameter> can be attached to a user-storage
+              block of type <type>B</type>.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Example:</term>
+
+            <listitem>
+              <programlisting>void process_remotely(char const *data, serialization::Descriptor const &amp;info)
+{
+  if (serialization::is_compatible&lt;Dense&lt;2&gt; &gt;(info))
+  {
+    Domain&lt;2&gt; dom(info.sizes[0], info.sizes[1]);
+    Dense&lt;2&gt; block(dom, reinterpret_cast&lt;float *&gt;(const_cast&lt;char *&gt;(data)));
+    block.admit();
+    ...
+  }
+}</programlisting>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

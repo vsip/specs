@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="complex" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Complex numbers</title>
+
+  <titleabbrev>complex</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause defines complex numbers, which are composed of real
+      and imaginary parts.</para>
+    </listitem>
+
+    <listitem>
+      <para>(ISO14882, [lib.complex.numbers])is incorporated by reference.
+      These classes and functions are incorporated into the vsip namespace.
+      [<emphasis>Example: </emphasis> vsip::complex and vsip::polar are
+      synonyms for the class template std::complex and the function
+      std::polar. ]</para>
+    </listitem>
+  </orderedlist>
+
+  <para>Header <emphasis>&lt;vsip/complex.hpp&gt;</emphasis> synopsis</para>
+
+  <xi:include href="code/complex.hpp" />
+
+  <section xml:id="complex.convert">
+    <title>Conversions</title>
+
+    <titleabbrev>complex.convert</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> The functionality of the VSIPL
+        functions <function>vsip_polar_f</function>,
+        <function>vsip_vpolar_f</function>, and
+        <function>vsip_mpolar_f</function>, which produce magnitude and phase
+        angle values from given complex values, is provided by recttopolar.
+        This function is so named to avoid conflict with the VSIPL++ function
+        polar, which, as specified in (ISO14882, [lib.complex.value.ops]),
+        constructs a complex number given a magnitude and phase angle.
+        ]</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> The VSIPL++ equivalents of VSIPL
+        functions <function>vsip_rect_f</function>,
+        <function>vsip_vrect_f</function>, and
+        <function>vsip_mrect_f</function>, which produce complex numbers given
+        magnitude and phase angle values, are polartorect and its synonym
+        polar. ]</para>
+
+        <synopsis>
+template &lt;typename T1, typename T2&gt;
+void
+<emphasis role="bold">recttopolar</emphasis>(complex&lt;T1&gt; const z, T2&amp; rho, T2&amp; theta) VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para>The only specialization which must be supported has
+              <type>T1</type> and <type>T2</type> both the same as
+              <type>scalar_f</type>. An implementation is permitted to prevent
+              instantiation for other choices of <type>T1</type> and
+              <type>T2</type>. <type>T1</type> must be assignable to
+              <type>T2</type>. (<code>z.real() != 0) || (z.imag() !=
+              0</code>).</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Effects:</term>
+
+            <listitem>
+              <para>Stores the polar representation in rho and theta. rho
+              contains the radius, and theta contains the phase
+              argument.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>Some specializations correspond to VSIPL function
+              <function>vsip_polar_f</function>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+        <synopsis>template &lt;typename T1,
+          typename T2,
+          template &lt;typename, typename&gt; class const_View,
+          template &lt;typename, typename&gt; class View,
+          typename Block0,
+          typename Block1,
+          typename Block2&gt;
+void
+<emphasis role="bold">recttopolar</emphasis>(const_View&lt;complex&lt;T1&gt;, Block0&gt;&amp; z,
+            View&lt;T2, Block1&gt; rho,
+            View&lt;T2, Block2&gt; theta) VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para><parameter>z</parameter>, <parameter>rho</parameter>, and
+              <parameter>theta</parameter> must be element conformant. The
+              only specializations which must be supported have
+              <type>T1</type> and <type>T2</type> both the same as
+              <type>scalar_f</type> and <type>const_View</type> and
+              <type>View</type> the same as <type>const_Vector</type> and
+              <type>Vector</type> or <type>const_Matrix</type> and
+              <type>Matrix</type>, respectively. An implementation is
+              permitted to prevent instantiation for other choices of
+              <type>T1</type>, <type>T2</type>, and <type>View</type>.
+              <type>T1</type> must be assignable to <type>T2</type>. For no
+              value val in z,<code> val.real() == 0 &amp;&amp; val.imag() ==
+              0</code>.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Effects:</term>
+
+            <listitem>
+              <para>Stores the polar representations of the complex numbers in
+              z in rho and theta. rho contains the radii, and theta contains
+              the phase arguments such that, for corresponding values val_z,
+              val_rho, and val_theta and recttopolar(val_z, val_rhop,
+              val_thetap), <code>val_rho == val_rhop &amp;&amp; val_theta ==
+              val_thetap</code>.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>Some specializations correspond to VSIPL functions
+              <function>vsip_vpolar_f</function> and
+              <function>vsip_mpolar_f</function>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+        <synopsis>template &lt;typename T&gt;
+complex&lt;T&gt;
+<emphasis role="bold">polartorect</emphasis>(T const&amp; rho, T const&amp; theta = 0) VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para>The only specialization which must be supported has T the
+              same as <type>scalar_f</type>. An implementation is permitted to
+              prevent instantiation of polartorect&lt;T&gt; for other choices
+              of T.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>vsip::polar(rho, theta).</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>Some specializations correspond to VSIPL function
+              <function>vsip_rect_f</function>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+        <synopsis>
+template &lt;typename T,
+          template &lt;typename, typename&gt; class const_View,
+          typename Block&gt;
+const_View&lt;complex&lt;T&gt;, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">polartorect</emphasis>(const_View&lt;T, Block&gt; rho) VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para>The only specialization which must be supported has T the
+              same as <type>scalar_f</type> and const_View the same as
+              const_Vector or const_Matrix. An implementation is permitted to
+              prevent instantiation of polartorect&lt;T&gt; for other choices
+              of T and const_View.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>A const_View v such that, for every value val_v in v,
+              <code>val_v == polartorect(val_rho, 0)</code> where val_rho is
+              the corresponding value in rho, respectively.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>Some specializations correspond to VSIPL functions
+              <function>vsip_vrect_f</function> and
+              <function>vsip_mrect_f</function>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+        <synopsis>
+template &lt;typename T,
+          template &lt;typename, typename&gt; class const_View,
+          typename Block0,
+          typename Block1&gt;
+const_View&lt;complex&lt;T&gt;, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">polartorect</emphasis>(const_View&lt;T, Block0&gt; rho, const_View&lt;T, Block1&gt; theta) VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para>rho and theta must be element conformant. The only
+              specialization which must be supported has T the same as
+              <type>scalar_f</type> and const_View the same as const_Vector or
+              const_Matrix. An implementation is permitted to prevent
+              instantiation of polartorect&lt;T&gt; for other choices of T and
+              const_View.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>A const_View v such that, for every value val_v in v,
+              <code>val_v == polartorect(val_rho, val_theta)</code> where
+              val_rho and val_theta are the corresponding values in rho and
+              theta, respectively.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>Some specializations correspond to VSIPL functions
+              <function>vsip_vrect_f</function> and
+              <function>vsip_mrect_f</function>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

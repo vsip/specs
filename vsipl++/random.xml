@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="random" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Random number generation</title>
+
+  <titleabbrev>random</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause specifies random number generation.</para>
+    </listitem>
+  </orderedlist>
+
+  <section xml:id="random.rand">
+    <title>Rand</title>
+
+    <titleabbrev>random.rand</titleabbrev>
+
+    <para>Header <emphasis>&lt;vsip/random.hpp&gt;</emphasis> synopsis</para>
+
+    <xi:include href="code/random.hpp"/>
+
+    <orderedlist>
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> The VSIPL++ Rand&lt;T&gt; template
+        is a generalization of the VSIPL rand object. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>The only specializations of Rand which must be supported are
+        Rand&lt;scalar_f&gt; and Rand&lt;cscalar_f&gt; . An implementation is
+        permitted to prevent instantiation of Rand&lt;T&gt; for other choices
+        of T .</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="random.rand.view_types">
+      <title>View types</title>
+
+      <titleabbrev>random.rand.view_types</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>vector_type specifies the type of a const_Vector with value
+          type T and an unspecified block type.</para>
+        </listitem>
+
+        <listitem>
+          <para>matrix_type specifies the type of a const_Matrix with value
+          type T and an unspecified block type.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="random.rand.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>random.rand.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Rand</emphasis>(index_type seed, bool portable = true)
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a random number generator object using the
+            specified seed seed . If portable == false, the random number
+            generator characteristics are implementation defined. Otherwise,
+            the random number generator object obeys the VSIPL specification
+	    and guidelines in VSIPL sections
+            “Random Numbers,” “VSIPL Random Number Generator Functions,” and
+            “Sample Implementation.”</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This constructor facilitates computation using one
+            processor. Use the four-parameter constructor for multiprocessor
+            execution.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Rand</emphasis>(index_type seed, index_type numprocs, index_type id, bool portable = true) 
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>0 &lt; id &lt;= numprocs &lt;= <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:msup>
+                        <m:mrow>
+                          <m:mn>2</m:mn>
+                        </m:mrow>
+
+                        <m:mrow>
+                          <m:mn>31</m:mn>
+                        </m:mrow>
+                      </m:msup>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a random number generator object. If portable ==
+            false, the random number generator characteristics are
+            implementation defined. Otherwise, the random number generator
+            object obeys the VSIPL specification
+	    sections listed above, the seed sequence is split into
+            numprocs equal-length subsequences, and the object’s initial seed
+            equals <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>seed</m:mi>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>id</m:mi>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>*</m:mo>
+
+                      <m:mo>ℓ</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>, where <inlineequation>
+                <m:math>
+                  <m:mstyle>
+                    <m:mo>ℓ</m:mo>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation> is the subsequence length.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>numprocs indicates the total number of processors, and id
+            indicates a processor ID.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="random.rand.generate">
+      <title>Number generators</title>
+
+      <titleabbrev>random.rand.generate</titleabbrev>
+
+      <synopsis>T <emphasis role="bold">randu</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A uniformly distributed random deviate over the open
+            interval <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>. A complex random number has real and
+            imaginary components where each component is uniformly distributed
+            over <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>vector_type <emphasis role="bold">randu</emphasis>(length_type len) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>len &gt; 0.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A vector_type v containing len uniformly distributed
+            pseudo-random numbers from the open interval <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>v.length() == len</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>matrix_type <emphasis role="bold">randu</emphasis>(length_type rows, length_type columns) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>row &gt; 0 &amp;&amp; columns &gt; 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A matrix_type m containing rows*columns uniformly
+            distributed pseudo-random numbers from the open interval
+            <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>m.size(0) == rows</code> . <code>m.size(1) ==
+            columns</code> .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>T <emphasis role="bold">randn</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A normally distributed random deviate having mean zero and
+            unit variance, i.e., <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>For a mathematical description how to generate pseudo-random
+            normally distributed deviates using randu, see the VSIPL
+            description of vsip_randn_f and vsip_crandn_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>vector_type <emphasis role="bold">randn</emphasis>(length_type len) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>len &gt; 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A vector_type v containing len normally distributed
+            pseudo-random numbers from the distribution <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>N</m:mi>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>v.length() == len</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>For a mathematical description how to generate pseudo-random
+            normally distributed deviates using randu, see the VSIPL
+            description of vsip_randn_f and vsip_crandn_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>matrix_type <emphasis role="bold">randn</emphasis>(length_type rows, length_type columns) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>row &gt; 0 &amp;&amp; columns &gt; 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A matrix_type m containing <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>rows</m:mi>
+
+                      <m:mo>*</m:mo>
+
+                      <m:mi>columns</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation> normally distributed pseudo-random numbers
+            from the distribution <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>N</m:mi>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mn>0</m:mn>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>m.size(0) == rows</code> . <code>m.size(1) ==
+            columns</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>For a mathematical description how to generate pseudo-random
+            normally distributed deviates using randu, see the VSIPL
+            description of vsip_randn_f and vsip_crandn_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

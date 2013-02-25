@@ -1,0 +1,1480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="interp" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Interpolation</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>This clause defines interpolation functionality for VSIPL.</para>
+
+    <para>For VSIPL interpolation an initial set of data points (x,y) are
+    obtained either through a measurement process (such as collecting data
+    from a set of sensors), or calculated from some functional relationship.
+    Each y data point is associated with an x data point. The x data points
+    are ordered from smallest to largest. The term node is used to describe a
+    particular (x,y) pair.</para>
+
+    <para>The data x is stored in a vector x and the data y is stored in a
+    vector y. If x and y are of length n, then the range of x is
+    [x(0),x(n-1)].</para>
+
+    <para>Users should note that node values contained in x must be ordered
+    from smallest to largest and must not be the same. This means that x[i] is
+    strictly less than x[i+1] and may not be equal.</para>
+
+    <para>Interpolation is the process of creating a function <inlineequation>
+        <m:math display="inline">
+          <m:mrow>
+            <m:mi>y</m:mi>
+
+            <m:mo>=</m:mo>
+
+            <m:mrow>
+              <m:mi>f</m:mi>
+
+              <m:mo>⁡</m:mo>
+
+              <m:mfenced>
+                <m:mi>x</m:mi>
+              </m:mfenced>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </inlineequation> such that if <inlineequation>
+        <m:math display="inline">
+          <m:mrow>
+            <m:mi>x</m:mi>
+
+            <m:mo>=</m:mo>
+
+            <m:mrow>
+              <m:mi>x</m:mi>
+
+              <m:mo>⁡</m:mo>
+
+              <m:mfenced>
+                <m:mi>i</m:mi>
+              </m:mfenced>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </inlineequation> then <inlineequation>
+        <m:math display="inline">
+          <m:mrow>
+            <m:mi>y</m:mi>
+
+            <m:mo>=</m:mo>
+
+            <m:mrow>
+              <m:mi>y</m:mi>
+
+              <m:mo>⁡</m:mo>
+
+              <m:mfenced>
+                <m:mi>i</m:mi>
+              </m:mfenced>
+            </m:mrow>
+          </m:mrow>
+        </m:math>
+      </inlineequation> for any <inlineequation>
+        <m:math display="inline">
+          <m:mi>x</m:mi>
+        </m:math>
+      </inlineequation> residing in the range of <emphasis
+    role="bold">x</emphasis>. Values of <inlineequation>
+        <m:math display="inline">
+          <m:mi>y</m:mi>
+        </m:math>
+      </inlineequation> calculated for values of <inlineequation>
+        <m:math display="inline">
+          <m:mi>x</m:mi>
+        </m:math>
+      </inlineequation> which are not nodes are interpolated values. Of course
+    there is no guarantee that interpolated values correspond to any physical
+    or mathematical truth. The usefulness of interpolated values depends upon
+    the selection of the interpolation method and the physical data being
+    interpolated.</para>
+
+    <para>Interpolation methods are well known<footnote>
+        <para><citetitle>Cheny and Kincaid. Numerical Mathematics And
+        Computing, 1985</citetitle>, <citetitle>Atkinson and Han. Elementary
+        Numerical Analysis,2004</citetitle></para>
+      </footnote> and it would be pointless to try to define interpolation in
+    this document. For VSIPL the interpolation methods for which function APIs
+    are defined are nearest, piecewise linear, and natural cubic
+    spline.</para>
+
+    <para>VSIPL does not exactly define the algorithm and functionality for
+    each interpolation method. Library implementors methods might differ
+    although linear and natural cubic spline methods are fairly standard and
+    there is not much room for variance.</para>
+
+    <para>Nearest interpolation methods do not appear to be well defined
+    although this method is easiest to implement. In particular the method for
+    deciding the interpolation value if an <inlineequation>
+        <m:math display="inline">
+          <m:mi>x</m:mi>
+        </m:math>
+      </inlineequation> value lies exactly between two node points is
+    problematic.</para>
+
+    <para>The user should always test an interpolation algorithm if exact
+    numerical equivalence between two library vendors is a requirement. If
+    needed users should write their own routine to meet their numerical
+    requirement. Interpolation is not an exact science.</para>
+  </section>
+
+  <section>
+    <title>Interpolation Fundamentals</title>
+
+    <para>VSIPL interpolating functions will take as input data the node set
+    described above in the introduction, and a vector of x values for which
+    interpolated values are desired.</para>
+
+    <para>Three interpolation functions are defined;
+    <function>vsip_vinterp_nearest_<replaceable>p</replaceable></function>,
+    <function>vsip_vinterp_linear_<replaceable>p</replaceable></function> and
+    <function>vsip_vinterp_spline_<replaceable>p</replaceable></function>.</para>
+
+    <para>For the spline method a vendor dependent interpolation object is
+    defined to allow for early binding of work space which may be needed for
+    best performance using the cubic spline interpolation.</para>
+
+    <para>This spline object requires the definition of create and destroy
+    support functions as well as the spline function. The nearest and linear
+    methods require no interpolation object so have no additional support
+    functionality.</para>
+
+    <para>This document also defines matrix interpolation; however matrix
+    interpolation is basically an iteration of vector interpolation over rows
+    or columns of the matrix.</para>
+  </section>
+
+  <section>
+    <title>Interpolation Type Definitions</title>
+
+    <synopsis>struct vsip_splinestruct_p; /* vendor dependent */
+typedef struct vsip_splinestruct_p vsip_spline_p;</synopsis>
+  </section>
+
+  <section>
+    <title>Interpolation Functions</title>
+
+    <para>The following represents interpolation operations defined in
+    VSIPL.</para>
+
+    <informaltable>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry><function>vsip_spline_create_<replaceable>p</replaceable></function></entry>
+
+            <entry>Create a (cubic) spline object</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_spline_destroy_<replaceable>p</replaceable></function></entry>
+
+            <entry>Destroy a spline object</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_vinterp_spline_<replaceable>p</replaceable></function></entry>
+
+            <entry>Perform a (cubic) spline interpolation</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_minterp_spline_<replaceable>p</replaceable></function></entry>
+
+            <entry>Perform a (cubic) spline interpolation on a matrix (by row
+            or by column).</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_vinterp_nearest_<replaceable>p</replaceable></function></entry>
+
+            <entry>Perform a nearest neighbor interpolation.</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_minterp_nearest_<replaceable>p</replaceable></function></entry>
+
+            <entry>Perform a nearest neighbor interpolation on a matrix (by
+            row or by column).</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_vinterp_linear_<replaceable>p</replaceable></function></entry>
+
+            <entry>Perform a linear interpolation.</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_minterp_linear_<replaceable>p</replaceable></function></entry>
+
+            <entry>Perform a linear interpolation on a matrix (by row or by
+            column)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    <section xml:id="spline_create">
+      <title>vsip_spline_create_<replaceable>p</replaceable></title>
+
+      <para>Create a spline object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Create a spline object. The spline object is available to
+            allow early binding for any data space the library implementor
+            might need for the spline interpolation function.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>vsip_spline_p* vsip_spline_create_p(vsip_length max);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>max</term>
+
+                <listitem>
+                  <para>Maximum number of known input data points. N must be
+                  greater than 2.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Pointer to created spline object or null on create
+            failure.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The length argument for the longest spline supported
+                must be greater than 2.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>The object must be created with a size equal to or greater
+            than the size of the known data input to the interpolation
+            function. For a vector spline fit max must be greater than or
+            equal to the length of the input vector of known (y) values. For a
+            matrix spline fit max must be greater than or equal to the product
+            of the row length and the column length of the input matrix of
+            known (y) values.</para>
+
+            <para>This object is reused as needed. It has no history
+            requirement.</para>
+
+            <para>Implementors should note that a development mode
+            implementation must have an attribute which indicates a valid
+            object. The spline object is set to valid after a successful
+            create. This allows error code to check for a valid object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example in
+            <function>vsip_vinterspline_<replaceable>p</replaceable></function>
+            API page.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><function>vsip_spline_destroy_<replaceable>p</replaceable></function>,
+            <function>vsip_vinterp_spline_<replaceable>p</replaceable></function>,
+            <function>vsip_minterp_spline_<replaceable>p</replaceable></function></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="spline_destroy">
+      <title>vsip_spline_destroy_<replaceable>p</replaceable></title>
+
+      <para>Destroy a spline object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Free any memory allocated when the spline object was
+            created.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_spline_destroy_p(vsip_spline_p *spl);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>spl</term>
+
+                <listitem>
+                  <para>Spline object to be destroyed or null.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>None</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The spline object must be valid or NULL.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>It is not an error to destroy a null spline object.</para>
+
+            <para>A development mode implementation will set the object to
+            invalid before freeing the object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example in
+            <function>vsip_vinterspline_<replaceable>p</replaceable></function>
+            API page.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><function>vsip_spline_create_<replaceable>p</replaceable></function>,
+            <function>vsip_vinterp_spline_<replaceable>p</replaceable></function>,
+            <function>vsip_minterp_spline_<replaceable>p</replaceable></function></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="spline">
+      <title>vsip_vinterp_spline_<replaceable>p</replaceable></title>
+
+      <para>Calculate interpolated values using the cubic spline
+      method.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>This function implements a natural cubic spline
+            interpolation method. A natural cubic spline assumes a cubic
+            polynomial of degree less than or equal to three. The polynomial
+            constants are calculated piecewise between each of the consecutive
+            node points using boundary conditions that the first and second
+            derivative of the polynomial is continuous at each node point. For
+            a natural cubic spline the second derivative is defined as zero at
+            the first and last node.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_vinterp_spline_p(const vsip_vview_p *x0, const vsip_vview_p *y0,
+                           vsip_spline_p *spl,
+                           const vsip_vview_p *x, const vsip_vview_p *y);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>x0</term>
+
+                <listitem>
+                  <para>Ordered (smallest to largest) vector of input x
+                  values.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y0</term>
+
+                <listitem>
+                  <para>Vector of input y values.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>spl</term>
+
+                <listitem>
+                  <para>spline object</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>x</term>
+
+                <listitem>
+                  <para>Input vector of x values for which an interpolated y
+                  value is requested. This vector is ordered from smallest to
+                  largest.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y</term>
+
+                <listitem>
+                  <para>Output y vector of the same length as x.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>None</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The view sizes must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The view objects must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The spline object must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The spline object must be conformant.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>No in-place functionality is defined for this
+            function.</para>
+
+            <para>A conformant spline object will have been created with
+            enough space. If enough space is not available a development mode
+            implementation will fail. For a production mode library using a
+            non-conformant spline object the result is implementation
+            dependent.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/spline.c" parse="text"/></programlisting>
+
+            <para>Output from this code is too long to include in this
+            document. To test redirect the output to an octave file
+            (&lt;file_name&gt;.m) and run the file in octave. This will input
+            the data into the octave environment allowing easy plotting of
+            input and output data for comparison.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><function>vsip_spline_create_<replaceable>p</replaceable></function>,
+            <function>vsip_spline_destroy_<replaceable>p</replaceable></function>,
+            <function>vsip_minterp_spline_<replaceable>p</replaceable></function></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="mspline">
+      <title>vsip_minterp_spline_<replaceable>p</replaceable></title>
+
+      <para>Calculate interpolated values by row or by column using the cubic
+      spline method.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Given a measured initial data set contained in vector x0 and
+            a matrix y0 where x0 is ordered from smallest to largest. The
+            vector x0 is associated with y0 by rows or by columns. If x0 is
+            associated with y0 by rows, then a vector cubic spline
+            interpolation is done for each row in the matrix. If x0 is
+            associated with y0 by columns, then a cubic spline interpolation
+            is done for each column in the matrix.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_minterp_spline_p(const vsip_vview_p *x0, const vsip_mview_p *y0,
+                           vsip_spline_p *spl, vsip_major dim,
+                           const vsip_vview_p *x, const vsip_mview_p *y);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>x0</term>
+
+                <listitem>
+                  <para>Ordered (smallest to largest) vector of input node
+                  values.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y0</term>
+
+                <listitem>
+                  <para>Matrix of input node y values.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>spl</term>
+
+                <listitem>
+                  <para>spline object</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>x</term>
+
+                <listitem>
+                  <para>Input vector of x values for which an interpolated y
+                  value is requested. This vector is ordered from smallest to
+                  largest.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y</term>
+
+                <listitem>
+                  <para>Output y matrix.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>None</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The view sizes must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The view objects must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The spline object must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The spline object must be conformant.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>No in-place functionality is defined for this
+            function.</para>
+
+            <para>Note a conformant spline object will have been created with
+            enough space. If enough space is not available, a development mode
+            implementation will fail. A production mode implementations action
+            is implementation dependent.</para>
+
+            <para>For a dim argument of VSIP_ROW (VSIP_COL) the row (column)
+            size of the output y matrix is equal to the length of the x vector
+            and the column (row) size is equal to the column (row) size of the
+            input y0 matrix.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/mspline.c" parse="text"/></programlisting>
+
+            <para>Output from this code is too long to include in this
+            document. To test redirect the output to an octave file
+            (&lt;file_name&gt;.m) and run the file in octave. This will input
+            the data into the octave environment allowing easy plotting of
+            input and output data for comparison.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><function>vsip_spline_create_<replaceable>p</replaceable></function>,
+            <function>vsip_spline_destroy_<replaceable>p</replaceable></function>,
+            <function>vsip_vinterp_spline_<replaceable>p</replaceable></function></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="vinterp_linear">
+      <title>vsip_vinterp_linear_<replaceable>p</replaceable></title>
+
+      <para>Calculate interpolated values using the linear method.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>The vector x0 is an input vector of length n and associated
+            with an equal length vector y0 of known values. The vectors x0 and
+            y0 form the node pairs. A vector x of values is supplied and a y
+            vector of interpolated values is calculated.</para>
+
+            <para>A slope</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>s</m:mi>
+
+                      <m:mi>i</m:mi>
+                    </m:msub>
+
+                    <m:mo>←</m:mo>
+
+                    <m:mfrac>
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>y0</m:mi>
+
+                          <m:mi>i+1</m:mi>
+                        </m:msub>
+
+                        <m:mo>-</m:mo>
+
+                        <m:msub>
+                          <m:mi>y0</m:mi>
+
+                          <m:mi>i</m:mi>
+                        </m:msub>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>x0</m:mi>
+
+                          <m:mi>i+1</m:mi>
+                        </m:msub>
+
+                        <m:mo>-</m:mo>
+
+                        <m:msub>
+                          <m:mi>x0</m:mi>
+
+                          <m:mi>i</m:mi>
+                        </m:msub>
+                      </m:mrow>
+                    </m:mfrac>
+                  </m:mrow>
+
+                  <m:mtext>for i = 0, 1, ..., n - 1</m:mtext>
+                </m:math>
+              </inlineequation></para>
+
+            <para>is calculated between consecutive node pairs. The
+            interpolated value is then given by</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>y</m:mi>
+
+                      <m:mi>j</m:mi>
+                    </m:msub>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:msub>
+                        <m:mi>y0</m:mi>
+
+                        <m:mi>i</m:mi>
+                      </m:msub>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mrow>
+                        <m:msub>
+                          <m:mi>s</m:mi>
+
+                          <m:mi>i</m:mi>
+                        </m:msub>
+
+                        <m:mo>⁢</m:mo>
+
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>x</m:mi>
+
+                              <m:mi>j</m:mi>
+                            </m:msub>
+
+                            <m:mo>-</m:mo>
+
+                            <m:msub>
+                              <m:mi>x0</m:mi>
+
+                              <m:mi>i</m:mi>
+                            </m:msub>
+                          </m:mrow>
+
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:mrow>
+                  </m:mrow>
+
+                  <m:mtext>for</m:mtext>
+
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>x0</m:mi>
+
+                      <m:mi>i</m:mi>
+                    </m:msub>
+
+                    <m:mo>≤</m:mo>
+
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mi>j</m:mi>
+                    </m:msub>
+
+                    <m:mo>&lt;</m:mo>
+
+                    <m:msub>
+                      <m:mi>x0</m:mi>
+
+                      <m:mi>i+1</m:mi>
+                    </m:msub>
+                  </m:mrow>
+                </m:math>
+              </inlineequation></para>
+
+            <para>the range of x is less than or equal to the range of
+            x0.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_vinterp_linear_p(const vsip_vview_p *x0, const vsip_vview_p *y0,
+                           const vsip_vview_p *x, const vsip_vview_p *y);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>x0</term>
+
+                <listitem>
+                  <para>Vector of known x data points.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y0</term>
+
+                <listitem>
+                  <para>Vector of known y data points</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>x</term>
+
+                <listitem>
+                  <para>Input vector of x values for which interpolated y
+                  values are calculated. This vector is ordered from smallest
+                  to largest.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y</term>
+
+                <listitem>
+                  <para>Output y vector of the same length as x.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The view sizes must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The view objects must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>No in-place functionality is defined for this
+            function.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/vinterp_linear.c"
+                parse="text"/></programlisting>
+
+            <para>Output from this code is too long to include in this
+            document. To test redirect the output to an octave file
+            (&lt;file_name&gt;.m) and run the file in octave. This will input
+            the data into the octave environment allowing easy plotting of
+            input and output data for comparison.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="minterp_linear">
+      <title>vsip_minterp_linear_<replaceable>p</replaceable></title>
+
+      <para>Calculate interpolated values using the linear method.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>The functionality for matrix interpolate linear is the same
+            as for vector interpolation except that the interpolation is
+            repeated over each row or column as selected by the dim
+            argument.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_minterp_linear_p(const vsip_vview_p *x0, const vsip_mview_p *y0,
+                           vsip_major dim,
+                           const vsip_vview_p *x, const vsip_mview_p *y);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>x0</term>
+
+                <listitem>
+                  <para>Vector of known x data points.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y0</term>
+
+                <listitem>
+                  <para>Vector of known y data points.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>dim</term>
+
+                <listitem>
+                  <para>Indicates interpolation by row or by column.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>x</term>
+
+                <listitem>
+                  <para>Input vector of x values for which interpolated y
+                  values are calculated. This vector is ordered from smallest
+                  to largest.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y</term>
+
+                <listitem>
+                  <para>Output y matrix.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The view sizes must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The view objects must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>No in-place functionality is defined for this
+            function.</para>
+
+            <para>For a dim argument of VSIP_ROW (VSIP_COL) the row (column)
+            size of the output y matrix is equal to the length of the x vector
+            and the column (row) size is equal to the column (row) size of the
+            input y0 matrix.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/minterp_linear.c"
+                parse="text"/></programlisting>
+
+            <para>Output from this code is too long to include in this
+            document. To test redirect the output to an octave file
+            (&lt;file_name&gt;.m) and run the file in octave. This will input
+            the data into the octave environment allowing easy plotting of
+            input and output data for comparison.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="vinterp_nearest">
+      <title>vsip_vinterp_nearest_<replaceable>p</replaceable></title>
+
+      <para>Calculate interpolated values using the nearest neighbor
+      method.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>The vector x0 is an input vector of length n and associated
+            with an equal length vector y0 of known values. The vectors x0 and
+            y0 form the node pairs. A vector x of values is supplied and a y
+            vector of interpolated values is calculated.</para>
+
+            <para>For an x0[i] &lt;= x[j] &lt; x0[i+1] the interpolated value
+            y[j] is equal to y0[i] if x[j] is closer to x0[i] otherwise y[j]
+            is equal to y0[j+1].</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_vinterp_nearest_p(const vsip_vview_p *x0, const vsip_vview_p *y0, 
+                            const vsip_vview_p *x, const vsip_vview_p *y);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>x0</term>
+
+                <listitem>
+                  <para>Vector of known x data points.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y0</term>
+
+                <listitem>
+                  <para>Vector of know y data points.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>x</term>
+
+                <listitem>
+                  <para>Input vector of x values for which an interpolated y
+                  value is requested.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y</term>
+
+                <listitem>
+                  <para>Output y vector of the same length as x.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The view sizes must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The view objects must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>This function is done out-of-place and no in-place
+            functionality exists.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/vinterp_nearest.c"
+                parse="text"/></programlisting>
+
+            <para>Output from this code is too long to include in this
+            document. To test redirect the output to an octave file
+            (&lt;file_name&gt;.m) and run the file in octave. This will input
+            the data into the octave environment allowing easy plotting of
+            input and output data for comparison.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="minterp_nearest">
+      <title>vsip_minterp_nearest_<replaceable>p</replaceable></title>
+
+      <para>Calculate interpolated values using the nearest method.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>The functionality for matrix interpolate nearest is the same
+            as for vector interpolation except that the interpolation is
+            repeated over each row or column as selected by the dim
+            argument.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_minterp_nearest_p(const vsip_vview_p *x0, const vsip_mview_p *y0,
+                            vsip_major dim,
+                            const vsip_vview_p *x, const vsip_mview_p *y);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>x0</term>
+
+                <listitem>
+                  <para>Vector of known x data points.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y0</term>
+
+                <listitem>
+                  <para>Matrix of know y data points.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>dim</term>
+
+                <listitem>
+                  <para>Indicates interpolation by row or by column.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>x</term>
+
+                <listitem>
+                  <para>Input vector of x values for which an interpolated y
+                  value is requested. This vector is ordered from smallest to
+                  largest.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>y</term>
+
+                <listitem>
+                  <para>Output y matrix.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The view sizes must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The view objects must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>This function is done out-of-place and no in-place
+            functionality exists.</para>
+
+            <para>For a dim argument of VSIP_ROW (VSIP_COL) the row (column)
+            size of the output y matrix is equal to the length of the x vector
+            and the column (row) size is equal to the column (row) size of the
+            input y0 matrix.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/minterp_nearest.c"
+                parse="text"/></programlisting>
+
+            <para>Output from this code is too long to include in this
+            document. To test redirect the output to an octave file
+            (&lt;file_name&gt;.m) and run the file in octave. This will input
+            the data into the octave environment allowing easy plotting of
+            input and output data for comparison.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

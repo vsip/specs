@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="support" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Support</title>
+
+  <titleabbrev>support</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause describes basic macros, types, exceptions, and similar
+      entities that are used throughout the library.</para>
+
+      <para>Header <emphasis>&lt;vsip/support.hpp&gt;</emphasis>
+      synopsis</para>
+
+      <xi:include href="code/support.hpp"/>
+    </listitem>
+  </orderedlist>
+
+  <section xml:id="support.macros">
+    <title>Macros</title>
+
+    <titleabbrev>support.macros</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <synopsis>#define VSIP_MAX_DIMENSION <emphasis>implementation-defined</emphasis></synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para><constant>VSIP_MAX_DIMENSION</constant> indicates the
+              maximum dimension supported by blocks in the VSIPL++ library.
+              The library implementation must provide blocks, views, and
+              domains for all dimensions less than or equal to
+              <constant>VSIP_MAX_DIMENSIONS</constant>. However, some entities
+              may support more than <constant>VSIP_MAX_DIMENSION</constant>
+              dimensions.</para>
+
+              <para><constant>VSIP_MAX_DIMENSION</constant> shall be an
+              unsigned integral quantity greater than or equal to two. The
+              value shall be suitable for use as a constant-expression in
+              preprocessing directives.</para>
+
+              <para>[<emphasis>Note: </emphasis>
+              <constant>VSIP_MAX_DIMENSION</constant> should be a positive
+              integral literal value. It must not expand to the name of a
+              const variable.</para>
+
+              <para>C++ does not allow: <literallayout class="monospaced">
+int const __vsip_max_dimension = 3;
+#define VSIP_MAX_DIMENSION __vsip_max_dimension
+#if VSIP_MAX_DIMENSION &gt; 2
+  // Conditionally compiled code.
+#endif
+	      </literallayout> ]</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>#define VSIP_HAS_EXCEPTIONS <emphasis>implementation-defined</emphasis></synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para>Evaluates to a non-zero value if and only if the
+              implementation throws the exceptions indicated by “Throws”
+              requirements. [<emphasis>Note: </emphasis> <xref
+              linkend="intro.compliance"/> specifies the interaction of
+              <constant>VSIP_HAS_EXCEPTIONS</constant> with exceptions.
+              ]</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>#define VSIP_NOTHROW <emphasis>implementation-defined</emphasis></synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para><constant>VSIP_NOTHROW</constant> behaves as if it has
+              been defined either as <code>#define VSIP_NOTHROW</code> or as
+              <code>#define VSIP_NOTHROW throw()</code>.</para>
+
+              <para>[<emphasis>Note: </emphasis> C++ implementations that do
+              not provide adequate support for throw specifications should
+              provide an empty definition. ]</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <para><synopsis>#define VSIP_THROW(X) <emphasis>implementation-defined</emphasis></synopsis><variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para><constant>VSIP_THROW</constant> behaves as if it has
+                been defined either as <code>#define VSIP_THROW(X)</code> or
+                as <code>#define VSIP_THROW(X) throw X</code>.</para>
+
+                <para>[<emphasis>Note: </emphasis> C++ implementations that do
+                not provide adequate support for throw specifications should
+                provide an empty definition. ]</para>
+              </listitem>
+            </varlistentry>
+          </variablelist></para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="support.types">
+    <title>Types</title>
+
+    <titleabbrev>support.types</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <synopsis>typedef <emphasis>implementation-defined</emphasis> VSIP_DEFAULT_VALUE_TYPE;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para><constant>VSIP_DEFAULT_VALUE_TYPE</constant> indicates the
+              default type of values when creating Vectors, Matrixes, and
+              Tensors.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>typedef <emphasis>implementation-defined</emphasis> cscalar_f;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para>The implementation shall define this type to be
+              <type>complex&lt;float&gt;</type>,
+              <type>complex&lt;double&gt;</type>, or <type>complex&lt;long
+              double&gt;</type> such that the choice of underlying type is the
+              same as <type>scalar_f</type>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>typedef <emphasis>implementation-defined</emphasis> cscalar_i;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para>The implementation shall define this type to be
+              <type>complex&lt;short&gt;</type>,
+              <type>complex&lt;int&gt;</type>, or <type>complex&lt;long
+              int&gt;</type> such that the choice of underlying type is the
+              same as <type>scalar_i</type>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>typedef <emphasis>implementation-defined</emphasis> dimension_type;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para>The <type>dimension_type</type> type shall be an unsigned
+              integral type.</para>
+
+              <para>The type shall be chosen such that
+              <constant>VSIP_MAX_DIMENSION</constant> can be implicitly
+              converted to <type>dimension_type</type>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>typedef <emphasis>implementation-defined</emphasis> scalar_f;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para>The implementation shall define this type to be
+              <type>float</type>, <type>double</type>, or <type>long
+              double</type>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>typedef <emphasis>implementation-defined</emphasis> scalar_i;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Value:</term>
+
+            <listitem>
+              <para>The implementation shall define this type to be
+              <type>short int</type>, <type>int</type>, <type>long int</type>,
+              <type>unsigned short int</type>, <type>unsigned int</type>,
+              <type>unsigned long int</type>, <type>long long int</type>, or
+              <type>unsigned long long int</type>.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="support.types.domain">
+      <title>Domain types</title>
+
+      <titleabbrev>support.types.domain</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>typedef <emphasis>implementation-defined</emphasis> index_type;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para>The <type>index_type</type> type is an unsigned integral
+                type indicating one coordinate of an
+                <type>Index&lt;D&gt;</type> in a <type>Domain&lt;D&gt;</type>
+                for a fixed <type>dimension_type</type>
+                <constant>D</constant>. This type must support values large
+                enough to represent the largest size of a view.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para><type>index_type</type> can be
+                <type>size_t</type>.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>typedef <emphasis>signed-version-of-index_type</emphasis> index_difference_type;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para>The <type>index_difference_type</type> type is a signed
+                integer representing the difference of two index_types, e.g.,
+                incrementing or decrementing an index_type.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>Domain arithmetic uses this type.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>typedef <emphasis>signed-version-of-index_type</emphasis> stride_type;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para>The <type>stride_type</type> type is a signed version of
+                <type>index_type</type> indicating the stride between
+                successive indices along a dimension.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>typedef <emphasis>unsigned-version-of-stride_type</emphasis> stride_scalar_type;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para>The <type>stride_scalar_type</type> type is an unsigned
+                multiple of a stride.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>Domain arithmetic uses this type.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>typedef index_type length_type;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para>A number of indices.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <para>The <type>whole_domain_type</type> enumerated value
+          <constant>whole_domain</constant> is used to indicate that an entire
+          domain should be returned by certain Tensor subview
+          functions.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="support.types.dimorder">
+      <title>Dimension-ordering types</title>
+
+      <titleabbrev>support.types.dimorder</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><type>tuple</type> requires exactly
+          <constant>VSIP_MAX_DIMENSION</constant> template parameters.</para>
+        </listitem>
+
+        <listitem>
+          <para>Exactly <constant>VSIP_MAX_DIMENSION</constant> type
+          definitions <type>row1_type</type>, <type>row2_type</type>, … are
+          required. For positive <constant>D</constant> at most
+          <constant>VSIP_MAX_DIMENSION</constant>, rowD_type’s first
+          <constant>D</constant> template values are 0, 1, …, D-1. The
+          remaining <code>VSIP_MAX_DIMENSION-D</code> entries are
+          unspecified.</para>
+
+          <para>[<emphasis>Note: </emphasis> These represent row-major
+          ordering for a one-dimensional block, two-dimensional block, etc.
+          ]</para>
+        </listitem>
+
+        <listitem>
+          <para>Exactly <constant>VSIP_MAX_DIMENSION</constant> type
+          definitions <type>col1_type</type>, <type>col2_type</type>, … are
+          required. For positive <constant>D</constant> at most
+          <constant>VSIP_MAX_DIMENSION</constant>, colD_type’s first
+          <constant>D</constant> template values are D-1, …, 1, 0. The
+          remaining <code>VSIP_MAX_DIMENSION-D</code> entries are
+          unspecified.</para>
+
+          <para>[<emphasis>Note: </emphasis> These represent column-major
+          ordering for a one-dimensional block, two-dimensional block, etc.
+          ]</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="support.types.function">
+      <title>Function and class types</title>
+
+      <titleabbrev>support.types.function</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> The
+          <type>return_mechanism_type</type> enumerated value
+          <constant>by_value</constant> indicates a function returns a
+          computed value. <constant>by_reference</constant> indicates a
+          function requires a parameter where the computed value is saved.
+          ]</para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="support.exceptions">
+    <title>Exceptions</title>
+
+    <titleabbrev>support.exceptions</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>This section specifies some of the exceptions that VSIPL++
+        functions and objects can throw. [<emphasis>Note: </emphasis> Some
+        errors are indicated by throwing exceptions. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>Memory allocation errors will be indicated by
+        <type>std::bad_alloc</type> exceptions. [<emphasis>Note: </emphasis>
+        The VSIPL API defines errors,
+        which are fatal in development mode and which produce undefined
+        results in production mode. This specification does not define a
+        development mode or a production mode. Instead, it defines exceptions
+        that are thrown by supporting implementations. Memory allocation
+        failures, which are indicated by the function return value in VSIPL,
+        are indicated by throwing the <type>std::bad_alloc</type>
+        exception.</para>
+
+        <para>As noted in <xref linkend="intro.compliance"/>, implementations
+        that do not support exceptions must provide an implementation-defined
+        way to report memory allocation errors to the user. ]</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="support.exceptions.comput">
+      <title>Class computation_error</title>
+
+      <titleabbrev>support.exceptions.comput</titleabbrev>
+
+      <xi:include href="code/support-exceptions-comput.hpp"/>
+
+      <orderedlist>
+        <listitem>
+          <para>The class <type>computation_error</type> defines the type of
+          objects thrown as exceptions to report errors presumably caused by
+          algorithmic computations and detectable only when the program
+          executes.</para>
+
+          <synopsis>computation_error(std::string const &amp;what_arg);</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Effects:</term>
+
+              <listitem>
+                <para>Constructs an object of class
+                <type>computation_error</type>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Postcondition:</term>
+
+              <listitem>
+                <para><code>strcmp(this-&gt;what(), what_arg.c_str()) ==
+                0</code>.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="support.constants">
+      <title>Constants</title>
+
+      <titleabbrev>support.constants</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> <constant>row</constant> and
+          <constant>col</constant> correspond to VSIPL constants
+          <constant>VSIP_ROW</constant> and <constant>VSIP_COL</constant>.
+          ]</para>
+        </listitem>
+
+        <listitem>
+          <para>An implementation must define
+          <constant>VSIP_MAX_DIMENSIONS</constant> <type>dimension_type</type>
+          constants <constant>dim0</constant>, <constant>dim1</constant>,
+          <constant>dim2</constant>, ….</para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+</chapter>

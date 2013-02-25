@@ -1,0 +1,41 @@
+pre 
+{
+  margin-left: 50px;
+  margin-right: 50px;
+  padding:5px;
+  /*background-color:#f2f5f7;*/
+  border: 1px solid #888888;
+}
+/* section titles*/
+span.title { float: left; padding-left: 1em;}
+span.titleabbrev { float: right; padding-right: 1em;}
+
+/* content */
+
+/* synopses & definitions */
+.term { font-weight: bold;}
+
+.figure-contents img,
+.chapter table,
+.section table
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chapter table th,
+.section table th { border-bottom: 1px solid black;}
+.chapter table td, 
+.section table td
+{
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.informaltable table { border-collapse:collapse;}
+
+.informaltable table tbody th
+{
+    border-bottom: none;
+    border-right: 1px solid black;
+}

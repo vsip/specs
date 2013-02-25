@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preface version="5.0" xml:id="foreword" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Foreword</title>
+
+  <para>The VSIPL++ Library provides C++ classes and functions for writing
+  embedded signal processing applications designed to run on one or more
+  processors. VSIPL++ contains</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>containers such as vectors, matrixes, and tensors,</para>
+    </listitem>
+
+    <listitem>
+      <para>mathematical operations such as addition and matrix multiplication
+      on these containers,</para>
+    </listitem>
+
+    <listitem>
+      <para>complex numbers and random numbers,</para>
+    </listitem>
+
+    <listitem>
+      <para>various linear algebra operations including solvers using LU, QR,
+      and singular value decomposition methods, and</para>
+    </listitem>
+
+    <listitem>
+      <para>signal processing classes and functions including fast Fourier
+      transforms, convolutions, correlations, FIR filters, and IIR
+      filters.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>The VSIPL++ specification has been split into two
+  overlapping documents, covering uniprocessor execution and multi-processor
+  execution. Uniprocessor execution is specified in the <olink
+  targetdoc="vsiplxx"></olink>, while distributed execution is specified
+  here.</para>
+
+  <para>This distributed specification is significantly shorter than the
+  uniprocessor specification because the library has been carefully designed
+  to support running the same programs in either single or multiple processor
+  modes. This specification contains means to specify how a container’s contents
+  are distributed among available processors. Mathematical operations and
+  other operations on those containers need not be re-specified because the
+  toolkit automatically ensures data is moved to where it is used so that
+  valid serial and parallel programs have the same effect.</para>
+
+  <para>Please visit the <link xlink:href="http://www.hpec-si.org">High
+  Performance Embedded Computing Software Initiative webpage</link> for more
+  information on VSIPL++ and for reference implementations.</para>
+</preface>

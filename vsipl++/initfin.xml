@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="initfin" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Initialization and finalization</title>
+
+  <titleabbrev>initfin</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause describes the <type>vsipl</type> class. At least one
+      <type>vsipl</type> object must exist while using the library.</para>
+
+      <para>Header <emphasis>&lt;vsip/initfin.hpp&gt;</emphasis>
+      synopsis</para>
+
+      <xi:include href="code/initfin.hpp"/>
+    </listitem>
+
+    <listitem>
+      <synopsis>vsipl();</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If there are no other extant vsipl objects, initializes the
+            library before its use. It behaves as if it were implemented as if
+            <code>(counter++ != 0) return; else /* perform initialization */
+            ....</code></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Failure to correctly initialize the library leads to
+            undefined behavior. This behavior can include throwing an
+            exception.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>vsipl(int &amp;argc, char** &amp;argv);</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>argc is the nonnegative number of program arguments in argv.
+            <code>argv[argc] == 0</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If there are no other extant vsipl objects, initializes the
+            library before its use. It behaves as if it were implemented as
+            <code>if (counter++ != 0) return; else /* perform initialization
+            */ ....</code></para>
+
+            <para>Program arguments used to initialize the library will be
+            removed so the requirements on argc and argv are still
+            valid.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Failure to correctly initialize the library leads to
+            undefined behavior. This behavior can include throwing an
+            exception.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>~vsipl();</synopsis>
+
+      <para><variablelist>
+          <varlistentry>
+            <term>Effects:</term>
+
+            <listitem>
+              <para>If there is only one extant <type>vsipl</type> object,
+              cleans up library data structures. Otherwise, the destructor has
+              no effect. It behaves as if it were implemented as <code>if
+              (–counter != 0) return; else /* perform destruction */
+              ....</code></para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Postconditions:</term>
+
+            <listitem>
+              <para>If the destructor had an effect, the VSIPL++ library
+              cannot be used.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>Failure of the library to correctly deallocate its
+              resources leads to undefined behavior. This behavior can include
+              throwing an exception.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+    </listitem>
+
+    <listitem>
+      <para>[<emphasis>Example: </emphasis> Many VSIPL++ programs will be
+      similar to: <xi:include href="code/initfin.cpp"/> ]</para>
+    </listitem>
+  </orderedlist>
+</chapter>

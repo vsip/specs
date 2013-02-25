@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0 OMG" xml:id="vsipl" 
+      xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <info>
+    <title>VSIPL</title>
+    <subtitle>Version 1.4</subtitle>
+    <titleabbrev>VSIPL 1.4</titleabbrev>
+    <authorgroup>
+      <author>
+        <orgname>
+	  <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="images/omg-logo.svg" format="SVG"/>
+            </imageobject>
+            <imageobject>
+              <imagedata fileref="images/omg-logo.png" format="PNG"/>
+            </imageobject>
+          </inlinemediaobject>
+	</orgname>
+      </author>
+    </authorgroup>
+
+    <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
+  </info>
+
+  <preface role="not.in.toc" xml:id="title1">
+    <!-- FIXME: DB requires a title but the OMG spec doesn't allow one. -->
+
+    <title/>
+
+    <para><emphasis role="bold">OMG Document Number:</emphasis>
+    formal/12-12-01</para>
+
+    <para><emphasis role="bold">Normative reference:</emphasis>
+    http://www.omg.org/spec/VSIPL</para>
+  </preface>
+
+  <xi:include href="legal.xml"/>
+  <toc/>
+  <xi:include href="preface.xml"/>
+  <xi:include href="intro.xml"/>
+  <xi:include href="types.xml"/>
+  <xi:include href="support.xml"/>
+  <xi:include href="scalar.xml"/>
+  <xi:include href="random.xml"/>
+  <xi:include href="vector.xml"/>
+  <xi:include href="signal.xml"/>
+  <xi:include href="linalg.xml"/>
+  <xi:include href="interp.xml"/>
+  <xi:include href="perm.xml"/>
+  <xi:include href="sort.xml"/>
+  <xi:include href="io.xml"/>
+  <xi:include href="impl.xml"/>
+  <xi:include href="glossary.xml"/>
+  <xi:include href="changes.xml"/>
+</book>

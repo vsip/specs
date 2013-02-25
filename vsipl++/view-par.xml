@@ -1,0 +1,1695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xreflabel="[view]" xml:id="view"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Views</title>
+
+  <titleabbrev>view</titleabbrev>
+
+  <section xml:id="view.view">
+    <title>Definitions</title>
+
+    <titleabbrev>view.view</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> [view.view] occurs in a separate
+        document excepting the additional definitions specified below.
+        ]</para>
+      </listitem>
+
+      <listitem>
+        <para>Every view meets the
+        requirements in <xref linkend="parviewreq" />. In <xref
+        linkend="parviewreq" />, V denotes a view class, v denotes a value of
+        type V, and p denotes a value of type index_type indicating a valid
+        patch of the subblock of v held by the local processor (0 &lt;= p &lt;
+        num_patches(v)).</para>
+
+        <table xml:id="parviewreq">
+          <caption>Parallel view requirements</caption>
+
+          <tr>
+            <th>expression</th>
+
+            <th>return type</th>
+          </tr>
+
+          <tr>
+            <td><code>V::local_type</code></td>
+
+            <td>implementation-defined</td>
+          </tr>
+
+          <tr>
+            <td><code>V::local_patch_type</code></td>
+
+            <td>implementation-defined</td>
+          </tr>
+
+          <tr>
+            <td><code>v.local()</code></td>
+
+            <td>V::local_type</td>
+          </tr>
+
+          <tr>
+            <td><code>v.local(p)</code></td>
+
+            <td>V::local_patch_type</td>
+          </tr>
+        </table>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> Every view has an associated block
+        which is responsible for storing or computing the data in the view
+        ([view.view]). Every block has an associated map ([view.block]). Every
+        map describes how data stored in a block can be distributed over
+        multiple processors by dividing the block into a set of disjoint
+        subblocks, whose union contains all of the block’s indices (<xref
+        linkend="map.map" />). Each subblock is an ordered set of indices
+        (<xref linkend="map.map" />). A patch is a maximal subset of a
+        subblock with contiguous indices (<xref linkend="map.map" />).
+        ]</para>
+      </listitem>
+
+      <listitem>
+        <para>The <emphasis>local subblock view</emphasis> of a distributed
+        view is a view to the subblock stored on the local processor. If the
+        local processor does not hold a subblock, the local subblock view is
+        empty.</para>
+      </listitem>
+
+      <listitem>
+        <para>local_type is the type of a view’s local subblock view. It shall
+        have the same dimension and same value type as the view. Its’ block
+        type is unspecified.</para>
+      </listitem>
+
+      <listitem>
+        <para>The local() member function returns the view’s local subblock
+        view.</para>
+      </listitem>
+
+      <listitem>
+        <para>local_patch_type is the type of a patch subview of a view’s
+        local subblock view. It shall have the same dimension and same value
+        type as the view. Its’ block type is unspecified.</para>
+      </listitem>
+
+      <listitem>
+        <para>The local(p) member function of a view returns a view of patch p
+        of view’s local subblock.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="view.vector">
+    <title>Vector</title>
+
+    <titleabbrev>view.vector</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>All <emphasis>Vector</emphasis> class template specifications
+        apply to the <emphasis>Vector</emphasis>&lt;T, Block&gt; class
+        template except the two-parameter constructor Vector(length_type,
+        const T&amp;) and the one-parameter constructor Vector(length_type)
+        are replaced by the constructors below and an additional typedef and
+        member functions are added to access the local view of a distributed
+        view.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="view.vector.types">
+      <title>Local View Types</title>
+
+      <titleabbrev>view.vector.types</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><type>local_type</type> specifies the type of the local
+          subblock view of <emphasis>Vector</emphasis>. The type is a
+          <emphasis>Vector</emphasis> with a value type T and an unspecified
+          block type.</para>
+        </listitem>
+
+        <listitem>
+          <para><type>local_patch_type</type> specifies the type of a patch
+          subview of a local subblock of <emphasis>Vector</emphasis>. The type
+          is a <emphasis>Vector</emphasis> with a value type T and an
+          unspecified block type.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="view.vector.constructors">
+      <title>Constructors</title>
+
+      <titleabbrev>view.vector.constructors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><synopsis><emphasis role="bold">Vector</emphasis>(length_type len, T const&amp; value, 
+       typename block_type::map_type const&amp; map = typename block_type::map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para><code>len &gt; 0</code> .</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable, zero-indexed Vector object
+                  containing exactly len values equal to value with a map
+                  map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para>std::bad_alloc indicating memory allocation for the
+                  underlying Dense block failed.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis><emphasis role="bold">Vector</emphasis>(length_type len, 
+       typename block_type::map_type const&amp; map = typename block_type::map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para><code>len &gt; 0</code> .</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable, zero-indexed Vector object
+                  containing exactly len unspecified values with a map
+                  map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para><type>std::bad_alloc</type> indicating memory
+                  allocation for the underlying Dense block failed.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="view.vector.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>view.vector.accessors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><synopsis>local_type <emphasis role="bold">local</emphasis>() VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the local subblock view. If <code>*this</code>
+                  is a distributed view, a view of the local processor’s
+                  subblock is returned. If <code>*this</code> is a local view,
+                  <code>*this</code> is returned.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>The domain of the local view is equivalent to the
+                  <code>subblock_domain(view)</code>.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>local_patch_type <emphasis role="bold">local</emphasis>(index_type patch) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>patch to be a valid patch of the local <code>subblock
+                  (0 &lt;= patch &lt; num_patches(view))</code>.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns a subview of the local subblock view
+                  corresponding to patch patch.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para><code>view.local(patch)</code> is equivalent to
+                  <code>view.local()(local_domain(view, map.subblock(),
+                  patch)</code></para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="view.matrix">
+    <title>Matrix</title>
+
+    <titleabbrev>view.matrix</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>All <emphasis>Matrix</emphasis> class template specifications
+        apply to the <emphasis>Matrix</emphasis>&lt;T, Block&gt; class
+        template except the three-parameter constructor
+        <code>Matrix(length_type, length_type, const T&amp;)</code> and the
+        two-parameter constructor Matrix(length_type, length_type) are
+        replaced by the constructors below and an additional typedef and
+        member function are added to access the local view of a distributed
+        view.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="view.matrix.types">
+      <title>Local View Types</title>
+
+      <titleabbrev>view.matrix.types</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>local_type specifies the type of the local subblock view of
+          <emphasis>Matrix</emphasis>. The type is a
+          <emphasis>Matrix</emphasis> with a value type T and an unspecified
+          block type.</para>
+        </listitem>
+
+        <listitem>
+          <para>local_patch_type specifies the type of a patch subview of a
+          local subblock of <emphasis>Matrix</emphasis>. The type is a
+          <emphasis>Matrix</emphasis> with a value type T and an unspecified
+          block type.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="view.matrix.constructors">
+      <title>Constructors</title>
+
+      <titleabbrev>view.matrix.constructors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><synopsis><emphasis role="bold">Matrix</emphasis>(length_type rows, length_type columns, T const&amp; value, 
+       typename block_type::map_type const&amp; map = typename block_type::map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>rows &gt; 0 . columns &gt; 0 .</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable, zero-indexed Matrix object
+                  containing exactly rows * columns values equal to value with
+                  a map map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para><type>std::bad_alloc</type> indicating memory
+                  allocation for the underlying Dense block failed.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis><emphasis role="bold">Matrix</emphasis>(length_type rows, length_type columns, 
+       typename block_type::map_type const&amp; map = typename block_type::map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>rows &gt; 0 . columns &gt; 0 .</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable, zero-indexed Matrix object
+                  containing exactly <code>rows * columns</code> unspecified
+                  values with a map map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para><type>std::bad_alloc</type> indicating memory
+                  allocation for the underlying Dense block failed.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="view.matrix.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>view.matrix.accessors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><synopsis>local_type <emphasis role="bold">local</emphasis>() VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the local subblock view. If <code>*this</code>
+                  is a distributed view, a view of the local processor’s
+                  subblock is returned. If <code>*this</code> is a local view,
+                  <code>*this</code> is returned.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>The domain of the local view is equivalent to the
+                  subblock_domain(view).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>local_patch_type <emphasis role="bold">local</emphasis>(index_type patch) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>patch to be a valid patch of the local <code>subblock
+                  (0 &lt;= patch &lt; num_patches(view))</code>.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns a subview of the local subblock view
+                  corresponding to patch patch.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para><code>view.local(patch)</code> is equivalent to
+                  <code>view.local()(local_domain(view, map.subblock(),
+                  patch)</code></para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="view.tensor">
+    <title>Tensor</title>
+
+    <titleabbrev>view.tensor</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>All <emphasis>Tensor</emphasis> class template specifications
+        apply to the <emphasis>Tensor</emphasis>&lt;T, Block&gt; class
+        template except the four-parameter constructor
+        <code>Tensor(length_type, length_type, length_type, const
+        T&amp;)</code> and the three-parameter constructor
+        <code>Tensor(length_type, length_type, length_type) </code>are
+        replaced by the constructors below and an additional typedef and
+        member function are added to access the local view of a distributed
+        view.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="view.tensor.types">
+      <title>Local View Types</title>
+
+      <titleabbrev>view.tensor.types</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>local_type specifies the type of the local subblock view of
+          <emphasis>Tensor</emphasis>. The type is a
+          <emphasis>Tensor</emphasis> with a value type T and an unspecified
+          block type.</para>
+        </listitem>
+
+        <listitem>
+          <para>local_patch_type specifies the type of a patch subview of a
+          local subblock of <emphasis>Tensor</emphasis>. The type is a
+          <emphasis>Tensor</emphasis> with a value type T and an unspecified
+          block type.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="view.tensor.constructors">
+      <title>Constructors</title>
+
+      <titleabbrev>view.tensor.constructors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><synopsis><emphasis role="bold">Tensor</emphasis>(length_type z_length, 
+       length_type y_length, 
+       length_type x_length, 
+       T const&amp; value, 
+       typename block_type::map_type const&amp; map = typename block_type::map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>z_length &gt; 0 . y_length &gt; 0 . x_length &gt;
+                  0 .</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable, zero-indexed Tensor object
+                  containing exactly <code>z_length * y_length *
+                  x_length</code> values equal to value with a map map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para><type>std::bad_alloc</type> indicating memory
+                  allocation for the underlying Dense block failed.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis><emphasis role="bold">Tensor</emphasis>(length_type z_length, 
+       length_type y_length, 
+       length_type x_length, 
+       typename block_type::map_type const&amp; map = typename block_type::map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>z_length &gt; 0 . y_length &gt; 0 . x_length &gt;
+                  0 .</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable, zero-indexed Tensor object
+                  containing exactly <code>z_length * y_length *
+                  x_length</code> unspecified values with a map map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para><type>std::bad_alloc</type> indicating memory
+                  allocation for the underlying Dense block failed.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="view.tensor.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>view.tensor.accessors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><synopsis>local_type <emphasis role="bold">local</emphasis>() VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the local subblock view. If *this is a
+                  distributed view, a view of the local processor’s subblock
+                  is returned. If <code>*this</code> is a local view,
+                  <code>*this</code> is returned.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>The domain of the local view is equivalent to the
+                  subblock_domain(view).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>local_patch_type <emphasis role="bold">local</emphasis>(index_type patch) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>patch to be a valid patch of the local subblock (0
+                  &lt;= patch &lt; num_patches(view)).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns a subview of the local subblock view
+                  corresponding to patch patch.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para><code>view.local(patch)</code> is equivalent to
+                  <code>view.local()(local_domain(view, map.subblock(),
+                  patch)</code></para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="view.support">
+    <title>Support Functions</title>
+
+    <titleabbrev>view.support</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>VSIPL++ provides a set of parallel support functions to query
+        distributed views.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="view.support.defn">
+      <title>Definitions</title>
+
+      <titleabbrev>view.support.defn</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The domain representing the size of a subblock is called the
+          <emphasis>subblock domain</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>A subblock is comprised of one or more patches
+          (num_patches()). Each patch consists of a maximal sequence of
+          elements with contiguous global indices.</para>
+        </listitem>
+
+        <listitem>
+          <para>The set of global indices represented by a subblock-patch is
+          called the <emphasis>global domain</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>The set of local indices storing a subblock-patch is called
+          the <emphasis>local domain</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>The global domain and local domain of a subblock-patch are
+          element conformant.</para>
+        </listitem>
+
+        <listitem>
+          <para>The union of the global domains of all subblocks-patches for a
+          view exactly overlaps with view’s domain.</para>
+        </listitem>
+
+        <listitem>
+          <para>The union of the local domains of patches for a view’s
+          subblock exactly overlaps with the subblock domain of the view’s
+          subblock.</para>
+        </listitem>
+
+        <listitem>
+          <para>If view is a D-dimensional view and g_idx = <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mrow>
+              </m:math>
+            </inlineequation> is a global index in the domain of view (for
+          each <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mi>0</m:mi>
+
+                  <m:mo>≤</m:mo>
+
+                  <m:mi>d</m:mi>
+
+                  <m:mo>&lt;</m:mo>
+
+                  <m:mi>D</m:mi>
+                </m:mrow>
+              </m:math>
+            </inlineequation>, <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mi>0</m:mi>
+
+                  <m:mo>≤</m:mo>
+
+                  <m:msub>
+                    <m:mi>i</m:mi>
+
+                    <m:mi>d</m:mi>
+                  </m:msub>
+
+                  <m:mo>&lt;</m:mo>
+
+                  <m:mtext>view.size(d))</m:mtext>
+                </m:mrow>
+              </m:math>
+            </inlineequation>, then there exists a subblock-patch pair sb-p
+          whose global domain gdom contains index <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mrow>
+              </m:math>
+            </inlineequation>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Moreover, if <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:msub>
+                        <m:mi>p</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>p</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mrow>
+              </m:math>
+            </inlineequation> are defined such that <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>g</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation> = gdom[d].first() + <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>p</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation> * gdom[d].stride(), then l_idx = <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:msub>
+                        <m:mi>l</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>l</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mrow>
+              </m:math>
+            </inlineequation>, where <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>l</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation> = ldom[d].first() + <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>p</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation> * ldom[d].stride() and ldom is the local domain
+          of subblock-patch pair sb-p, is the local index of the local
+          subblock storing the value of global index <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mrow>
+              </m:math>
+            </inlineequation> in the view view.</para>
+        </listitem>
+
+        <listitem>
+          <para>The following relationships hold on all processors:sb ==
+          subblock_from_global_index(view, g_idx),p ==
+          patch_from_global_index(view, g_idx),gdom == global_domain(view, sb,
+          p),ldom == local_domain(view, sb, p),l_idx ==
+          local_from_global_index(view, g_idx), g_idx ==
+          global_from_local_index(view, sb, l_idx), <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>l</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation> == local_from_global_index(view, d,
+          <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>g</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation>), and <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>g</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation> == global_from_local_index(view, d, sb,
+          <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>l</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation>).</para>
+        </listitem>
+
+        <listitem>
+          <para>The following relationships hold on processors owning subblock
+          sb (i.e. processors where sb ==
+          view.block().map().subblock()):local_view ==
+          view.local(),local_view.get<inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:msub>
+                        <m:mi>l</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>l</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mrow>
+              </m:math>
+            </inlineequation> == view.get<inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>g</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:mrow>
+              </m:math>
+            </inlineequation>,gdom == global_domain(view, p),ldom ==
+          local_domain(view, p), and<inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>g</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation> == global_from_local_index(view, d,
+          <inlineequation>
+              <m:math display="inline">
+                <m:msub>
+                  <m:mi>l</m:mi>
+
+                  <m:mi>d</m:mi>
+                </m:msub>
+              </m:math>
+            </inlineequation>).</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="view.support.fcn">
+      <title>Functions</title>
+
+      <titleabbrev>view.support.fcn</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><emphasis>&lt;vsip/parallel.hpp&gt;</emphasis> provides all
+          declarations in this sub-sub-clause unless otherwise
+          indicated.</para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Domain&lt;ViewT::dim&gt; <emphasis
+                role="bold">
+subblock_domain</emphasis>(ViewT const &amp;view, index_type sb) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>Subblock sb to be a valid subblock of view view (0
+                  &lt;= sb &lt; num_subblocks(view)) or no_subblock.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If sb is a valid subblock, returns the domain
+                  representing the extent of view’s subblock sb. If sb ==
+                  no_subblock, returns an empty domain.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Domain&lt;ViewT::dim&gt; 
+<emphasis role="bold">subblock_domain</emphasis>(ViewT const &amp;view) VSIP_NOTHROW;</synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the domain representing the extent of view’s
+                  subblock stored on the local processor, or an empty domain
+                  if the local processor does not hold a subblock.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to subblock_domain(view,
+                  subblock(view)).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Domain&lt;ViewT::dim&gt; <emphasis
+                role="bold">
+local_domain</emphasis>(ViewT const &amp;view, index_type sb, index_type p) VSIP_NOTHROW;</synopsis>
+          <variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>sb to be a valid subblock of view (0 &lt;= sb &lt;
+                  num_subblocks(view)) or no_subblock. p to be a valid patch
+                  of view’s subblock sb (0 &lt;= p &lt; num_patches(view,
+                  sb)).</para>
+
+                  <para>Returns the local domain for subblock sb patch p of
+                  view.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Domain&lt;ViewT::dim&gt; <emphasis
+                role="bold">
+local_domain</emphasis>(ViewT const &amp;view, index_type p=0) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>p to be a valid patch of view’s local subblock (0
+                  &lt;= p &lt; num_patches(view, subblock(view))).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the local domain for the local subblock patch
+                  p of view.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to local_domain(view, subblock(view),
+                  p).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Domain&lt;ViewT::dim&gt; <emphasis
+                role="bold">
+global_domain</emphasis>( ViewT const &amp;view, index_type sb, index_type p) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>sb to be a valid subblock of view (0 &lt;= sb &lt;
+                  num_subblocks(view)) or no_subblock. p to be a valid patch
+                  of view’s subblock sb (0 &lt;= p &lt; num_patches(view,
+                  sb)).</para>
+
+                  <para>Returns the local domain for subblock sb patch p of
+                  view.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Domain&lt;ViewT::dim&gt; 
+<emphasis role="bold">global_domain</emphasis>(ViewT const &amp;view, index_type p=0) VSIP_NOTHROW;</synopsis>
+          <variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>p to be a valid patch of view’s local subblock (0
+                  &lt;= p &lt; num_patches(view, subblock(view))).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the local domain for the local subblock patch
+                  p of view.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to global_domain(view, subblock(view),
+                  p).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; length_type 
+<emphasis role="bold">num_subblocks</emphasis>(ViewT const &amp;view) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the number of subblocks of view.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to
+                  view.block().map().num_subblocks().</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; length_type <emphasis
+                role="bold">
+num_patches</emphasis>(ViewT const &amp;view, index_type sb) VSIP_NOTHROW;</synopsis>
+          <variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>sb to be either a valid subblock of view (0 &lt;= sb
+                  &lt; num_subblocks(view)) or no_subblock.</para>
+
+                  <para>Returns the number of patches in subblock sb of view,
+                  or 0 if sb == no_subblock.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; length_type <emphasis
+                role="bold">
+num_patches</emphasis>(ViewT const &amp;view) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the number of patches for the local subblock
+                  of view. Returns 0 if there is no local subblock.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to num_patches(view,
+                  subblock(view)).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; index_type <emphasis
+                role="bold">
+subblock</emphasis>(ViewT const &amp;view, processor_type pr) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the subblock of view view held by processor
+                  pr, or no_subblock if pr does not hold a subblock.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to view.block().map().subblock(pr).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; index_type <emphasis
+                role="bold">
+subblock</emphasis>(ViewT const &amp;view) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the subblock of view view held by the local
+                  processor, or no_subblock if the local processor does not
+                  hold a subblock.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to view.block().map().subblock().</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; index_type <emphasis
+                role="bold">
+subblock_from_global_index</emphasis>(ViewT const &amp;view, Index&lt;ViewT::dim&gt; const &amp;g_idx) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>g_idx to be a valid global index of view view (0 &lt;=
+                  g_idx[d] &lt; view.size(d) for each d such that 0 &lt;= d
+                  &lt; ViewT::dim).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the subblock sb containing global index g_idx.
+                  g_idx is in global_domain(view, sb, p) where p =
+                  patch_from_global_index(view, g_idx).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; index_type 
+<emphasis role="bold">patch_from_global_index</emphasis>(ViewT const &amp;view, Index&lt;ViewT::dim&gt; const &amp;g_idx) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>g_idx to be a valid global index of view view (0 &lt;=
+                  g_idx[d] &lt; view.size(d) for each d such that 0 &lt;= d
+                  &lt; ViewT::dim).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the patch p containing global index g_idx.
+                  g_idx is in global_domain(view, sb, p) where sb =
+                  subblock_from_global_index(view, g_idx).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Index&lt;ViewT::dim&gt; 
+<emphasis role="bold">local_from_global_index</emphasis>(ViewT const &amp;view, Index&lt;ViewT::dim&gt; const &amp;g_idx) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>g_idx to be a valid global index of view view (0 &lt;=
+                  g_idx[d] &lt; view.size(d) for each d such that 0 &lt;= d
+                  &lt; ViewT::dim).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the index l_idx into the local view that
+                  corresponds to the value at global index g_idx in the global
+                  view.</para>
+
+                  <para>The local index l_idx is valid in the local view of
+                  the subblock holding global index g_idx, as determined by
+                  subblock_from_global_index.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; index_type <emphasis
+                role="bold">
+local_from_global_index</emphasis>(ViewT const &amp;view, dimension_type d, index_type g_i) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>d to be a valid dimension view view (0 &lt;= d &lt;
+                  ViewT::dim).</para>
+
+                  <para>g_i to be a valid index of dimension d of view view (0
+                  &lt;= g_i &lt; view.size(d)).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the local dimension-d index l_i in the local
+                  view corresponding to global dimension-d index i.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>If g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>, l_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>l</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>l</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>, and l_idx =
+                  local_from_global_index(view, g_idx), then for all 0 &lt;= d
+                  &lt; D , <inlineequation>
+                      <m:math display="inline">
+                        <m:msub>
+                          <m:mi>l</m:mi>
+
+                          <m:mi>d</m:mi>
+                        </m:msub>
+                      </m:math>
+                    </inlineequation> = local_from_global_index(view, d,
+                  <inlineequation>
+                      <m:math display="inline">
+                        <m:msub>
+                          <m:mi>g</m:mi>
+
+                          <m:mi>d</m:mi>
+                        </m:msub>
+                      </m:math>
+                    </inlineequation>).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Index&lt;ViewT::dim&gt; <emphasis
+                role="bold">
+global_from_local_index</emphasis>(ViewT const &amp;view, index_type sb Index&lt;ViewT::dim&gt; const &amp;l_idx) 
+  VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>l_idx to be a valid local index of subblock sb of view
+                  view (0 &lt;= l_idx[d] &lt; subblock_domain(view,
+                  sb)[d].size() for each d such that 0 &lt;= d &lt;
+                  ViewT::dim).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the global index g_idx corresponding to the
+                  local index l_idx in the view of the processor holding
+                  subblock sb.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; Index&lt;ViewT::dim&gt; <emphasis
+                role="bold">
+global_from_local_index</emphasis>(ViewT const &amp;view, Index&lt;ViewT::dim&gt; const &amp;l_idx) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>l_idx to be a valid local index of the subblock of
+                  view view held on the local processor. (0 &lt;= l_idx[d]
+                  &lt; subblock_domain(view)[d].size() for each d such that 0
+                  &lt;= d &lt; ViewT::dim).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the global index g_idx corresponding to the
+                  local index l_idx in the local view on the local
+                  processor.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>Equivalent to global_from_local_index(view,
+                  subblock(view), idx)</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename ViewT&gt; index_type <emphasis
+                role="bold">
+global_from_local_index</emphasis>(ViewT const &amp;view, dimension_type d, index_type l_i) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>d to be a valid dimension view view (0 &lt;= d &lt;
+                  ViewT::dim). l_i to be a valid local index of dimension d of
+                  view view subblock on local processor (0 &lt;= l_i &lt;
+                  subblock_domain(view)[d].size()).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Returns the global dimension-d index g_i corresponding
+                  to the local dimension-d index i in the local view.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Notes:</term>
+
+                <listitem>
+                  <para>If g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>, l_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>l</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>l</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>, and g_idx =
+                  global_from_local_index(view, l_idx), then for all 0 &lt;= d
+                  &lt; D,  <inlineequation>
+                      <m:math display="inline">
+                        <m:msub>
+                          <m:mi>g</m:mi>
+
+                          <m:mi>d</m:mi>
+                        </m:msub>
+                      </m:math>
+                    </inlineequation> = global_from_local_view(view, d,
+                  <inlineequation>
+                      <m:math display="inline">
+                        <m:msub>
+                          <m:mi>l</m:mi>
+
+                          <m:mi>d</m:mi>
+                        </m:msub>
+                      </m:math>
+                    </inlineequation>).</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+</chapter>

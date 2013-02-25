@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xreflabel="[selgen]" xml:id="selgen"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Selection, generation, and manipulation functions</title>
+
+  <titleabbrev>selgen</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause specifies functions that select view indices or values
+      satisfying a criterion. It also specifies functions that generate views
+      from scalars and specifies functions manipulating views.</para>
+
+      <para>Header <emphasis>&lt;vsip/selgen.hpp&gt;</emphasis>
+      synopsis</para>
+
+      <xi:include href="code/selgen.hpp" />
+    </listitem>
+  </orderedlist>
+
+  <section xml:id="selgen.selection">
+    <title>Selection functions</title>
+
+    <titleabbrev>selgen.selection</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A <emphasis>selection function</emphasis> finds one or more
+        values or indices satisfying a given criterion in one or more
+        views.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="selgen.selection.first">
+      <title>Find leftmost true pair</title>
+
+      <titleabbrev>selgen.selection.first</titleabbrev>
+
+      <synopsis>
+template &lt;typename FnObject,
+          typename T1,
+          typename T2,
+          typename Block1,
+          typename Block2&gt;
+index_type
+<emphasis role="bold">first</emphasis>(index_type j,
+      FnObject obj,
+      const_Vector&lt;T1, Block1&gt; v,
+      const_Vector&lt;T2, Block2&gt; w);</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The only specializations which must be supported have
+            <type>FnObject</type> the same as <code>bool (*)(scalar_f,
+            scalar_f)</code>, <code>bool (*)(scalar_i, scalar_i)</code>,
+            <code>bool (*)(bool, bool)</code>, <code>bool (*)(Index&lt;1&gt;
+            const&amp;, Index&lt;1&gt; const&amp;)</code>, <code>bool
+            (*)(Index&lt;2&gt; const&amp;, Index&lt;2&gt; const&amp;)</code>,
+            and <code>bool (*)( Index&lt;3&gt; const&amp;, Index&lt;3&gt;
+            const&amp;)</code>. An implementation is permitted to prevent
+            instantiation for other choices for
+            <personname>FnObject</personname> . If t1 is an object of type T1
+            and t2 is an object of type T2, obj(t1, t2) must be valid. v and w
+            must be element conformant.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The smallest index k &gt;= j such that <code>f(v.get(k),
+            w.get(k))</code> . A return value at least v.size() indicates
+            <code>f(v.get(k), w.get(k))</code> is false for all k &gt;= j .
+            This value will equal <code>v.size()</code> if<code> j &lt;
+            v.size()</code> .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function corresponds to the VSIPL functions
+            vsip_vfirst_f, vsip_vfirst_i, vsip_vfirst_bl, vsip_vfirst_vi,
+            vsip_vfirst_mi, and vsip_vfirst_ti.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="selgen.selection.indexbool">
+      <title>Find indices of non-false values</title>
+
+      <titleabbrev>selgen.selection.indexbool</titleabbrev>
+
+      <synopsis>
+template &lt;template &lt;typename, typename&gt; class const_View,
+          typename T,
+          typename Block1,
+          typename Block2&gt;
+length_type
+<emphasis role="bold">indexbool</emphasis>(const_View&lt;T, Block1&gt; source,
+          Vector&lt;Index&lt;const_View&lt;T, Block1&gt;::dim&gt;, Block2&gt; indices)
+  VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The only specializations which must be supported have
+            const_View the same as const_Vector or const_Matrix and T the same
+            as bool . An implementation is permitted to prevent instantiation
+            for other choices for const_View and T . Block2 must be
+            modifiable. indices.size() must be at least equal to the number of
+            non-false values in source .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Let len be the value returned by the function. If len == 0,
+            then indices is not modified. Otherwise, indices.get(0), …,
+            indices.get(len-1) contain distinct Index&lt;const_View&lt;T,
+            Block1&gt;::dim&gt; values v such that the source value at v is
+            not false . Furthermore, values in indices are lexicographically
+            increasingly ordered.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The number of non-false values in source .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function corresponds to the VSIPL functions
+            vsip_vindexbool_bl and vsip_mindexbool_bl but does not modify the
+            given Vector’s size.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="selgen.selection.gather">
+      <title>Gathering specified values</title>
+
+      <titleabbrev>selgen.selection.gather</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>A gather instantiation returns a const_Vector with view values
+          specified by a const_Vector of indices.</para>
+        </listitem>
+      </orderedlist>
+
+      <synopsis>
+template &lt;template &lt;typename, typename&gt; class const_View,
+          typename T,
+          typename Block0,
+          typename Block1&gt;
+const_Vector&lt;T, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">gather</emphasis>(const_View&lt;T, Block0&gt; v,
+       const_Vector&lt;Index&lt;View&lt;T, Block0&gt;::dim&gt;, Block1&gt; idx)
+  VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>An implementation must support specializations with
+            const_View the same as const_Vector or const_Matrix and T the same
+            as scalar_i, scalar_f, or cscalar_f. It must also support
+            specializations with const_View the same as const_Tensor and T the
+            same as scalar_i, scalar_f, cscalar_f, cscalar_i, or bool. An
+            implementation is permitted to prevent instantiation for other
+            choices for const_View and T . For all 0 &lt;= i &lt; idx.size(),
+            idx.get(i) must be in v’s domain.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A const_Vector w having <code>w.size() == idx.size()</code>
+            . For all indices 0 &lt;= i &lt; idx.size(), <code>w.get(i) ==
+            v.get(idx.get(i))</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function corresponds to the VSIPL functions
+            vsip_vgather_i, vsip_mgather_i, vsip_tgather_i, vsip_vgather_f,
+            vsip_mgather_f, vsip_tgather_f, vsip_cvgather_f, vsip_cmgather_f,
+            vsip_ctgather_f, vsip_ctgather_i, and vsip_tgather_bl. The
+            returned vector’s block is not necessarily the same as Block0 or
+            Block1 .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="selgen.selection.scatter">
+      <title>Scattering specified values</title>
+
+      <titleabbrev>selgen.selection.scatter</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> The composition of a scatter
+          instantiation and its analogous gather instantiation yields the
+          identity function. ]</para>
+        </listitem>
+      </orderedlist>
+
+      <synopsis>
+template &lt;template &lt;typename, typename&gt; class const_View,
+          typename T,
+          typename Block0,
+          typename Block1,
+          typename Block2&gt;
+void
+<emphasis role="bold">scatter</emphasis>(const_Vector&lt;T, Block0&gt; v,
+        const_Vector&lt;Index&lt;View&lt;T, Block2&gt;::dim&gt;, Block1&gt; idx,
+        typename ViewConversion&lt;const_View, T, Block2&gt;::view_type out)
+  VSIP_NOTHROW; </synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>An implementation must support specializations with
+            const_View the same as const_Vector or const_Matrix and T the same
+            as scalar_i, scalar_f, or cscalar_f. It must also support
+            specializations with const_View the same as const_Tensor and T the
+            same as scalar_i, scalar_f, cscalar_f, cscalar_i, or bool. An
+            implementation is permitted to prevent instantiation for other
+            choices for const_View and T . v and idx must be element
+            conformant. All idx entries must be within the domain of
+            out.block(). v must not overlap with out. idx must not overlap
+            with out.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>For all indices 0 &lt;= i &lt; v.domain.size(),
+            <code>out.get(idx.get(i)) == v.get(i)</code> unless idx contains
+            duplicate entries in which case the stored value is
+            undefined.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function corresponds to the VSIPL functions
+            vsip_vscatter_i, vsip_mscatter_i, vsip_tscatter_i,
+            vsip_vscatter_f, vsip_mscatter_f, vsip_tscatter_f,
+            vsip_cvscatter_f, vsip_cmscatter_f, vsip_ctscatter_f,
+            vsip_ctscatter_i, and vsip_tscatter_bl.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="selgen.generate">
+    <title>Generation functions</title>
+
+    <titleabbrev>selgen.generate</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A <emphasis>generation function</emphasis> generates a view from
+        its given parameters, which usually include scalars and/or
+        views.</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> Unlike most VSIPL++ functions,
+        these functions modify their view arguments. Most are obviated by
+        scalar assignment syntax, which may be faster. For example, the VSIPL
+        fill functions, vsip_vfill_i, vsip_vfill_f, vsip_cvfill_f,
+        vsip_mfill_i, vsip_mfill_f, and vsip_cmfill_f, are obviated by scalar
+        assignment. ]</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="selgen.generate.ramp">
+      <title>Filling with a linear function</title>
+
+      <titleabbrev>selgen.generate.ramp</titleabbrev>
+
+      <synopsis>
+template &lt;typename T&gt;
+const_Vector&lt;T, <emphasis>unspecified</emphasis>&gt; <emphasis role="bold">ramp</emphasis>(T a, T b, length_type len) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>len &gt; 0 . The only specializations which must be
+            supported have T the same as scalar_i or scalar_f. An
+            implementation is permitted to prevent instantiation for other
+            choices.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A const_Vector w having <code>w.size() == len</code> . For 0
+            &lt;= i &lt; len, <code>w.get(i) == a + i * b</code> .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function corresponds to the VSIPL functions
+            <function>vsip_vramp_f</function> and
+            <function>vsip_vramp_i</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="selgen.clip">
+    <title>Clipping and inverse clipping</title>
+
+    <titleabbrev>selgen.clip</titleabbrev>
+
+    <synopsis>
+template &lt;typename Tout,
+          typename Tin0,
+          typename Tin1,
+          template &lt;typename, typename&gt; class const_View,
+          typename Block&gt;
+const_View&lt;Tout, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">clip</emphasis>(const_View&lt;Tin0, Block&gt;,
+     Tin1 lower_threshold,
+     Tin1 upper_threshold,
+     Tout lower_clip_value,
+     Tout upper_clip_value)
+  VSIP_NOTHROW;</synopsis>
+
+    <variablelist>
+      <varlistentry>
+        <term>Requires:</term>
+
+        <listitem>
+          <para>Tin0 and Tin1 must be comparable. The only specializations
+          which must be supported have Tout, Tin0, and Tin1 all scalar_f or
+          all scalar_i and const_View either const_Vector or const_Matrix. An
+          implementation is permitted to prevent instantiations for other
+          values of Tout, Tin0, Tin1, and View .</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Returns:</term>
+
+        <listitem>
+          <para>The element-wise extension of the one-element clip function.
+          The one-element clip function operating on a value v returns a value
+          determined by applying these rules sequentially until a condition is
+          satisfied:</para>
+
+          <orderedlist>
+            <listitem>
+              <para>If v &lt;= lower_threshold, return
+              lower_clip_value.</para>
+            </listitem>
+
+            <listitem>
+              <para>If v &lt; upper_threshold, return v.</para>
+            </listitem>
+
+            <listitem>
+              <para>Return upper_clip_value.</para>
+            </listitem>
+          </orderedlist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Note:</term>
+
+        <listitem>
+          <para>This function provides the functionality of the VSIPL
+          functions <function>vsip_vclip_f</function>,
+          <function>vsip_vclip_i</function>,
+          <function>vsip_mclip_f</function>, and
+          <function>vsip_mclip_i</function>. The returned view’s block is not
+          necessarily the same as Block .</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <synopsis>
+template &lt;typename Tout,
+          typename Tin0,
+          typename Tin1,
+          template &lt;typename, typename&gt; class const_View,
+          typename Block&gt;
+const_View&lt;Tout, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">invclip</emphasis>(const_View&lt;Tin0, Block&gt;,
+        Tin1 lower_threshold,
+        Tin1 middle_threshold,
+        Tin1 upper_threshold,
+        Tout lower_clip_value,
+        Tout upper_clip_value)
+  VSIP_NOTHROW;</synopsis>
+
+    <variablelist>
+      <varlistentry>
+        <term>Requires:</term>
+
+        <listitem>
+          <para>Tin0 and Tin1 must be comparable. The only specializations
+          which must be supported have Tout, Tin0, and Tin1 all scalar_f or
+          all scalar_i and const_View either const_Vector or const_Matrix. An
+          implementation is permitted to prevent instantiations for other
+          values of Tout, Tin0, Tin1, and View .</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Returns:</term>
+
+        <listitem>
+          <para>The element-wise extension of the one-element inverse clip
+          function. The one-element inverse clip function operating on a value
+          v returns a value determined by applying these rules sequentially
+          until a condition is satisfied:</para>
+
+          <orderedlist>
+            <listitem>
+              <para>If v &lt; lower_threshold, return v .</para>
+            </listitem>
+
+            <listitem>
+              <para>If v &lt; middle_threshold, return lower_clip_value
+              .</para>
+            </listitem>
+
+            <listitem>
+              <para>If v &lt;= upper_threshold, return upper_clip_value
+              .</para>
+            </listitem>
+
+            <listitem>
+              <para>Otherwise, return v .</para>
+            </listitem>
+          </orderedlist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Note:</term>
+
+        <listitem>
+          <para>This function provides the functionality of the VSIPL
+          functions <function>vsip_vinvclip_f</function>,
+          <function>vsip_vinvclip_i</function>,
+          <function>vsip_minvclip_f</function>, and
+          <function>vsip_minvclip_i</function>.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section xml:id="selgen.manipulation">
+    <title>Manipulation functions</title>
+
+    <titleabbrev>selgen.manipulation</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A <emphasis>manipulation function</emphasis> modifies values in
+        one or more views.</para>
+      </listitem>
+    </orderedlist>
+
+    <synopsis>template &lt;typename T0,
+          typename T1,
+          template &lt;typename, typename&gt; class View,
+          typename Block0,
+          typename Block1&gt;
+void <emphasis role="bold">swap</emphasis>(View&lt;T0, Block0&gt; v, View&lt;T1, Block1&gt; w) VSIP_NOTHROW;</synopsis>
+
+    <variablelist>
+      <varlistentry>
+        <term>Requires:</term>
+
+        <listitem>
+          <para>The only specializations which must be supported are for T0
+          and T1 both the same as scalar_i, scalar_f, or cscalar_f and View
+          the same as Vector or Matrix . An implementation is permitted to
+          prevent instantiations for other values of T0, T1, and View. Block0
+          and Block1 must be modifiable. v and w must be
+          element-conformant.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Effects:</term>
+
+        <listitem>
+          <para>For <code>0 &lt;= i &lt; v.size()</code>, the values<code>
+          v.get(i)</code> and <code>w.get(i)</code> are swapped, i.e.,
+          exchanged.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Note:</term>
+
+        <listitem>
+          <para>This function provides part of the functionality of the VSIPL
+          functions <function>vsip_vswap_i</function>,
+          <function>vsip_vswap_f</function>,
+          <function>vsip_cvswap_f</function>,
+          <function>vsip_mswap_i</function>,
+          <function>vsip_mswap_f</function>, and
+          <function>vsip_cmswap_f</function>.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+</chapter>

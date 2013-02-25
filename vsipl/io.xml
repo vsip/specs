@@ -1,0 +1,1696 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="io" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Implementation Dependent Input and Output</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Unlike VSIPL block objects that have a well defined counterpart in
+    user memory, other opaque VSIPL objects have a totally implementation
+    dependent content. For instance the information stored in FFT objects is
+    dependent on the implementation and is not defined by the specification.
+    Only the characteristics of the FFT object are defined in VSIPL.</para>
+
+    <para>It is desirable to be able to copy these objects into user memory so
+    they may be stored for later use or sent to another process. The purpose
+    of this chapter is to define sufficient functionality so that all VSIPL
+    objects have a counterpart in user memory. Because these objects are
+    implementation dependent the content of the user memory is not defined.
+    Objects from different implementations are not required to be
+    compatible.</para>
+
+    <section>
+      <title>Methodology</title>
+
+      <para>The general method for implementation dependent I/O will be to
+      query the implementation dependent object for its size and then use that
+      size to allocate user memory. The user memory is then passed to an
+      export function that fills the memory with implementation dependent
+      information suitable to recreate the exported object. The user memory
+      can be stored for later use, or it can be passed as a message to another
+      process where it is used to recreate the functionality of the original
+      object.</para>
+
+      <para>To recreate the object the user memory is associated with an
+      object of the proper type using an import function. The import function
+      uses the exported data and does whatever is necessary to return an
+      object which is a copy of the original object.</para>
+
+      <para>The import function takes either a pointer to a created object of
+      the proper object type or a null pointer as an input parameter. If a
+      null pointer is input, the import function returns a new object of the
+      proper type. If an object of the proper type is input then the import
+      function is free to make use of the object. The import function’s use of
+      the input object is implementation dependent.</para>
+
+      <para>Only objects created initially with import can be used as an input
+      to import. The method used to create the object is entirely
+      implementation dependent. There is no requirement for import to return
+      the same object as that input.</para>
+
+      <para>The import function is required to destroy any memory associated
+      with the input object if that memory is not required for use in the
+      returned object. If an object is returned, it must be destroyed by the
+      user using the normal destroy functions. The implementation is always
+      responsible for cleaning up after itself. If import returns NULL because
+      of an allocation failure or some other reason, then any input object
+      must be destroyed by the implementation.</para>
+
+      <para>Any memory allocated by the user for storage of the exported
+      object must be destroyed by the user. The memory should not be destroyed
+      until it is no longer associated with an imported object. This will
+      happen after the imported object is destroyed or when the imported
+      object is reimported using another exported object.</para>
+    </section>
+
+    <section>
+      <title>Functionality and Naming</title>
+
+      <para>There are many functions associated with all the VSIPL
+      implementation dependent objects, however there are only a few root
+      names to remember for I/O functions. The root name of the I/O function
+      goes with the root name (or object name) of the object to create the
+      functions names for I/O. So the function name will look like
+      <function>vsip_<replaceable>d</replaceable>&lt;object&gt;_&lt;root&gt;_<replaceable>p</replaceable></function>.</para>
+
+      <para>Three new root names are required which are not used elsewhere in
+      VSIPL. The first is size which indicates a query for the amount of user
+      memory required for a VSIPL object to be stored in. The second is export
+      which indicates an export of the VSIPL object to the user memory. The
+      final is import which is used to create and/or modify the VSIPL objects
+      and import the data.</para>
+
+      <para>In addition to these three new functions we also define a find
+      function to return a pointer to user memory associated with an imported
+      object.</para>
+
+      <para><informaltable>
+          <tgroup cols="2">
+            <colspec align="center"/>
+
+            <thead>
+              <row>
+                <entry align="center">Root</entry>
+
+                <entry align="center">Functionality</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>export</entry>
+
+                <entry>Export a VSIPL object to user memory.</entry>
+              </row>
+
+              <row>
+                <entry>import</entry>
+
+                <entry>Import a VSIPL object stored in user memory. Create the
+                object if necessary. Allocate or free VSIPL memory as
+                necessary for use by the VSIPL object.</entry>
+              </row>
+
+              <row>
+                <entry>size</entry>
+
+                <entry>Return the amount of user memory required to export a
+                VSIPL object.</entry>
+              </row>
+
+              <row>
+                <entry>find</entry>
+
+                <entry>Return a pointer to user memory.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </section>
+  </section>
+
+  <section>
+    <title>I/O Functionality</title>
+
+    <para>The specification pages for all implementation dependent
+    input/output functions are essentially identical and so are overloaded
+    into a single set of specification pages. To create valid prototypes using
+    the overloaded prototypes replace the &lt;object&gt; place holder with a
+    valid object root and the &lt;object_type&gt; placeholder with a valid
+    object root type. For instance for the QRD object the name is qrd and the
+    type is qr so the proper prototype resulting from the overloaded prototype
+    <code>size_t vsip_d&lt;object&gt;_export_p(vsip_d&lt;object_type&gt;_p
+    *obj, size_t N, void *mem_ptr);</code> would be <code>size_t
+    vsip_dqrd_export_p(vsip_dqr_p *obj, size_t N, void
+    *mem_ptr);</code></para>
+
+    <para>Of course only I/O functions for which a valid create function are
+    defined in the VSIPL specification are defined for I/O. All specified
+    VSIPL I/O functions are listed below.</para>
+
+    <section>
+      <title>Signal Processing Prototypes</title>
+
+      <section>
+        <title>FFT objects</title>
+
+        <para>Since all FFT objects are of a single type we only require one
+        set of I/O functions.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>fft</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>fft</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_fft_export_f(vsip_fft_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>FFT export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_fft_f *vsip_fft_import_f(vsip_fft_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>FFT import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_fft_size_f(vsip_fft_f *obj);</entry>
+
+                <entry>FFT size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_fft_find_f(vsip_fft_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with an FFT
+                object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>Multiple FFT objects</title>
+
+        <para>Since all FFTM objects are of a single type we only require one
+        set of I/O functions.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>fftm</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>fftm</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_fftm_export_f(vsip_fftm_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Multiple FFT export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_fftm_f *vsip_fftm_import_f(vsip_fftm_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>Multiple FFT import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_fftm_size_f(vsip_fftm_f *obj);</entry>
+
+                <entry>Multiple FFT size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_fftm_find_f(vsip_fftm_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a
+                Multiple FFT object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>Two Dimensional FFT objects</title>
+
+        <para>Since all two dimensional FFT objects are of a single type we
+        only require one set of I/O functions.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>fft2d</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>fft2d</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_fft2d_export_f(vsip_fft2d_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Two dimensional FFT export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_fft2d_f *vsip_fftm_import_f(vsip_fft2d_f *obj,
+                void *mem_ptr);</entry>
+
+                <entry>Two dimensional FFT import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_fft2d_size_f(vsip_fft2d_f *obj);</entry>
+
+                <entry>Two dimensional FFT size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_fft2d_find_f(vsip_fft2d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a two
+                dimensional FFT object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>Three Dimensional FFT objects</title>
+
+        <para>Since all three dimensional FFT objects are of a single type we
+        only require one set of I/O functions.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>fft3d</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>fft3d</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_fft3d_export_f(vsip_fft3d_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Three dimensional FFT export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_fft3d_f *vsip_fftm_import_f(vsip_fft3d_f *obj,
+                void *mem_ptr);</entry>
+
+                <entry>Three dimensional FFT import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_fft3d_size_f(vsip_fft3d_f *obj);</entry>
+
+                <entry>Three dimensional FFT size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_fft3d_find_f(vsip_fft3d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a three
+                dimensional FFT object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>One Dimensional Convolution</title>
+
+        <para>Only real float convolution objects are defined in the current
+        VSIPL specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>conv1d</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>conv1d</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_conv1d_export_f(vsip_conv1d_f *obj, size_t
+                N, void *mem_ptr);</entry>
+
+                <entry>One dimensional convolution export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_conv1d_f *vsip_conv1d_import_f(vsip_conv1d_f *obj,
+                void *mem_ptr);</entry>
+
+                <entry>One dimensional convolution import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_conv1d_size_f(vsip_conv1d_f *obj);</entry>
+
+                <entry>One dimensional convolution size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_conv1d_find_f(vsip_conv1d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with an one
+                dimensional convolution object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>Two Dimensional Convolution</title>
+
+        <para>Only real float convolution objects are defined in the current
+        VSIPL specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>conv2d</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>conv2d</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_conv2d_export_f(vsip_conv2d_f *obj, size_t
+                N, void *mem_ptr);</entry>
+
+                <entry>Two dimensional convolution export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_conv2d_f *vsip_conv2d_import_f(vsip_conv2d_f *obj,
+                void *mem_ptr);</entry>
+
+                <entry>Two dimensional convolution import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_conv2d_size_f(vsip_conv2d_f *obj);</entry>
+
+                <entry>Two dimensional convolution size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_conv2d_find_f(vsip_conv2d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a two
+                dimensional convolution object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>One Dimensional Correlation</title>
+
+        <para>Real and complex float correlation objects are defined in the
+        specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>corr1d</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>corr1d</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_corr1d_export_f(vsip_corr1d_f *obj, size_t
+                N, void *mem_ptr);</entry>
+
+                <entry>One dimensional correlation export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_corr1d_f *vsip_corr1d_import_f(vsip_corr1d_f *obj,
+                void *mem_ptr);</entry>
+
+                <entry>One dimensional correlation import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_corr1d_size_f(vsip_corr1d_f *obj);</entry>
+
+                <entry>One dimensional correlation size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_corr1d_find_f(vsip_corr1d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a one
+                dimensional correlation object</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_ccorr1d_export_f(vsip_ccorr1d_f *obj,
+                size_t N, void *mem_ptr);</entry>
+
+                <entry>One dimensional complex correlation export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_ccorr1d_f *vsip_ccorr1d_import_f(vsip_ccorr1d_f
+                *obj, void *mem_ptr);</entry>
+
+                <entry>One dimensional complex correlation import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_ccorr1d_size_f(vsip_ccorr1d_f
+                *obj);</entry>
+
+                <entry>One dimensional complex correlation size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_ccorr1d_find_f(vsip_ccorr1d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a one
+                dimensional complex correlation object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>Two Dimensional Correlation</title>
+
+        <para>Real and complex float correlation objects are defined in the
+        specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>corr2d</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>corr2d</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_corr2d_export_f(vsip_corr2d_f *obj, size_t
+                N, void *mem_ptr);</entry>
+
+                <entry>Two dimensional correlation export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_corr2d_f *vsip_corr2d_import_f(vsip_corr2d_f *obj,
+                void *mem_ptr);</entry>
+
+                <entry>Two dimensional correlation import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_corr2d_size_f(vsip_corr2d_f *obj);</entry>
+
+                <entry>Two dimensional correlation size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_corr2d_find_f(vsip_corr2d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a two
+                dimensional correlation object</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_ccorr2d_export_f(vsip_ccorr2d_f *obj,
+                size_t N, void *mem_ptr);</entry>
+
+                <entry>Two dimensional complex correlation export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_ccorr2d_f *vsip_ccorr2d_import_f(vsip_ccorr2d_f
+                *obj, void *mem_ptr);</entry>
+
+                <entry>Two dimensional complex correlation import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_ccorr2d_size_f(vsip_ccorr2d_f
+                *obj);</entry>
+
+                <entry>Two dimensional complex correlation size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_ccorr2d_find_f(vsip_ccorr2d_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a two
+                dimensional complex correlation object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>FIR Filter Object</title>
+
+        <para>Real and complex float FIR filter objects are defined in the
+        specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>fir</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>fir</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_fir_export_f(vsip_fir_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>FIR export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_fir_f *vsip_fir_import_f(vsip_fir_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>FIR import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_fir_size_f(vsip_fir_f *obj);</entry>
+
+                <entry>FIR size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_fir_find_f(vsip_fir_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a FIR
+                filter object</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_cfir_export_f(vsip_cfir_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Complex FIR export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_cfir_f *vsip_cfir_import_f(vsip_cfir_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>Complex FIR import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_cfir_size_f(vsip_cfir_f *obj);</entry>
+
+                <entry>Complex FIR size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_cfir_find_f(vsip_cfir_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a
+                complex FIR filter object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>IIR Filter Object</title>
+
+        <para>Only real float IIR objects are in the specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>iir</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>iir</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_iir_export_f(vsip_iir_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>IIR export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_iir_f *vsip_iir_import_f(vsip_iir_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>IIR import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_iir_size_f(vsip_iir_f *obj);</entry>
+
+                <entry>IIR size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_iir_find_f(vsip_iir_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with an IIR
+                filter object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+    </section>
+
+    <section>
+      <title>Linear Algebra Prototypes</title>
+
+      <para>Linear algebra objects are associated with a decomposition of a
+      matrix which is a separate operation from the create function. It is
+      erroneous to export a decomposition object without an associated
+      decomposed matrix.</para>
+
+      <section>
+        <title>LUD Object I/O</title>
+
+        <para>Float and complex LUD objects are defined in the
+        specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>lud</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>lu</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_lud_export_f(vsip_lu_f *obj, size_t N, void
+                *mem_ptr);</entry>
+
+                <entry>LUD export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_lu_f *vsip_lud_import_f(vsip_lu_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>LUD import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_lud_size_f(vsip_lu_f *obj);</entry>
+
+                <entry>LUD size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_lud_find_f(vsip_lu_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a LUD
+                object</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_clud_export_f(vsip_clu_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Complex LUD export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_clu_f *vsip_clud_import_f(vsip_clu_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>Complex LUD import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_clud_size_f(vsip_clu_f *obj);</entry>
+
+                <entry>Complex LUD size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_clud_find_f(vsip_clu_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a
+                Complex LUD object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>Cholesky Object I/O</title>
+
+        <para>Float and complex cholesky objects are defined in the
+        specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>chold</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>chol</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_chold_export_f(vsip_chol_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Cholesky export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_chol_f *vsip_chold_import_f(vsip_chol_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>Cholesky import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_chold_size_f(vsip_chol_f *obj);</entry>
+
+                <entry>Cholesky size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_chold_find_f(vsip_chol_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a
+                Cholesky object</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_cchold_export_f(vsip_cchol_f *obj, size_t
+                N, void *mem_ptr);</entry>
+
+                <entry>Complex Cholesky export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_cchol_f *vsip_cchold_import_f(vsip_cchol_f *obj,
+                void *mem_ptr);</entry>
+
+                <entry>Complex Cholesky import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_cchold_size_f(vsip_cchol_f *obj);</entry>
+
+                <entry>Complex Cholesky size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_cchold_find_f(vsip_cchol_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a
+                complex Cholesky object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>QRD Object I/O</title>
+
+        <para>Float and complex QRD objects are defined in the
+        specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>qrd</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>qr</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_qrd_export_f(vsip_qr_f *obj, size_t N, void
+                *mem_ptr);</entry>
+
+                <entry>QRD export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_qr_f *vsip_qrd_import_f(vsip_qr_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>QRD import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_qrd_size_f(vsip_qr_f *obj);</entry>
+
+                <entry>QRD size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_qrd_find_f(vsip_qr_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a QRD
+                object</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_cqrd_export_f(vsip_cqr_f *obj,size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Complex QRD export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_cqr_f *vsip_cqrd_import_f(vsip_cqr_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>Complex QRD import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_cqrd_size_f(vsip_cqr_f *obj);</entry>
+
+                <entry>Complex QRD size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_cqrd_find_f(vsip_cqr_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a
+                complex QRD object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+
+      <section>
+        <title>SVD Object I/O</title>
+
+        <para>Float and complex SVD objects are defined in the
+        specification.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>&lt;object&gt;</entry>
+
+                <entry>svd</entry>
+              </row>
+
+              <row>
+                <entry>&lt;object_type&gt;</entry>
+
+                <entry>sv</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>size_t vsip_svd_export_f(vsip_sv_f *obj, size_t N, void
+                *mem_ptr);</entry>
+
+                <entry>SVD export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_sv_f *vsip_svd_import_f(vsip_sv_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>SVD import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_svd_size_f(vsip_sv_f *obj);</entry>
+
+                <entry>SVD size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_svd_find_f(vsip_sv_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a SVD
+                object</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_csvd_export_f(vsip_csv_f *obj, size_t N,
+                void *mem_ptr);</entry>
+
+                <entry>Complex SVD export</entry>
+              </row>
+
+              <row>
+                <entry>vsip_csv_f *vsip_csvd_import_f(vsip_csv_f *obj, void
+                *mem_ptr);</entry>
+
+                <entry>Complex SVD import</entry>
+              </row>
+
+              <row>
+                <entry>size_t vsip_csvd_size_f(vsip_csv_f *obj);</entry>
+
+                <entry>Complex SVD size</entry>
+              </row>
+
+              <row>
+                <entry>void *vsip_csvd_find_f(vsip_csv_f *obj);</entry>
+
+                <entry>Find a pointer to the user data associated with a
+                complex SVD object</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </section>
+    </section>
+
+    <section xml:id="export">
+      <title>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_export_<replaceable>p</replaceable></title>
+
+      <para>Export an object and any associated data to user memory.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>This function allows an object to export information to user
+            memory that can be used to create a new object of identical
+            functionality as the original object. If the exported object is
+            normally associated with array decomposition, then the object must
+            include the decomposition before the export is done.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>size_t vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_export_<replaceable>p</replaceable>(vsip_<replaceable>d</replaceable><replaceable>&lt;object_type&gt;</replaceable>_<replaceable>p</replaceable> *obj, size_t N, void *mem_ptr);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>obj</term>
+
+                <listitem>
+                  <para>Valid object.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>N</term>
+
+                <listitem>
+                  <para>Size of memory in bytes referenced by mem_ptr.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>mem_ptr</term>
+
+                <listitem>
+                  <para>User data array of sufficient size to hold the
+                  exported object and its data. This pointer must be byte
+                  aligned on a long word.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Size of memory in bytes used to store the exported
+            information.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para>If the object is associated with a matrix decomposition, the
+            decomposition must be performed before the export function is
+            called.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The arguments must conform to the following:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>The objects must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>If the memory required to export the object is not
+            sufficient, the export will fail and the returned value will be
+            zero.</para>
+
+            <para>The result of using a memory pointer which is not long word
+            aligned is implementation dependent.</para>
+
+            <para>Any valid object of the proper data type may be
+            exported.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example at the end of this chapter.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="find">
+      <title>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_find_<replaceable>p</replaceable></title>
+
+      <para>Return the memory pointer of a user memory associated with an
+      object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Return the pointer to the beginning of user memory
+            associated with an object. If the object has no user memory
+            associated with it, then the function returns a null
+            pointer.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void *vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_find_<replaceable>p</replaceable>(vsip_<replaceable>d</replaceable><replaceable>&lt;object_type&gt;</replaceable>_<replaceable>p</replaceable> *obj);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>obj</term>
+
+                <listitem>
+                  <para>Valid object.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Pointer to user memory associated with an object, or NULL if
+            the object is not associated with any user memory.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The arguments must conform to the following:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>The objects must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>Even though a pointer to the user memory is returned, any
+            user memory associated with an object is owned by VSIPL until the
+            object is either destroyed, or reused by the
+            <function>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_import_<replaceable>p</replaceable></function>
+            function. The results of modifying memory associated with an
+            object is implementation dependent and is erroneous in a compliant
+            VSIPL program.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example at the end of this chapter.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="import">
+      <title>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_import_<replaceable>p</replaceable></title>
+
+      <para>Import an object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>This function will re-create an object exported using
+            <function>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_export_<replaceable>p</replaceable></function>.</para>
+
+            <para>The import function is called with a null pointer if no
+            object is available. Objects used in the import function must be
+            created by the import function.</para>
+
+            <para>The import function may be used in a loop to import objects.
+            It is the responsibility of the import function to allocate or
+            free memory in the input object as necessary. The object returned
+            by the import function must be destroyed after it is no longer
+            needed using the
+            <function>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_destroy_<replaceable>p</replaceable></function>
+            function.</para>
+
+            <para>User memory associated with the import is not destroyed by
+            VSIPL and must be destroyed by the user after the object is
+            destroyed or associated with other user memory (used in another
+            import). The object owns the associated user memory until either
+            the object is destroyed, or other user memory is imported to the
+            object. User memory associated with the object must not be
+            destroyed until the object is destroyed.</para>
+
+            <para>If the import fails returning a null pointer, the input
+            argument is also destroyed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>vsip_<replaceable>d</replaceable><replaceable>&lt;object_type&gt;</replaceable>_<replaceable>p</replaceable> *
+vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_import_<replaceable>p</replaceable>(vsip_<replaceable>d</replaceable><replaceable>&lt;object_type&gt;</replaceable>_<replaceable>p</replaceable> *obj, void *mem_ptr);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>obj</term>
+
+                <listitem>
+                  <para>Valid object or NULL.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>mem_ptr</term>
+
+                <listitem>
+                  <para>Pointer to user memory initialized with
+                  <function>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_export_<replaceable>p</replaceable></function>.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>A valid object or a null pointer if the import fails.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The arguments must conform to the following:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>The imported user memory must be a valid pointer to an
+                exported object if the proper type.</para>
+              </listitem>
+
+              <listitem>
+                <para>The input object must either be a null pointer or an
+                object previously created with import.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>Since import allows the reuse of VSIPL objects it is
+            important that the implementation query the input VSIPL object to
+            determine its state and destroy any VSIPL memory which may not be
+            needed by the implementation. The methods for importing an object
+            are implementation dependent. The intent of this note is to
+            prevent memory leaks.</para>
+
+            <para>Only objects created with the import function may be used as
+            input to import.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example at the end of this chapter.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="size">
+      <title>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_size_<replaceable>p</replaceable></title>
+
+      <para>Return the minimum memory size of user data required to hold an
+      object and any data associated with the object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Calculate the amount of memory required to store an object
+            exported with the
+            <function>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_export_<replaceable>p</replaceable></function>
+            function. The size includes all the data or other information
+            associated with the object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>size_t vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_size_<replaceable>p</replaceable>(vsip_<replaceable>d</replaceable><replaceable>&lt;object_type&gt;</replaceable>_<replaceable>p</replaceable> *obj);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>obj</term>
+
+                <listitem>
+                  <para>Valid object.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Memory size in bytes required to hold user data exported by
+            <function>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_export_<replaceable>p</replaceable></function>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The arguments must conform to the following:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>The object must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example at the end of this chapter.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><function>vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_export_<replaceable>p</replaceable></function></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section>
+    <title>Examples</title>
+
+    <para>This section shows VSIPL example code for I/O functions. The Example
+    usea a QR decompostion to solve the problem</para>
+
+    <para><inlineequation>
+        <m:math display="inline">
+          <m:mrow>
+            <m:mrow>
+              <m:mrow>
+                <m:msup>
+                  <m:mi fontweight="bold">A</m:mi>
+
+                  <m:mi>T</m:mi>
+                </m:msup>
+
+                <m:mo>⁢</m:mo>
+
+                <m:mi fontweight="bold">A</m:mi>
+              </m:mrow>
+
+              <m:mo>⁢</m:mo>
+
+              <m:mi fontweight="bold">x</m:mi>
+            </m:mrow>
+
+            <m:mo>=</m:mo>
+
+            <m:mi fontweight="bold">b</m:mi>
+          </m:mrow>
+        </m:math>
+      </inlineequation></para>
+
+    <para>for x given a float matrix A of size (aRows, aCols) and a right-hand
+    side vector b.</para>
+
+    <example>
+      <title>VSIPL QR Export code</title>
+
+      <programlisting><xi:include href="examples/qr_export.c" parse="text"/></programlisting>
+    </example>
+
+    <example>
+      <title>VSIPL QR Import code</title>
+
+      <programlisting><xi:include href="examples/qr_import.c" parse="text"/></programlisting>
+    </example>
+  </section>
+</chapter>

@@ -1,0 +1,1445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xreflabel="[block]" xml:id="block"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Blocks</title>
+
+  <titleabbrev>block</titleabbrev>
+
+  <section xml:id="block.dense">
+    <title>Dense block</title>
+
+    <titleabbrev>block.dense</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>All Dense class template specifications apply, except the
+        semantics of user-specified storage are refined to account for
+        distributed blocks.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="block.dense.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>block.dense.constructors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom, T *const pointer, map_type const &amp;map = map_type()) 
+  VSIP_THROW((std::bad_alloc));</synopsis> <variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>For all i such that <code>0 &lt;= i &lt;
+                  subblock_domain.size()</code>, <code>pointer[i] = T()</code>
+                  must be a valid C++ expression. subblock_domain is the
+                  domain of the subblock stored on the local processor if the
+                  block is distributed. subblock_domain is dom if the block is
+                  not distributed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable Dense object with
+                  user-specified storage and distributed by the map
+                  map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para>std::bad_alloc indicating memory allocation for the
+                  returned Dense failed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Postconditions:</term>
+
+                <listitem>
+                  <para>If D == 1, *this will have a one-dimensional
+                  Domain&lt;1&gt; denoted domain with Index&lt;1&gt;es
+                  containing 0, …, dom.size()-1 . If D != 1, *this will have
+                  two domains: Domain&lt;1&gt; domain1 with Index&lt;1&gt;s
+                  containing 0, …, dom.size()-1 and a Domain&lt;D&gt; domainD
+                  with, for each 0 &lt;= d &lt; D, domainD[d].size() ==
+                  dom[d].size(), domainD[d].stride() == 1, and
+                  domainD[d].first() == 0. The object’s use count will be one.
+                  this-&gt;user_storage() == array_format.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>The block’s values are unspecified. This block’s
+                  values can only be accessed after an admit call and before
+                  its corresponding release call. When the block is admitted,
+                  the pointer[i] values listed above may be modified by the
+                  block.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom, uT *const pointer, map_type const &amp;map = map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>T must be a complex type, with underlying type uT (T =
+                  complex&lt;uT&gt;). For all i such that 0 &lt;= i &lt;
+                  2*subblock_domain.size(), pointer[i] = uT() must be a valid
+                  C++ expression. subblock_domain is the domain of the
+                  subblock stored on the local processor if the block is
+                  distributed. subblock_domain is dom if the block is not
+                  distributed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable Dense object with
+                  user-specified storage and distributed by the map
+                  map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para>std::bad_alloc indicating memory allocation for the
+                  returned Dense failed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Postconditions:</term>
+
+                <listitem>
+                  <para>If D == 1, *this will have a one-dimensional
+                  Domain&lt;1&gt; denoted domain with Index&lt;1&gt;es
+                  containing 0, …, dom.size()-1 . If D != 1, *this will have
+                  two domains: Domain&lt;1&gt; domain1 with Index&lt;1&gt;es
+                  containing 0, …, dom.size()-1 and a Domain&lt;D&gt; domainD
+                  with, for each 0 &lt;= d &lt; D, domainD[d].size() ==
+                  dom[d].size(), domainD[d].stride() == 1, and
+                  domainD[d].first() == 0. The object’s use count will be one.
+                  this-&gt;user_storage() == interleaved_format.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>The block’s values are unspecified. This block’s
+                  values can only be accessed after an admit call and before
+                  its corresponding release call. When the block is admitted,
+                  the pointer[i] values listed above may be modified by the
+                  block.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom, uT *const real_pointer, uT *const imag_pointer, 
+      map_type const &amp;map = map_type()) 
+  VSIP_THROW((std::bad_alloc)); </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>T must be a complex type, with underlying type uT (T =
+                  complex&lt;uT&gt;). For all i such that 0 &lt;= i &lt;
+                  subblock_domain.size(), real_pointer[i] = uT() and
+                  imag_pointer[i] = uT() must be valid C++ expressions.
+                  subblock_domain is the domain of the subblock stored on the
+                  local processor if the block is distributed. subblock_domain
+                  is dom if the block is not distributed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a modifiable Dense object with
+                  user-specified storage and distributed by the map
+                  map.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Throws:</term>
+
+                <listitem>
+                  <para>std::bad_alloc indicating memory allocation for the
+                  returned Dense failed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Postconditions:</term>
+
+                <listitem>
+                  <para>If D == 1, *this will have a one-dimensional
+                  Domain&lt;1&gt; denoted domain with Index&lt;1&gt;es
+                  containing 0, …, dom.size()-1 . If D != 1, *this will have
+                  two domains: Domain&lt;1&gt; domain1 with Index&lt;1&gt;es
+                  containing 0, …, dom.size()-1 and a Domain&lt;D&gt; domainD
+                  with, for each 0 &lt;= d &lt; D, domainD[d].size() ==
+                  dom[d].size(), domainD[d].stride() == 1, and
+                  domainD[d].first() == 0. The object’s use count will be one.
+                  this-&gt;user_storage() == split_format.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>The block’s values are unspecified. This block’s
+                  values can only be accessed after an admit call and before
+                  its corresponding release call. When the block is admitted,
+                  the real_pointer[i] and imag_pointer[i] values listed above
+                  may be modified by the block.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="block.dense.userdata">
+      <title>User-specified storage</title>
+
+      <titleabbrev>block.dense.userdata</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>For the definitions in this section, let <itemizedlist>
+              <listitem>
+                <para>D be the dimensionality of Dense block *this.</para>
+              </listitem>
+
+              <listitem>
+                <para>subblock_domain be the domain of the subblock of *this
+                stored on the local processor. If no subblock is stored on the
+                local processor, subblock_domain is empty.</para>
+              </listitem>
+
+              <listitem>
+                <para>l_idx = <inlineequation>
+                    <m:math display="inline">
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mfenced>
+                            <m:msub>
+                              <m:mi>l</m:mi>
+
+                              <m:mi>0</m:mi>
+                            </m:msub>
+
+                            <m:mo>⋯</m:mo>
+
+                            <m:msub>
+                              <m:mi>l</m:mi>
+
+                              <m:mrow>
+                                <m:mi>D</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mi>1</m:mi>
+                              </m:mrow>
+                            </m:msub>
+                          </m:mfenced>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:math>
+                  </inlineequation> refer to a local index of the subblock of
+                *this stored on the local processor, where <inlineequation>
+                    <m:math display="inline">
+                      <m:mrow>
+                        <m:mi>0</m:mi>
+
+                        <m:mo>≤</m:mo>
+
+                        <m:msub>
+                          <m:mi>l</m:mi>
+
+                          <m:mi>d</m:mi>
+                        </m:msub>
+                      </m:mrow>
+                    </m:math>
+                  </inlineequation> &lt; subblock_domain[d].size() for each
+                dimension d of block *this.</para>
+              </listitem>
+
+              <listitem>
+                <para>g_idx = <inlineequation>
+                    <m:math display="inline">
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mfenced>
+                            <m:msub>
+                              <m:mi>g</m:mi>
+
+                              <m:mi>0</m:mi>
+                            </m:msub>
+
+                            <m:mo>⋯</m:mo>
+
+                            <m:msub>
+                              <m:mi>g</m:mi>
+
+                              <m:mrow>
+                                <m:mi>D</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mi>1</m:mi>
+                              </m:mrow>
+                            </m:msub>
+                          </m:mfenced>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:math>
+                  </inlineequation> refer to the global index corresponding to
+                local index l_idx.</para>
+              </listitem>
+
+              <listitem>
+                <para>linear_index(l_idx) be a function that converts a local
+                index l_idx of block *this into a linear index in accordance
+                with the dimension-ordering <inlineequation>
+                    <m:math>
+                      <m:msub>
+                        <m:mi>d</m:mi>
+
+                        <m:mi>0</m:mi>
+                      </m:msub>
+
+                      <m:mo>⋯</m:mo>
+
+                      <m:msub>
+                        <m:mi>d</m:mi>
+
+                        <m:mrow>
+                          <m:mi>D</m:mi>
+
+                          <m:mo>-</m:mo>
+
+                          <m:mi>1</m:mi>
+                        </m:mrow>
+                      </m:msub>
+                    </m:math>
+                  </inlineequation> of block *this:</para>
+
+                <para>linear_index(l_idx) = <inlineequation>
+                    <m:math display="inline">
+                      <m:mrow>
+                        <m:munderover>
+                          <m:mo>∑</m:mo>
+
+                          <m:mrow>
+                            <m:mi>i</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mi>0</m:mi>
+                          </m:mrow>
+
+                          <m:mrow>
+                            <m:mi>D</m:mi>
+
+                            <m:mo>-</m:mo>
+
+                            <m:mi>1</m:mi>
+                          </m:mrow>
+                        </m:munderover>
+
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:msub>
+                            <m:mi>l</m:mi>
+
+                            <m:msub>
+                              <m:mi>d</m:mi>
+
+                              <m:mi>i</m:mi>
+                            </m:msub>
+                          </m:msub>
+
+                          <m:mo>∗</m:mo>
+
+                          <m:mrow>
+                            <m:munderover>
+                              <m:mo>∏</m:mo>
+
+                              <m:mrow>
+                                <m:mi>j</m:mi>
+
+                                <m:mo>=</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>i</m:mi>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:mrow>
+
+                              <m:mrow>
+                                <m:mi>D</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mi>1</m:mi>
+                              </m:mrow>
+                            </m:munderover>
+                          </m:mrow>
+
+                          <m:mtext>this-&gt;size(D,</m:mtext>
+
+                          <m:msub>
+                            <m:mi>d</m:mi>
+
+                            <m:mi>j</m:mi>
+                          </m:msub>
+
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+                    </m:math>
+                  </inlineequation>)</para>
+              </listitem>
+            </itemizedlist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">admit</emphasis>(bool update = true) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is not a block with user-specified storage or
+                  *this is an admitted block with user-specified storage,
+                  there is no effect. Otherwise, the block is admitted so that
+                  its data can be used by VSIPL++ functions and
+                  objects.</para>
+
+                  <para>If update == true, the values of *this are updated as
+                  appropriate for the value of this-&gt;user_storage().</para>
+
+                  <para>Assuming this-&gt;user_storage() == array_format, for
+                  all local indices l_idx with corresponding global indices
+                  g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> == pointer[linear_index(l_idx)] where
+                  pointer is the value returned by this-&gt;find.</para>
+
+                  <para>Assuming this-&gt;user_storage() ==
+                  interleaved_format, for all local indices l_idx with
+                  corresponding global indices g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> ==
+                  complex&lt;T&gt;(pointer[2*linear_index(l_idx)+0],
+                  pointer[2*linear_index(l_idx)+1]) where pointer is the value
+                  returned by this-&gt;find.</para>
+
+                  <para>Assuming this-&gt;user_storage() == split_format, for
+                  all local indices l_idx with corresponding global indices
+                  g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> ==
+                  complex&lt;T&gt;(real_pointer[linear_index(l_idx)],
+                  imag_pointer[linear_index(l_idx)]) where real_pointer and
+                  imag_pointer are the values returned by
+                  this-&gt;find.</para>
+
+                  <para>If update == false, the result of
+                  this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> for all g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> such that 0 &lt;= <inlineequation>
+                      <m:math display="inline">
+                        <m:msub>
+                          <m:mi>g</m:mi>
+
+                          <m:mi>d</m:mi>
+                        </m:msub>
+                      </m:math>
+                    </inlineequation> &lt; this-&gt;size(D, d), is
+                  undefined.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>Invoking admit on an admitted block is permitted. The
+                  intent of using a false update flag is that, if the data in
+                  the user-specified storage is not needed, then there is no
+                  need to force consistency between the block’s storage and
+                  the user-specified storage possibly through copies.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">release</emphasis>(bool update = true) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is not a block with user-specified storage or
+                  *this is a released block with user-specified storage, there
+                  is no effect. Otherwise, the block is released so that its
+                  data cannot be used by VSIPL++ functions and objects.</para>
+
+                  <para>If update == true, the values in the user-specified
+                  storage are updated as appropriate for the value of
+                  this-&gt;user_storage().</para>
+
+                  <para>Assuming this-&gt;user_storage() == array_format, for
+                  all local indices l_idx with corresponding global indices
+                  g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> == pointer[linear_index(l_idx)] where
+                  pointer is the value returned by this-&gt;find.</para>
+
+                  <para>Assuming this-&gt;user_storage() ==
+                  interleaved_format, for all local indices l_idx with
+                  corresponding global indices g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> ==
+                  complex&lt;T&gt;(pointer[2*linear_index(l_idx)+0],
+                  pointer[2*linear_index(l_idx)+1]) where pointer is the value
+                  returned by this-&gt;find.</para>
+
+                  <para>Assuming this-&gt;user_storage() == split_format, for
+                  all local indices l_idx with corresponding global indices
+                  g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> ==
+                  complex&lt;T&gt;(real_pointer[linear_index(l_idx)],
+                  imag_pointer[linear_index(l_idx)]) where real_pointer and
+                  imag_pointer are the values returned by
+                  this-&gt;find.</para>
+
+                  <para>If update == false, the values in the user-specified
+                  storage are undefined.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>Invoking release on a released block is permitted. The
+                  intent of using a false update flag is that, if the data in
+                  the block’s storage is no longer needed, then there is no
+                  need to force consistency between the block’s storage and
+                  the user-specified storage possibly through copies.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">release</emphasis>(bool update, T*&amp; pointer) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>*this must either be a block with user-specified
+                  storage such that this-&gt;user_storage() equals
+                  array_format, or a block without user-specified
+                  storage.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is not a block with user-specified storage,
+                  pointer is assigned NULL, but there are no other effects. If
+                  *this is a released block with user-specified storage,
+                  pointer is assigned the value returned by this-&gt;find, but
+                  there are no other effects.</para>
+
+                  <para>Otherwise, the block is released so that its data may
+                  not be used by VSIPL++ functions and objects. pointer is
+                  assigned the value returned by this-&gt;find. If update ==
+                  true, the values in the user-specified storage are updated.
+                  For all local indices l_idx with corresponding global
+                  indices g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> == pointer[linear_index(l_idx)]</para>
+
+                  <para>If update == false, the values in the user-specified
+                  storage are unspecified.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>Invoking release on a released block is permitted. The
+                  intent of using a false update flag is that, if the data in
+                  the block’s storage is no longer needed, then there is no
+                  need to force consistency between the block’s storage and
+                  the user-specified storage possibly through copies.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">release</emphasis>(bool update, uT*&amp; pointer) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>*this must either be a block with user-specified
+                  storage such that this-&gt;user_storage() equals
+                  interleaved_format, or a block without user-specified
+                  storage. T must be a complex type with underlying type uT (T
+                  = complex&lt;uT&gt;).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is not a block with user-specified storage,
+                  pointer is assigned NULL, but there are no other effects. If
+                  *this is a released block with user-specified storage,
+                  pointer is assigned the value returned by this-&gt;find, but
+                  there are no other effects.</para>
+
+                  <para>Otherwise, the block is released so that its data may
+                  not be used by VSIPL++ functions and objects. pointer is
+                  assigned the value returned by this-&gt;find.</para>
+
+                  <para>If update == true, the values in the user-specified
+                  storage are updated. for all local indices l_idx with
+                  corresponding global indices g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> ==
+                  complex&lt;T&gt;(pointer[2*linear_index(l_idx)+0],
+                  pointer[2*linear_index(l_idx)+1])</para>
+
+                  <para>If update == false, the values in the user-specified
+                  storage are unspecified.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>Invoking release on a released block is permitted. The
+                  intent of using a false update flag is that, if the data in
+                  the block’s storage is no longer needed, then there is no
+                  need to force consistency between the block’s storage and
+                  the user-specified storage possibly through copies.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">release</emphasis>(bool update, uT*&amp; real_pointer, uT*&amp; imag_pointer) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>*this must either be a block with user-specified
+                  storage such that this-&gt;user_storage() equals
+                  interleaved_format or split_format, or a block without
+                  user-specified storage. T must be a complex type with
+                  underlying type uT (T = complex&lt;uT&gt;).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is not a block with user-specified storage,
+                  real_pointer and imag_pointer are assigned NULL, but there
+                  are no other effects. If *this is a released block with
+                  user-specified storage, real_pointer and imag_pointer are
+                  assigned the values returned by this-&gt;find, but there are
+                  no other effects. Otherwise, the block is released so that
+                  its data may not be used by VSIPL++ functions and objects.
+                  real_pointer and imag_pointer are assigned the values
+                  returned by this-&gt;find.</para>
+
+                  <para>If update == true, the values in the user-specified
+                  storage are updated. Assuming this-&gt;user_storage() ==
+                  interleaved_format, for all local indices l_idx with
+                  corresponding global indices g_idx = <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> ==
+                  complex&lt;T&gt;(real_pointer[2*linear_index(l_idx)+0],
+                  real_pointer[2*linear_index(l_idx)+1]) Assuming
+                  this-&gt;user_storage() == split_format, for all local
+                  indices l_idx with corresponding global indices g_idx =
+                  <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>: this-&gt;get<inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mfenced>
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mi>0</m:mi>
+                              </m:msub>
+
+                              <m:mo>⋯</m:mo>
+
+                              <m:msub>
+                                <m:mi>g</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>D</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation> ==
+                  complex&lt;T&gt;(real_pointer[linear_index(l_idx)],
+                  imag_pointer[linear_index(l_idx)])</para>
+
+                  <para>If update == false, the values in the user-specified
+                  storage are unspecified.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Note:</term>
+
+                <listitem>
+                  <para>Invoking release on a released block is permitted. The
+                  intent of using a false update flag is that, if the data in
+                  the block’s storage is no longer needed, then there is no
+                  need to force consistency between the block’s storage and
+                  the user-specified storage possibly through copies.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> No change to find member function
+          specifications. ]</para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">rebind</emphasis>(T* const pointer) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>!this-&gt;admitted() &amp;&amp;
+                  this-&gt;user_storage() == array_format. For all i such that
+                  0 &lt;= i &lt; subblock_domain.size(), pointer[i] = T() must
+                  be a valid C++ expression. subblock_domain is the local
+                  domain of the block stored on the local processor if the
+                  block is distributed or dom if the block is not
+                  distributed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is a block with user-specified storage,
+                  replaces the block’s user-specified storage pointer with
+                  pointer. If *this is not a block with user-specified
+                  storage, this function has no effect.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">rebind</emphasis>(uT* const pointer) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>!this-&gt;admitted(). this-&gt;user_storage() equals
+                  interleaved_format or split_format. T must be a complex type
+                  with underlying type uT (T = complex&lt;uT&gt;). For all i
+                  such that 0 &lt;= i &lt; 2 * subblock_domain.size(),
+                  pointer[i] = uT() must be a valid C++ expression.
+                  subblock_domain is the domain of the subblock stored on the
+                  local processor if the block is distributed. subblock_domain
+                  is dom if the block is not distributed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is a block with user-specified storage,
+                  replaces the block’s user-specified storage pointer with
+                  pointer. If *this is not a block with user-specified
+                  storage, this function has no effect.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Postconditions:</term>
+
+                <listitem>
+                  <para>this-&gt;user_storage() == interleaved_format.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>void <emphasis role="bold">rebind</emphasis>(uT*const real_pointer, uT*const imag_pointer) VSIP_NOTHROW; </synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>!this-&gt;admitted(). this-&gt;user_storage() equals
+                  interleaved_format or split_format. T must be a complex type
+                  with underlying type uT (T = complex&lt;uT&gt;). For all i
+                  such that 0 &lt;= i &lt; subblock_domain.size(),
+                  real_pointer[i] = uT() and imag_pointer[i] = uT() must be
+                  valid C++ expressions. subblock_domain is the domain of the
+                  subblock stored on the local processor if the block is
+                  distributed. subblock_domain is dom if the block is not
+                  distributed.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>If *this is a block with user-specified storage,
+                  replaces the block’s user-specified storage pointers with
+                  real_pointer and imag_pointer. If *this is not a block with
+                  user-specified storage, this function has no effect.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Postconditions:</term>
+
+                <listitem>
+                  <para>this-&gt;user_storage() == split_format.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+</chapter>

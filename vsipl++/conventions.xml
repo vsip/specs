@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="conventions"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Conventions</title>
+
+  <titleabbrev>conventions</titleabbrev>
+
+  <para>This clause describes various conventions that apply throughout the
+  remainder of this document.</para>
+
+  <section xml:id="conventions.defs">
+    <title>Definitions</title>
+
+    <titleabbrev>conventions.defs</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Many terms used in this specification are defined in other
+        specifications, and have the same meaning here as in these
+        references.</para>
+      </listitem>
+
+      <listitem>
+        <para>All terms defined in ISO/IEC 14882:1998 Programming Languages —
+        C++ have the same meaning in this specification unless otherwise
+        indicated. In particular, these words are defined.</para>
+
+        <variablelist>
+          <varlistentry>
+            <term>implementation-defined</term>
+
+            <listitem>
+              <para>This phrase means that specifics depend on a particular
+              implementation and that each implementation should
+              document.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>undefined</term>
+
+            <listitem>
+              <para>This word means that behavior must meet no specific
+              requirements. Undefined behavior may also be expected when this
+              standard omits a description of any explicitly defined
+              behavior.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>unspecified</term>
+
+            <listitem>
+              <para>This word means that specifics depend on a particular
+              implementation.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <para>All functions, macros, types defined in VSIPL have the same
+        meaning in this specification unless otherwise indicated.</para>
+      </listitem>
+
+      <listitem>
+        <para>All terms defined in IETF RFC 2119 have the same meaning in this
+        specification unless otherwise indicated. In particular, these words
+        are defined.</para>
+
+        <para><variablelist>
+            <varlistentry>
+              <term>must</term>
+
+              <listitem>
+                <para>This word, or the terms “required” or “shall,” mean that
+                the definition is an absolute requirement of the
+                specification.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>must not</term>
+
+              <listitem>
+                <para>This phrase, or the phrase “shall not,” means that the
+                definition is an absolute prohibition of the
+                specification.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>should</term>
+
+              <listitem>
+                <para>This word, or the adjective “recommended,” means that
+                there may exist valid reasons in particular circumstances to
+                ignore a particular item, but the full implications must be
+                understood and carefully weighed before choosing a different
+                course.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>should not</term>
+
+              <listitem>
+                <para>This phrase, or the phrase “not recommended” means that
+                there may exist valid reasons in particular circumstances when
+                the particular behavior is acceptable or even useful, but the
+                full implications should be understood and the case carefully
+                weighed before implementing any behavior described with this
+                label.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>may</term>
+
+              <listitem>
+                <para>This word, or the adjective “optional,” means that an
+                item is truly optional. One vendor may choose to include the
+                item because a particular marketplace requires it or because
+                the vendor feels that it enhances the product while another
+                vendor may omit the same item.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist></para>
+      </listitem>
+
+      <listitem>
+        <para>A <emphasis>complex type</emphasis> is a specialization of
+        <type>complex</type>. Objects of such types can store complex numbers.
+        A complex type <type>complex&lt;T&gt;</type>’s <emphasis>underlying
+        type</emphasis> is the numeric type <type>T</type>.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="conventions.struct">
+    <title>Structure</title>
+
+    <titleabbrev>conventions.struct</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Each clause contains the following elements, as
+        applicable:<footnote>
+            <para>To save space, items that do not apply to a clause are
+            omitted. For example, if a clause does not specify any
+            requirements, there will be no “Requirements” subclause.</para>
+          </footnote></para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Summary</para>
+          </listitem>
+
+          <listitem>
+            <para>Requirements</para>
+          </listitem>
+
+          <listitem>
+            <para>Detailed Specifications</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </orderedlist>
+
+    <section>
+      <title>Summary</title>
+
+      <titleabbrev>conventions.struct.summary</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The Summary provides a synopsis of the clause, and introduces
+          the first-level subclauses. Each subclause also provides a summary,
+          listing the headers specified in the subclause and the library
+          entities provided in each header.</para>
+        </listitem>
+
+        <listitem>
+          <para>Paragraphs labeled “Note(s):”, “Example(s):”, or
+          “Rationale(s):” are informative, other paragraphs are
+          normative.</para>
+        </listitem>
+
+        <listitem>
+          <para>The summary and the detailed specifications are presented in
+          the order:<itemizedlist>
+              <listitem>
+                <para>Macros</para>
+              </listitem>
+
+              <listitem>
+                <para>Values</para>
+              </listitem>
+
+              <listitem>
+                <para>Types</para>
+              </listitem>
+
+              <listitem>
+                <para>Classes</para>
+              </listitem>
+
+              <listitem>
+                <para>Functions</para>
+              </listitem>
+
+              <listitem>
+                <para>Objects</para>
+              </listitem>
+            </itemizedlist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="conventions.struct.requirements">
+      <title>Requirements</title>
+
+      <titleabbrev>conventions.struct.requirements</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>VSIPL++ can be extended by a C++ program. Each clause, as
+          applicable, describes the requirements that such extensions must
+          meet. Such extensions are generally one of the
+          following:<itemizedlist>
+              <listitem>
+                <para>Template arguments</para>
+              </listitem>
+
+              <listitem>
+                <para>Derived classes</para>
+              </listitem>
+
+              <listitem>
+                <para>Containers and/or algorithms that meet an interface
+                convention</para>
+              </listitem>
+            </itemizedlist></para>
+        </listitem>
+
+        <listitem>
+          <para>Interface convention requirements are stated as generally as
+          possible. Instead of stating “class X has to define a member
+          function <function>operator++()</function>”, the interface requires
+          “for any object x of class X, ++x is defined.” That is, whether the
+          operator is a member is unspecified.</para>
+        </listitem>
+
+        <listitem>
+          <para>Requirements are stated in terms of well-defined expressions,
+          which define valid terms of the types that satisfy the requirements.
+          For every set of requirements there is a table that specifies an
+          initial set of the valid expressions and their semantics. Any
+          generic algorithm that uses the requirements is described in terms
+          of the valid expressions for its formal type parameters.</para>
+        </listitem>
+
+        <listitem>
+          <para>In some cases the semantic requirements are presented as C++
+          code. Such code is intended as a specification of equivalence of a
+          construct to another construct, not necessarily as the way the
+          construct must be implemented.</para>
+        </listitem>
+
+        <listitem>
+          <para>If constraints for a function, function template, object, or
+          value are violated, the function’s, function template’s, object’s,
+          or value’s behavior is undefined.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="conventions.struct.spec">
+      <title>Specifications</title>
+
+      <titleabbrev>conventions.struct.spec</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The detailed specifications contain the following
+          elements:<itemizedlist>
+              <listitem>
+                <para>Name and brief description</para>
+              </listitem>
+
+              <listitem>
+                <para>Synopsis (class definition or function prototype, as
+                appropriate)</para>
+              </listitem>
+
+              <listitem>
+                <para>Restrictions on template arguments, if any</para>
+              </listitem>
+
+              <listitem>
+                <para>Description of class invariants</para>
+              </listitem>
+
+              <listitem>
+                <para>Description of function semantics</para>
+              </listitem>
+            </itemizedlist></para>
+        </listitem>
+
+        <listitem>
+          <para>Descriptions of class member functions follow the order (as
+          appropriate):<footnote>
+              <para>To save space, items that do not apply to a class are
+              omitted. For example, if a class does not specify any comparison
+              functions, there will be no “Comparison functions”
+              subclause.</para>
+            </footnote></para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Constructor(s) and destructor</para>
+            </listitem>
+
+            <listitem>
+              <para>Copying &amp; assignment functions</para>
+            </listitem>
+
+            <listitem>
+              <para>Comparison functions</para>
+            </listitem>
+
+            <listitem>
+              <para>Modifier functions</para>
+            </listitem>
+
+            <listitem>
+              <para>Operators and other non-member functions</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>Descriptions of function semantics contain the following
+          elements (as appropriate):<footnote>
+              <para>To save space, items that do not apply to a function are
+              omitted. For example, if a function does not specify any
+              preconditions, there will be no “Requires” paragraph.</para>
+            </footnote></para>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires</term>
+
+              <listitem>
+                <para>The preconditions for calling the function</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Effects</term>
+
+              <listitem>
+                <para>The actions performed by the function</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns</term>
+
+              <listitem>
+                <para>A description of the value(s) returned by the
+                function</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Postconditions</term>
+
+              <listitem>
+                <para>The observable results established by the
+                function</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Throws</term>
+
+              <listitem>
+                <para>Any exceptions thrown by the function, and the
+                conditions that would cause the exception</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <?hard-pagebreak?>
+
+  <section xml:id="conventions.requirements">
+    <title>Library-wide requirements</title>
+
+    <titleabbrev>conventions.requirements</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>(ISO14882, [lib.using.headers]/2) is incorporated by
+        reference.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <varname>vsip</varname> namespace contains all library
+        functions, classes, types, exceptions, and similar entities. Macros
+        reside outside the namespace.</para>
+      </listitem>
+
+      <listitem>
+        <para>The <varname>vsip::impl</varname> namespace, if present,
+        contains functions, classes, types, exceptions, and similar entities
+        useful for the implementation. The contents of this namespace are
+        unspecified.</para>
+      </listitem>
+
+      <listitem>
+        <para>All macros beginning with <varname>VSIP_</varname> are reserved
+        by the implementation.</para>
+      </listitem>
+
+      <listitem>
+        <para>For all classes defined by the specification, all class member
+        names beginning with <varname>impl_</varname> are reserved for use by
+        the implementation.</para>
+      </listitem>
+
+      <listitem>
+        <para>For the sake of exposition, the specification does not describe
+        copy constructors, assignment operators, and (non-virtual) destructors
+        with the same apparent semantics as those that can be generated by
+        default. It is unspecified whether the implementation provides
+        explicit definitions for such member function signatures or for
+        virtual destructors that can be generated by default.</para>
+      </listitem>
+
+      <listitem>
+        <para>Implementation header files shall have internal include-guards
+        to protect against multiple inclusion of a single header. If a file is
+        included multiple times, only the first inclusion will be
+        processed.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

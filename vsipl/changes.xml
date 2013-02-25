@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appendix version="5.0" xml:id="changes" xmlns="http://docbook.org/ns/docbook"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          xmlns:ns5="http://www.w3.org/2000/svg"
+          xmlns:ns3="http://www.w3.org/1999/xhtml"
+          xmlns:ns="http://docbook.org/ns/docbook"
+          xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Specification Changes</title>
+
+  <revhistory>
+    <revision>
+      <revnumber>1.0</revnumber>
+
+      <date/>
+
+      <revdescription>
+        <para>Initial VSIPL specification.</para>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.1</revnumber>
+
+      <date>2002-06-11</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para>Added complex to sum value
+            (<function>vsip_<replaceable>ds</replaceable>sumval_<replaceable>p</replaceable></function>).</para>
+          </listitem>
+
+          <listitem>
+            <para>Added complex to elementwise logical equal
+            (<function>vsip_<replaceable>ds</replaceable>leq_<replaceable>p</replaceable></function>).
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>Added complex to elementwise logical not equal
+            (<function>vsip_<replaceable>ds</replaceable>lne_<replaceable>p</replaceable></function>).
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>Added
+            <function>vsip_fft_setwindow_<replaceable>f</replaceable></function>
+            and
+            <function>vsip_fftm_setwindow_<replaceable>f</replaceable></function>
+            routines to FFT section. Modified functionality table in FFT
+            section and signal processing introduction to reflect additions.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>Added SVD routines
+            <function>vsip_<replaceable>d</replaceable>svdmatu_<replaceable>f</replaceable></function>
+            and
+            <function>vsip_<replaceable>d</replaceable>svdmatv_<replaceable>f</replaceable></function>.
+            Modified functionality table in SVD section to reflect additions.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>Added chapter for implementation dependent input and output.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.2</revnumber>
+
+      <date>2006-04-02</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para>Added functions
+            <function>vsip_<replaceable>ds</replaceable>copyto_user_<replaceable>p</replaceable></function>
+            and
+            <function>vsip_<replaceable>ds</replaceable>copyfrom_user_<replaceable>p</replaceable></function>
+            to support copying data from user memory to the data space
+            referenced by a view, and copying data referenced by a view
+            directly to user memory. </para>
+          </listitem>
+
+          <listitem>
+            <para>Added functionality to support vector and matrix elementwise
+            floor
+            (<function>vsip_<replaceable>s</replaceable>floor_<replaceable>p</replaceable>_<replaceable>p</replaceable></function>),
+            ceiling
+            (<function>vsip_<replaceable>s</replaceable>ceil_<replaceable>p</replaceable>_<replaceable>p</replaceable></function>)
+            and round
+            (<function>vsip_<replaceable>s</replaceable>round_<replaceable>p</replaceable>_<replaceable>p</replaceable></function>)
+            operations. Although these functions may be done in place or
+            copied to a float output, sometimes the output is desired to be
+            integer. The naming convention is used to support a type change in
+            the output view to integer. </para>
+          </listitem>
+
+          <listitem>
+            <para>Added type vector index (_vi) as a standard (unsigned)
+            integer type. This means that any defined function supporting
+            integer calculations may be implemented to support vector index
+            view types. This makes vector index manipulations easier and
+            eliminates the need for copies to and from other integer types.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>Added section in Change Notes for Deprecated Functions
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>Added
+            <function>vsip_cstorage_<replaceable>p</replaceable></function>.
+            Deprecated vsip_cstorage. Allows the use of different complex
+            storage for different types. Also note changes to public header
+            file defined on the new complex storage page. </para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.3</revnumber>
+
+      <date>2008-01-31</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para>Added short section allowing new functionality to be added
+            to VSIPL in companion documents not part of this main document.
+            (See additonal functions below). </para>
+          </listitem>
+
+          <listitem>
+            <para>Added gather and scatter functionality for matrix index
+            vectors. </para>
+          </listitem>
+
+          <listitem>
+            <para>Added scalar vector/matrix compares to Logical Operations
+            </para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.4</revnumber>
+
+      <date>2012-12-10</date>
+
+      <revdescription>
+        <para>Various formatting changes are applied as part of the adoption
+        of the specification by the Object Management Group. In
+        particular:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Additional APIs from the "Addendum" chapter have been
+            properly integrated into the main body of the
+            specification.</para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+  </revhistory>
+</appendix>

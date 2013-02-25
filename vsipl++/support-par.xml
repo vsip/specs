@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="support" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Support</title>
+
+  <titleabbrev>support</titleabbrev>
+
+  <para>Header <emphasis>&lt;vsip/support.hpp&gt;</emphasis> synopsis</para>
+
+  <xi:include href="code/support-par.hpp" />
+
+  <section xml:id="support.types">
+    <title>Types</title>
+
+    <titleabbrev>support.types</titleabbrev>
+
+    <section xml:id="support.types.par">
+      <title>Parallel types</title>
+
+      <titleabbrev>support.types.par</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>typedef <emphasis>implementation-defined</emphasis> processor_type;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para><type>processor_type</type> is an integral type that
+                represents a particular processor. A
+                <emphasis>processor</emphasis> is an execution context with
+                associated memory capably of computation.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>typedef <emphasis>signed-version-of-processor_type</emphasis> processor_difference_type;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Value:</term>
+
+              <listitem>
+                <para>This type indicates a difference between two
+                processor_type types. An instance can also be used to
+                increment a processor_type instance. [<emphasis>Note:
+                </emphasis> This type is not very useful to the user but is
+                required to satisfy constant iterator requirements in
+                [view.map]. ]</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="support.functions">
+    <title>Functions</title>
+
+    <titleabbrev>support.functions</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <synopsis>length_type <emphasis role="bold">num_processors</emphasis>() VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>The total number of processors executing the data-parallel
+              program.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>const_Vector&lt;processor_type, <emphasis>implementation-defined</emphasis>&gt;
+<emphasis role="bold">processor_set</emphasis>() VSIP_THROW((std::bad_alloc));</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>The set of processors executing the data-parallel
+              program.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>processor_type <emphasis role="bold">local_processor</emphasis>() VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>The local processor.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <synopsis>index_type <emphasis role="bold">local_processor_index</emphasis>() VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>The index of the local processor in the processor set.
+              (<code>processor_set().get(local_processor_index()) ==
+              local_processor()</code>).</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="support.constants">
+    <title>Constants</title>
+
+    <titleabbrev>support.constants</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A processor_type of value no_processor is used to indicate no
+        valid processor.</para>
+      </listitem>
+
+      <listitem>
+        <para>An index_type of value no_subblock is used to indicate no valid
+        subblock.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

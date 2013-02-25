@@ -1,0 +1,2343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xml:id="vsipl" 
+      xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <info>
+    <title>VSIPL Core Profile</title>
+    <subtitle>Version 1.4</subtitle>
+    <titleabbrev>VSIPL Core Profile 1.4</titleabbrev>
+    <authorgroup>
+      <author>
+        <orgname>
+	  <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="images/omg-logo.svg" format="SVG"/>
+            </imageobject>
+            <imageobject>
+              <imagedata fileref="images/omg-logo.png" format="PNG"/>
+            </imageobject>
+          </inlinemediaobject>
+	</orgname>
+      </author>
+    </authorgroup>
+
+    <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
+  </info>
+
+  <preface role="not.in.toc" xml:id="title1">
+    <!-- FIXME: DB requires a title but the OMG spec doesn't allow one. -->
+
+    <title/>
+
+    <para><emphasis role="bold">OMG Document Number:</emphasis>
+    formal/12-12-02</para>
+
+    <para><emphasis role="bold">Normative reference:</emphasis>
+    http://www.omg.org/spec/VSIPL</para>
+  </preface>
+
+  <chapter>
+    <title>Requirements</title>
+
+    <section>
+      <title>Introduction</title>
+
+      <para>This document contains minimum requirements for a VSIPL compliant
+      library meeting a profile called VSIPL Core, or just Core. This is a
+      companion requirements document to the VSIPL specification. All
+      functions and data types in the Core profile must meet all requirements
+      for functions and data types as defined in the VSIPL
+      specification.</para>
+    </section>
+
+    <section>
+      <title>Basic Data Types</title>
+
+      <para>This profile is a list of the (minimum) required functions to meet
+      a VSIPL Core profile. Implementation of the profile requires the
+      implementor to support VSIPL data types needed to implement the
+      functions.</para>
+
+      <para>To meet the minimum requirement for a VSIPL Core profile the
+      implementor need only support one float type, and one signed integer
+      type.</para>
+
+      <para>The following scalar data types are listed as a convenience. In
+      order to implement the functions of the Core profile in accordance with
+      the VSIPL specification these scalars must be defined. Note that
+      <code>_f</code> and <code>_i</code> denote some implementation dependent
+      float type and some implementation dependent (signed) integer type
+      respectively.</para>
+
+      <informaltable>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry align="center">Data Type</entry>
+
+              <entry align="center">Comments</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry><type>vsip_scalar_vi</type></entry>
+
+              <entry>Scalar vector index.</entry>
+            </row>
+
+            <row>
+              <entry><type>vsip_scalar_mi</type></entry>
+
+              <entry>Scalar matrix index.</entry>
+            </row>
+
+            <row>
+              <entry><type>vsip_scalar_bl</type></entry>
+
+              <entry>Scalar boolean.</entry>
+            </row>
+
+            <row>
+              <entry><type>vsip_scalar_f</type></entry>
+
+              <entry>Only a single float type is needed.</entry>
+            </row>
+
+            <row>
+              <entry><type>vsip_cscalar_f</type></entry>
+
+              <entry>Only a single complex float type of precision matching
+              <type>vsip_scalar_f</type> is needed.</entry>
+            </row>
+
+            <row>
+              <entry><type>vsip_scalar_i</type></entry>
+
+              <entry>A single signed integer type is needed</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+
+    <section>
+      <title>Function Profile for Core</title>
+
+      <section>
+        <title>Support Functions</title>
+
+        <para>All profiles must include <function>vsip_init</function> and
+        <function>vsip_finalize</function> support functions. In addition,
+        Core must include the following VSIPL support functions.</para>
+
+        <section>
+          <title>Block Support</title>
+
+          <para>The following set of functions are included for block support
+          in Core.</para>
+
+          <informaltable>
+            <tgroup cols="3">
+              <tbody>
+                <row>
+                  <entry>vsip_blockcreate_f</entry>
+
+                  <entry>vsip_blockcreate_i</entry>
+
+                  <entry>vsip_cblockcreate_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockbind_f</entry>
+
+                  <entry>vsip_blockbind_i</entry>
+
+                  <entry>vsip_cblockbind_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockfind_f</entry>
+
+                  <entry>vsip_blockfind_i</entry>
+
+                  <entry>vsip_cblockfind_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockdestroy_f</entry>
+
+                  <entry>vsip_blockdestroy_i</entry>
+
+                  <entry>vsip_cblockdestroy_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockadmit_f</entry>
+
+                  <entry>vsip_blockadmit_i</entry>
+
+                  <entry>vsip_cblockadmit_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockrelease_f</entry>
+
+                  <entry>vsip_blockrelease_i</entry>
+
+                  <entry>vsip_cblockrelease_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockrebind_f</entry>
+
+                  <entry>vsip_blockrebind_i</entry>
+
+                  <entry>vsip_cblockrebind_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockcreate_bl</entry>
+
+                  <entry>vsip_blockcreate_vi</entry>
+
+                  <entry>vsip_blockcreate_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockbind_bl</entry>
+
+                  <entry>vsip_blockbind_vi</entry>
+
+                  <entry>vsip_blockbind_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockfind_bl</entry>
+
+                  <entry>vsip_blockfind_vi</entry>
+
+                  <entry>vsip_blockfind_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockdestroy_bl</entry>
+
+                  <entry>vsip_blockdestroy_vi</entry>
+
+                  <entry>vsip_blockdestroy_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockadmit_bl</entry>
+
+                  <entry>vsip_blockadmit_vi</entry>
+
+                  <entry>vsip_blockadmit_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockrelease_bl</entry>
+
+                  <entry>vsip_blockrelease_vi</entry>
+
+                  <entry>vsip_blockrelease_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_blockrebind_bl</entry>
+
+                  <entry>vsip_blockrebind_vi</entry>
+
+                  <entry>vsip_blockrebind_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_cstorage</entry>
+
+                  <entry/>
+
+                  <entry/>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+
+          <para>Total functions are 43 for block support.</para>
+        </section>
+
+        <section>
+          <title>Vector View Support</title>
+
+          <para>The following set of functions are included for vector view
+          support in Core.</para>
+
+          <informaltable>
+            <tgroup cols="3">
+              <tbody>
+                <row>
+                  <entry>vsip_vbind_f</entry>
+
+                  <entry>vsip_vbind_i</entry>
+
+                  <entry>vsip_cvbind_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcreate_f</entry>
+
+                  <entry>vsip_vcreate_i</entry>
+
+                  <entry>vsip_cvcreate_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vdestroy_f</entry>
+
+                  <entry>vsip_vdestroy_i</entry>
+
+                  <entry>vsip_cvdestroy_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_valldestroy_f</entry>
+
+                  <entry>vsip_valldestroy_i</entry>
+
+                  <entry>vsip_cvalldestroy_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcloneview_f</entry>
+
+                  <entry>vsip_vcloneview_i</entry>
+
+                  <entry>vsip_cvcloneview_f</entry>
+                </row>
+
+                <row>
+                  <entry/>
+
+                  <entry/>
+
+                  <entry>vsip_vrealview_f</entry>
+                </row>
+
+                <row>
+                  <entry/>
+
+                  <entry/>
+
+                  <entry>vsip_vimagview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vsubview_f</entry>
+
+                  <entry>vsip_vsubview_i</entry>
+
+                  <entry>vsip_cvsubview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetattrib_f</entry>
+
+                  <entry>vsip_vgetattrib_i</entry>
+
+                  <entry>vsip_cvgetattrib_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetblock_f</entry>
+
+                  <entry>vsip_vgetblock_i</entry>
+
+                  <entry>vsip_cvgetblock_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetoffset_f</entry>
+
+                  <entry>vsip_vgetoffset_i</entry>
+
+                  <entry>vsip_cvgetoffset_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetstride_f</entry>
+
+                  <entry>vsip_vgetstride_i</entry>
+
+                  <entry>vsip_cvgetstride_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetlength_f</entry>
+
+                  <entry>vsip_vgetlength_i</entry>
+
+                  <entry>vsip_cvgetlength_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputattrib_f</entry>
+
+                  <entry>vsip_vputattrib_i</entry>
+
+                  <entry>vsip_cvputattrib_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputoffset_f</entry>
+
+                  <entry>vsip_vputoffset_i</entry>
+
+                  <entry>vsip_cvputoffset_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputstride_f</entry>
+
+                  <entry>vsip_vputstride_i</entry>
+
+                  <entry>vsip_cvputstride_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputlength_f</entry>
+
+                  <entry>vsip_vputlength_i</entry>
+
+                  <entry>vsip_cvputlength_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vget_f</entry>
+
+                  <entry>vsip_vget_i</entry>
+
+                  <entry>vsip_cvget_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vput_f</entry>
+
+                  <entry>vsip_vput_i</entry>
+
+                  <entry>vsip_cvput_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vbind_bl</entry>
+
+                  <entry>vsip_vbind_vi</entry>
+
+                  <entry>vsip_cvbind_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcreate_bl</entry>
+
+                  <entry>vsip_vcreate_vi</entry>
+
+                  <entry>vsip_cvcreate_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vdestroy_bl</entry>
+
+                  <entry>vsip_vdestroy_vi</entry>
+
+                  <entry>vsip_cvdestroy_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_valldestroy_bl</entry>
+
+                  <entry>vsip_valldestroy_vi</entry>
+
+                  <entry>vsip_cvalldestroy_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcloneview_bl</entry>
+
+                  <entry>vsip_vcloneview_vi</entry>
+
+                  <entry>vsip_cvcloneview_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vsubview_bl</entry>
+
+                  <entry>vsip_vsubview_vi</entry>
+
+                  <entry>vsip_cvsubview_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetattrib_bl</entry>
+
+                  <entry>vsip_vgetattrib_vi</entry>
+
+                  <entry>vsip_cvgetattrib_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetblock_bl</entry>
+
+                  <entry>vsip_vgetblock_vi</entry>
+
+                  <entry>vsip_cvgetblock_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetoffset_bl</entry>
+
+                  <entry>vsip_vgetoffset_vi</entry>
+
+                  <entry>vsip_cvgetoffset_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetstride_bl</entry>
+
+                  <entry>vsip_vgetstride_vi</entry>
+
+                  <entry>vsip_cvgetstride_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vgetlength_bl</entry>
+
+                  <entry>vsip_vgetlength_vi</entry>
+
+                  <entry>vsip_cvgetlength_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputattrib_bl</entry>
+
+                  <entry>vsip_vputattrib_vi</entry>
+
+                  <entry>vsip_cvputattrib_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputoffset_bl</entry>
+
+                  <entry>vsip_vputoffset_vi</entry>
+
+                  <entry>vsip_cvputoffset_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputstride_bl</entry>
+
+                  <entry>vsip_vputstride_vi</entry>
+
+                  <entry>vsip_cvputstride_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vputlength_bl</entry>
+
+                  <entry>vsip_vputlength_vi</entry>
+
+                  <entry>vsip_cvputlength_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vget_bl</entry>
+
+                  <entry>vsip_vget_vi</entry>
+
+                  <entry>vsip_cvget_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vput_bl</entry>
+
+                  <entry>vsip_vput_vi</entry>
+
+                  <entry>vsip_cvput_mi</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+
+          <para>Total functions are 104 for vector view support.</para>
+        </section>
+
+        <section>
+          <title>Vector View Copy Support</title>
+
+          <para>The following vector copy functions are included as part of
+          the VSIPL Core Profile.</para>
+
+          <informaltable>
+            <tgroup cols="2">
+              <tbody>
+                <row>
+                  <entry>vsip_vcopy_f_f</entry>
+
+                  <entry>vsip_vcopy_vi_i</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcopy_f_i</entry>
+
+                  <entry>vsip_vcopy_mi_mi</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcopy_i_f</entry>
+
+                  <entry>vsip_vcopy_bl_bl</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_cvcopy_f_f</entry>
+
+                  <entry>vsip_vcopy_bl_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcopy_i_i</entry>
+
+                  <entry>vsip_vcopy_f_bl</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_vcopy_vi_vi</entry>
+
+                  <entry/>
+                </row>
+
+                <row>
+                  <entry>vsip_vcopy_i_vi</entry>
+
+                  <entry/>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+
+          <para>Total functions are 12 for copy support.</para>
+        </section>
+
+        <section>
+          <title>Matrix View Support</title>
+
+          <para>The following matrix view support functions are included in
+          the VSIPL Core profile.</para>
+
+          <informaltable>
+            <tgroup cols="2">
+              <tbody>
+                <row>
+                  <entry>vsip_mbind_f</entry>
+
+                  <entry>vsip_cmbind_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mcreate_f</entry>
+
+                  <entry>vsip_cmcreate_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mdestroy_f</entry>
+
+                  <entry>vsip_cmdestroy_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_malldestroy_f</entry>
+
+                  <entry>vsip_cmalldestroy_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mcloneview_f</entry>
+
+                  <entry>vsip_cmcloneview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_msubview_f</entry>
+
+                  <entry>vsip_cmsubview_f</entry>
+                </row>
+
+                <row>
+                  <entry/>
+
+                  <entry>vsip_mrealview_f</entry>
+                </row>
+
+                <row>
+                  <entry/>
+
+                  <entry>vsip_mimagview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vs ip_mrowview_f</entry>
+
+                  <entry>vsip_cmrowview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vs ip_mcolview_f</entry>
+
+                  <entry>vsip_cmcolview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vs ip_mdiagview_f</entry>
+
+                  <entry>vsip_cmdiagview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vs ip_mtransview_f</entry>
+
+                  <entry>vsip_cmtransview_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mgetattrib_f</entry>
+
+                  <entry>vsip_cmgetattrib_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mgetblock_f</entry>
+
+                  <entry>vsip_cmgetblock_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mgetoffset_f</entry>
+
+                  <entry>vsip_cmgetoffset_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mgetrowstride_f</entry>
+
+                  <entry>vsip_cmgetrowstride_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mgetcolstride_f</entry>
+
+                  <entry>vsip_cmgetcolstride_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mgetrowlength_f</entry>
+
+                  <entry>vsip_cmgetrowlength_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mgetcollength_f</entry>
+
+                  <entry>vsip_cmgetcollength_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mputattrib_f</entry>
+
+                  <entry>vsip_cmputattrib_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mputoffset_f</entry>
+
+                  <entry>vsip_cmputoffset_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mputrowstride_f</entry>
+
+                  <entry>vsip_cmputrowstride_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mputcolstride_f</entry>
+
+                  <entry>vsip_cmputcolstride_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mputrowlength_f</entry>
+
+                  <entry>vsip_cmputrowlength_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mputcollength_f</entry>
+
+                  <entry>vsip_cmputcollength_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mget_f</entry>
+
+                  <entry>vsip_cmget_f</entry>
+                </row>
+
+                <row>
+                  <entry>vsip_mput_f</entry>
+
+                  <entry>vsip_cmput_f</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+
+          <para>Total functions are 52 for matrix view support.</para>
+        </section>
+
+        <section>
+          <title>Matrix View Copy Support</title>
+
+          <para>The following matrix copy functions are included in the VSIPL
+          Core profile.</para>
+
+          <informaltable>
+            <tgroup cols="2">
+              <tbody>
+                <row>
+                  <entry>vsip_mcopy_f_f</entry>
+
+                  <entry>vsip_cmcopy_f_f</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
+
+          <para>Total functions are 2 for matrix copy support.</para>
+        </section>
+      </section>
+
+      <section>
+        <title>Scalar functions</title>
+
+        <para>The following functions are included for real scalar support in
+        the VSIPL Core profile.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_matindex_mi</entry>
+
+                <entry>vsip_MATINDEX_mi</entry>
+              </row>
+
+              <row>
+                <entry>vsip_rowindex_mi</entry>
+
+                <entry>vsip_colindex_mi</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>The following functions are included for complex scalar support
+        in the VSIPL Core profile.</para>
+
+        <informaltable>
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>vsip_arg_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cadd_f</entry>
+
+                <entry>vsip_rcadd_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_conj_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cdiv_f</entry>
+
+                <entry/>
+
+                <entry>vsip_crdiv_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_cexp_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cjmul_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cmag_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cmagsq_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cmplx_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cmul_f</entry>
+
+                <entry>vsip_rcmul_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_cneg_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_crecip_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_csub_f</entry>
+
+                <entry>vsip_rcsub_f</entry>
+
+                <entry>vsip_crsub_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_csqrt_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_imag_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_polar_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_real_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_rect_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CADD_f</entry>
+
+                <entry>vsip_RCADD_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CONJ_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CDIV_f</entry>
+
+                <entry/>
+
+                <entry>vsip_CRDIV_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_CEXP_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CJMUL_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CMUL_f</entry>
+
+                <entry>vsip_RCMUL_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CNEG_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CRECIP_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CSUB_f</entry>
+
+                <entry>vsip_RCSUB_f</entry>
+
+                <entry>vsip_CRSUB_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_CSQRT_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_CMPLX_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>The following functions are included for random number scalar
+        support in the VSIPL Core profile.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_randu_f</entry>
+
+                <entry>vsip_crandu_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_randn_f</entry>
+
+                <entry>vsip_crandn_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>Total functions are 47 for scalar support.</para>
+      </section>
+
+      <section>
+        <title>Vector Elementwise Functions</title>
+
+        <para>The following vector and elementwise functions are included in
+        the VSIPL Core profile.</para>
+
+        <informaltable>
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>vsip_vacos_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vasin_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vatan_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vatan2_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vcos_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vexp_f</entry>
+
+                <entry>vsip_cvexp_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vexp10_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>visp_vlog_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vlog10_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsin_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsqrt_f</entry>
+
+                <entry>vsip_cvsqrt_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vtan_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_cvconj_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_veuler_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmag_f</entry>
+
+                <entry>vsip_cvmag_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vcmagsq_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmeanval_f</entry>
+
+                <entry>vsip_cvmeanval_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmeansqval_f</entry>
+
+                <entry>vsip_cvmeansqval_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vneg_f</entry>
+
+                <entry>vsip_cvneg_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vrecip_f</entry>
+
+                <entry>vsip_cvrecip_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vrsqrt_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsq_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsumval_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsumsqval_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vadd_f</entry>
+
+                <entry>vsip_cvadd_f</entry>
+
+                <entry>vsip_rcvadd_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_svadd_f</entry>
+
+                <entry>vsip_csvadd_f</entry>
+
+                <entry>vsip_rscvadd_f</entry>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_cvjdot_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vdiv_f</entry>
+
+                <entry>vsip_cvdiv_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_svdiv_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vdot_f</entry>
+
+                <entry>vsip_cvdot_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vhypot_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_cvjmul_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmul_f</entry>
+
+                <entry>vsip_cvmul_f</entry>
+
+                <entry>vsip_rcvmul_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vmmul_f</entry>
+
+                <entry>vsip_cvmmul_f</entry>
+
+                <entry>vsip_rvcmmul_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_svmul_f</entry>
+
+                <entry>vsip_csvmul_f</entry>
+
+                <entry>vsip_rscvmul_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vsub_f</entry>
+
+                <entry>vsip_cvsub_f</entry>
+
+                <entry>vsip_rcvsub_f</entry>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry/>
+
+                <entry>vsip_crvsub_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_svsub_f</entry>
+
+                <entry>vsip_csvsub_f</entry>
+
+                <entry>vsip_rscvsub_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vam_f</entry>
+
+                <entry>vsip_cvam_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vma_f</entry>
+
+                <entry>vsip_cvma_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmsa_f</entry>
+
+                <entry>vsip_cvmsa_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmsb_f</entry>
+
+                <entry>vsip_cvmsb_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsam_f</entry>
+
+                <entry>vsip_cvsam_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsbm_f</entry>
+
+                <entry>vsip_cvsbm_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsma_f</entry>
+
+                <entry>vsip_cvsma_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vsmsa_f</entry>
+
+                <entry>vsip_cvsmsa_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vleq_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vlge_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vlgt_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vlle_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vllt_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vlne_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vclip_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vinvclip_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmax_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmaxmg_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vcmaxmgsq_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vcmaxmqsqval_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmaxmgval_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmaxval_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vmin_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vminmg_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vcminmgsq_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vcminmgsqval_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vminmgval_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vminval_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vfill_f</entry>
+
+                <entry>vsip_cvfill_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vramp_f</entry>
+
+                <entry/>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vcmplx_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vexpoavg_f</entry>
+
+                <entry>vsip_cvexpoavg_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vgather_f</entry>
+
+                <entry>vsip_cvgather_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vimag_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_cvmodulate_f</entry>
+
+                <entry>vsip_vmodulate_f</entry>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vpolar_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vreal_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_vrect_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vscatter_f</entry>
+
+                <entry>vsip_cvscatter_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_vswap_f</entry>
+
+                <entry>vsip_cvswap_f</entry>
+
+                <entry/>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>The following functions are required for random support in the
+        VSIPL Core profile.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_vrandu_f</entry>
+
+                <entry>vsip_cvrandu_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vrandn_f</entry>
+
+                <entry>vsip_cvrandn_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_randcreate</entry>
+
+                <entry>vsip_randdestroy</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>The following integer functions are required to support integer
+        calculation in the VSIPL Core profile.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_vmag_i</entry>
+
+                <entry>vsip_vclip_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vneg_i</entry>
+
+                <entry>vsip_vinvclip_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vadd_i</entry>
+
+                <entry>vsip_vand_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_svadd_i</entry>
+
+                <entry>vsip_vnot_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vmul_i</entry>
+
+                <entry>vsip_vor_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_svmul_i</entry>
+
+                <entry>vsip_vxor_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vsub_i</entry>
+
+                <entry>vsip_vfill_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_svsub_i</entry>
+
+                <entry>vsip_vramp_i</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vgather_i</entry>
+
+                <entry>vsip_vscatter_i</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>The following boolean functions are required for boolean support
+        in the VSIPL Core profile.</para>
+
+        <informaltable>
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_vsumval_bl</entry>
+
+                <entry>vsip_vand_bl</entry>
+              </row>
+
+              <row>
+                <entry>vsip_valltrue_bl</entry>
+
+                <entry>vsip_vnot_bl</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vanytrue_bl</entry>
+
+                <entry>vsip_vor_bl</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vindexbool</entry>
+
+                <entry>vsip_vxor_bl</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <para>A total of 147 functions in vector and elementwise.</para>
+      </section>
+
+      <section>
+        <title>Signal Processing Functions</title>
+
+        <para>Core requires support for the following signal processing
+        functions.</para>
+
+        <table>
+          <title>Fast Fourier Transform</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>vsip_ccfftop_f</entry>
+
+                <entry>vsip_ccfftop_create_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_ccfftip_f</entry>
+
+                <entry>vsip_ccfftip_create_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_rcfftop_f</entry>
+
+                <entry>vsip_rcfftop_create_f</entry>
+
+                <entry>vsip_fft_getattr_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_crfftop_f</entry>
+
+                <entry>vsip_crfftop_create_f</entry>
+
+                <entry>vsip_fft_destroy_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_ccfftmop_f</entry>
+
+                <entry>vsip_ccfftmop_create_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_ccfftmip_f</entry>
+
+                <entry>vsip_ccfftmip_create_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_rcfftmop_f</entry>
+
+                <entry>vsip_rcfftmop_create_f</entry>
+
+                <entry>vsip_fftm_getattr_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_crfftmop_f</entry>
+
+                <entry>vsip_crfftmop_create_f</entry>
+
+                <entry>vsip_fftm_destroy_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Window Creation Functions</title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry>vsip_vcreate_hanning_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vcreate_blackman_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vcreate_kaiser_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vcreate_cheby_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>FIR Filter Functions</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_fir_create_f</entry>
+
+                <entry>vsip_cfir_create_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_firflt_f</entry>
+
+                <entry>vsip_cfirflt_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_fir_destroy_f</entry>
+
+                <entry>vsip_cfir_destroy_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_fir_getattr_f</entry>
+
+                <entry>vsip_cfir_getattr_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Convolution Function</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_conv1d_create_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_convolve1d_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_conv1d_destroy_f</entry>
+
+                <entry/>
+              </row>
+
+              <row>
+                <entry>vsip_conv1d_getattr_f</entry>
+
+                <entry/>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Correlation Functions</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_corr1d_create_f</entry>
+
+                <entry>vsip_ccorr1d_create_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_correlate1d_f</entry>
+
+                <entry>vsip_ccorrelate1d_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_corr1d_destroy_f</entry>
+
+                <entry>vsip_ccorr1d_destroy_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_corr1d_getattr_f</entry>
+
+                <entry>vsip_ccorr1d_getattr_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Histogram Function</title>
+
+          <tgroup cols="1">
+            <tbody>
+              <row>
+                <entry>vsip_vhisto_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>A total of 45 functions in Signal Processing.</para>
+      </section>
+
+      <section>
+        <title>Linear Algebra Functions</title>
+
+        <para>Core requires the following functions for linear algebra
+        manipulation.</para>
+
+        <table>
+          <title>Matrix Products</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry>vsip_vmprod_f</entry>
+
+                <entry>vsip_mprodt_f</entry>
+
+                <entry>vsip_cmprodt_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_cvmprod_f</entry>
+
+                <entry/>
+
+                <entry>vsip_cmprodh_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_mvprod_f</entry>
+
+                <entry>vsip_mprod_f</entry>
+
+                <entry>vsip_cmprod_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_cmvprod_f</entry>
+
+                <entry/>
+
+                <entry>vsip_cmprodj_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Matrix Transposes</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_mtrans_f</entry>
+
+                <entry>vsip_cmtrans_f</entry>
+              </row>
+
+              <row>
+                <entry/>
+
+                <entry>vsip_cmherm_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>General Matrix Product and Sum and Special Matrix
+          Products</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_gemp_f</entry>
+
+                <entry>vsip_cgemp_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_gems_f</entry>
+
+                <entry>vsip_cgems_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_vouter_f</entry>
+
+                <entry>vsip_cvouter_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>LU Decomposition</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_lud_create_f</entry>
+
+                <entry>vsip_clud_create_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_lud_f</entry>
+
+                <entry>vsip_clud_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_lud_getattr_f</entry>
+
+                <entry>vsip_clud_getattr_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_lusol_f</entry>
+
+                <entry>vsip_clusol_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_lud_destroy_f</entry>
+
+                <entry>vsip_clud_destroy_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Cholesky</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_chold_f</entry>
+
+                <entry>vsip_cchold_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_chold_create_f</entry>
+
+                <entry>vsip_cchold_create_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_cholsol_f</entry>
+
+                <entry>vsip_ccholsol_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_chold_getattr_f</entry>
+
+                <entry>vsip_cchold_getattr_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_chold_destroy_f</entry>
+
+                <entry>vsip_cchold_destroy_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>QRD</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_qrd_f</entry>
+
+                <entry>vsip_cqrd_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_qrd_create_f</entry>
+
+                <entry>vsip_cqrd_create_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_qrsol_f</entry>
+
+                <entry>vsip_cqrsol_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_qrdprodq_f</entry>
+
+                <entry>vsip_cqrdprodq_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_qrdsolr_f</entry>
+
+                <entry>vsip_cqrdsolr_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_qrd_getattr_f</entry>
+
+                <entry>vsip_cqrd_getattr_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_qrd_destroy_f</entry>
+
+                <entry>vsip_cqrd_destroy_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Special Solvers</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>vsip_toepsol_f</entry>
+
+                <entry>vsip_ctoepsol_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_covsol_f</entry>
+
+                <entry>vsip_ccovsol_f</entry>
+              </row>
+
+              <row>
+                <entry>vsip_llsqsol_f</entry>
+
+                <entry>vsip_cllsqsol_f</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>A total of required 59 functions in Linear Algebra.</para>
+
+        <para>A total of 513 functions are in the VSIPL Core Profile.</para>
+      </section>
+    </section>
+  </chapter>
+</book>

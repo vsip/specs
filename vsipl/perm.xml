@@ -1,0 +1,1608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="perm" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Permutation Functions</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>This clause defines functionality for a permute operation on VSIPL
+    matrices. The permute is done either by row or by column. This function
+    may be done in place.</para>
+
+    <section>
+      <title>Permute Fundamentals</title>
+
+      <para>We define both a single function for permute without a permute
+      object, and a function set which uses a permute object. The single
+      function is simpler to use but does not maintain the state of the
+      permute vector.</para>
+
+      <para>The more complicated permute defines a reusable object allowing
+      for early binding of information and data space to optimize the
+      permutation operation.</para>
+
+      <para>The permute function set consists of a permute object, a create
+      function, an initialize function, a permute operation, and a destroy
+      function. The permute object and method are implementation dependent;
+      however, the implementor must support in-place, as well as out of place
+      permutes for both permute functions.</para>
+
+      <para>To keep the interface simple permute is only done in one dimension
+      at a time. To permute both the rows and columns you must permute twice,
+      once for the row permute and once for the column permute.</para>
+
+      <section>
+        <title>Functionality</title>
+
+        <para>A permutation matrix P is an identity matrix with rows
+        re-ordered. Note the permute matrix will have exactly one “1” in each
+        row and in each column. All other elements in the row and column where
+        a one resides will be zero, and every row and column will contain a
+        one.</para>
+
+        <para>The matrix product</para>
+
+        <para><inlineequation>
+            <m:math display="inline">
+              <m:mrow>
+                <m:mi>C</m:mi>
+
+                <m:mo>←</m:mo>
+
+                <m:mrow>
+                  <m:mi>P</m:mi>
+
+                  <m:mo>⁢</m:mo>
+
+                  <m:mi>A</m:mi>
+                </m:mrow>
+              </m:mrow>
+            </m:math>
+          </inlineequation></para>
+
+        <para>will permute the rows of and A place the result in C , and the
+        matrix product</para>
+
+        <para><inlineequation>
+            <m:math display="inline">
+              <m:mrow>
+                <m:mi>C</m:mi>
+
+                <m:mo>←</m:mo>
+
+                <m:mrow>
+                  <m:mi>A</m:mi>
+
+                  <m:mo>⁢</m:mo>
+
+                  <m:mi>P</m:mi>
+                </m:mrow>
+              </m:mrow>
+            </m:math>
+          </inlineequation></para>
+
+        <para>will permute the columns of A and place the result in C . For
+        example (row permute)</para>
+
+        <para><inlineequation>
+            <m:math display="inline">
+              <m:mrow>
+                <m:mrow>
+                  <m:mo>[</m:mo>
+
+                  <m:mtable>
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+
+                  <m:mo>]</m:mo>
+                </m:mrow>
+
+                <m:mo>←</m:mo>
+
+                <m:mrow>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+
+                    <m:mtable>
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+                    </m:mtable>
+
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+
+                  <m:mo>×</m:mo>
+
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+
+                    <m:mtable>
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+                    </m:mtable>
+
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mrow>
+            </m:math>
+          </inlineequation></para>
+
+        <para>and (column permute)</para>
+
+        <para><inlineequation>
+            <m:math display="inline">
+              <m:mrow>
+                <m:mrow>
+                  <m:mo>[</m:mo>
+
+                  <m:mtable>
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>0,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>1,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>2,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,1</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,3</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,0</m:mn>
+                        </m:msub>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:msub>
+                          <m:mi>a</m:mi>
+
+                          <m:mn>3,2</m:mn>
+                        </m:msub>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+
+                  <m:mo>]</m:mo>
+                </m:mrow>
+
+                <m:mo>←</m:mo>
+
+                <m:mrow>
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+
+                    <m:mtable>
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>0,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>1,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,0</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,1</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,2</m:mn>
+                          </m:msub>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:msub>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>3,3</m:mn>
+                          </m:msub>
+                        </m:mtd>
+                      </m:mtr>
+                    </m:mtable>
+
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+
+                  <m:mo>×</m:mo>
+
+                  <m:mrow>
+                    <m:mo>[</m:mo>
+
+                    <m:mtable>
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+
+                      <m:mtr>
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>1</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+
+                        <m:mtd>
+                          <m:mi>0</m:mi>
+                        </m:mtd>
+                      </m:mtr>
+                    </m:mtable>
+
+                    <m:mo>]</m:mo>
+                  </m:mrow>
+                </m:mrow>
+              </m:mrow>
+            </m:math>
+          </inlineequation></para>
+
+        <para>Although permutation can be done with a matrix multiply, this is
+        not an efficient mechanism. In addition the permute matrix P is sparse
+        and not very handy to work with for the actual permute operation. Note
+        that P is always square and of size column length for row permutes and
+        of size row length for column permutes. The common mechanism is to
+        create an index vector of the proper size (size of permute matrix) and
+        to store the information contained in the P matrix by storing the
+        location of the ones in a vector P . Basically if a one is located at
+        P matrix location</para>
+
+        <para><inlineequation>
+            <m:math display="inline">
+              <m:mrow>
+                <m:mi>p</m:mi>
+
+                <m:mo>←</m:mo>
+
+                <m:mrow>
+                  <m:mo>[</m:mo>
+
+                  <m:mtable>
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mi>2</m:mi>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mi>0</m:mi>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mi>3</m:mi>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mi>1</m:mi>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+
+                  <m:mo>]</m:mo>
+                </m:mrow>
+              </m:mrow>
+            </m:math>
+          </inlineequation></para>
+
+        <para>Note the permutation vector is defined the same for both row and
+        column permutations.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Type Definitions for Permute</title>
+
+      <para>The implementation dependent type vsip_permute is defined for the
+      permute object. Note that the permute object name does not contain
+      depth, precision, or shape. Having a single type for permute means only
+      a single destroy and a single initialize function are needed; however
+      the create function and the permute function have depth, precision and
+      shape to allow the implementor freedom to properly allocate any
+      temporary space in the permute object.</para>
+
+      <synopsis>struct vsip_permuteattributes;/* vendor dependent */
+typedef struct vsip_permuteattributes vsip_permute;</synopsis>
+    </section>
+  </section>
+
+  <section>
+    <title>Permutation Functions</title>
+
+    <para>The following man pages represent permutation operations defined in
+    VSIPL.</para>
+
+    <informaltable>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry><function>vsip_dmpermute_create_p</function></entry>
+
+            <entry>Create a permute object.</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_permute_init</function></entry>
+
+            <entry>Initialize a permute object.</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_permute_destroy</function></entry>
+
+            <entry>Free memory associated with a permute object</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_dmpermute_p</function></entry>
+
+            <entry>Permute a matrix using a reusable permute object.</entry>
+          </row>
+
+          <row>
+            <entry><function>vsip_dmpermute_once_p</function></entry>
+
+            <entry>Permute a matrix using a permutation vector. The vector is
+            modified in the permutation so may only be used once unless
+            reinitialized.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    <section xml:id="mpermute_create">
+      <title>vsip_<replaceable>d</replaceable>mpermute_create_<replaceable>p</replaceable></title>
+
+      <para>Create a permute object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Allocate memory for a permute object and any necessary
+            memory needed for all permute functionality. At create an object
+            is created that can permute either by row or by column. The
+            permute direction (row or column) may not be changed after the
+            permute object is created, and the size of the matrix which can be
+            permuted is also set at create time. All permute objects have the
+            same type; however every permute create is keyed to the type of
+            matrix that will be permuted.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>vsip_permute * 
+vsip_dmpermute_create_p(vsip_length m, vsip_length n, vsip_major major);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>m</term>
+
+                <listitem>
+                  <para>Number of rows in matrix to be permuted.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>n</term>
+
+                <listitem>
+                  <para>Number of columns in matrix to be permuted.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>major</term>
+
+                <listitem>
+                  <para>Permute direction. VSIP_ROW implies that rows are
+                  permuted and VSIP_COL implies that columns are
+                  permuted.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Pointer to permute object or NULL on failure.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The lengths m and n must be greater than zero.</para>
+              </listitem>
+
+              <listitem>
+                <para>The major argument must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>The permute direction is set with the create function and
+            may not be reset. If permutes in both directions are required,
+            then they must be done with two different permute objects; one for
+            row permutes and one for column permutes.</para>
+
+            <para>This function is to provide early binding for permute
+            functionality. The returned permute object must be initialized
+            before using <function>vsip_permute_init</function>.</para>
+
+            <para>A development mode permute create function must set state
+            information indicating a valid object on create. This allows error
+            checking for a valid permute object. After this call the object
+            will either be valid or NULL.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example in
+            <function>vsip_<replaceable>d</replaceable>mpermute_<replaceable>p</replaceable></function>
+            description page.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="permute_init">
+      <title>vsip_permute_init</title>
+
+      <para>Initialize (or re-initialize) permute object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>This function initializes a permute object with a permute
+            vector. The permute vector is not attached to the permute object
+            and is not modified by the initialization phase. A permute object
+            may be re-initialized by calling this function with a new permute
+            vector. The information stored in a permute object is not changed
+            when
+            <function>vsip_<replaceable>d</replaceable>mpermute_<replaceable>p</replaceable></function>
+            is called.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>vsip_permute *
+vsip_dmpermute_create_p(vsip_length m, vsip_length n, vsip_major major);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>perm</term>
+
+                <listitem>
+                  <para>Permute object.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>p</term>
+
+                <listitem>
+                  <para>Index vector of rows or columns to permute.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Convenience pointer to permute object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para>The index vector p must be a valid permute vector. A valid
+            permute vector will have one index entry for each indexed element
+            of the permute vector. There will be exactly one index 0 and
+            exactly one index n-1 where n is the length of the vector p. Every
+            element in the index vector will have a value less than n, and no
+            value will be used more than once. The result of an invalid index
+            vector are implementation dependent.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The vector p must match the size of matrix and
+                associated permute direction used in the permute create
+                function (conformant).</para>
+              </listitem>
+
+              <listitem>
+                <para>The vector p must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The permute object must be valid or NULL.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>If this function is called with a NULL permute object, it
+            does nothing and returns NULL.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example in
+            <function>vsip_<replaceable>d</replaceable>mpermute_<replaceable>p</replaceable></function>
+            description page.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="permute_destroy">
+      <title>vsip_permute_destroy</title>
+
+      <para>Destroy a permute object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Free memory associated with a permute object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_permute_destroy(vsip_permute *perm);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>perm</term>
+
+                <listitem>
+                  <para>Valid permute object to destroy or NULL.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para>The permute object must be valid or NULL</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The permute object must be valid or NULL</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>A development mode permute destroy function must set the
+            permute object to invalid before destroying the permute object.
+            Since the object may remain in memory after destruction setting it
+            to invalid will allow error code to determine it is invalid even
+            if the object is not overwritten.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See example in
+            <function>vsip_<replaceable>d</replaceable>mpermute_<replaceable>p</replaceable></function>
+            description page.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="mpermute">
+      <title>vsip_<replaceable>d</replaceable>mpermute_<replaceable>p</replaceable></title>
+
+      <para>Permute a matrix.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Using an initialized permute object permute an input matrix
+            and place the output in an output matrix. If the input matrix and
+            the output matrix are the same as the input matrix, then an
+            in-place operation occurs. If the output matrix is not the same as
+            the input matrix, then elements that are not permuted are copied
+            into the corresponding element of the output matrix.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_dmpermute_p(const vsip_dmview_p *A, const vsip_permute *perm,
+                      const vsip_dmview_p *C);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>A</term>
+
+                <listitem>
+                  <para>Matrix view of input matrix.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>perm</term>
+
+                <listitem>
+                  <para>Conforming permute object created with permute create
+                  function
+                  <function>vsip_<replaceable>d</replaceable>mpermute_create_<replaceable>p</replaceable></function></para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>C</term>
+
+                <listitem>
+                  <para>Matrix view of input matrix.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para>The permute object must have been made with the proper
+            create function. The result of using a permute object which was
+            not created for the proper matrix type is implementation
+            dependent.</para>
+
+            <para>The size of the input matrix must equal the size used when
+            the permute object was created.</para>
+
+            <para>If A and C reference the same data space (in-place
+            operation), they must reference the exact same data space.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The matrix A and C must be conformant with each
+                other.</para>
+              </listitem>
+
+              <listitem>
+                <para>The permute object must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The permute object must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The views must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>For the permute object to be conformant it must have been
+            created with proper sizes and initialized.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/mpermute.c"
+                parse="text"/></programlisting>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="mpermute_once">
+      <title>vsip_<replaceable>d</replaceable>mpermute_once_<replaceable>p</replaceable></title>
+
+      <para>Permute a matrix.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Using a permute vector permute an input matrix placing the
+            output in an output matrix. If the input matrix and output matrix
+            are the same, then an in-place operation occurs. If the output
+            matrix is not the same as the input matrix, then elements that are
+            not permuted are copied into the corresponding element of the
+            output matrix. The permute vector may be modified by the permute
+            operation.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_dmpermute_once_p(const vsip_dmview_p *A, vsip_major major,
+                           const vsip_vview_vi *p, const vsip_dmview_p *C);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>A</term>
+
+                <listitem>
+                  <para>Matrix view of input matrix.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>major</term>
+
+                <listitem>
+                  <para><parameter>Permute direction. VSIP_ROW implies that
+                  rows are permuted and VSIP_COL implies that columns are
+                  permuted.</parameter></para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>p</term>
+
+                <listitem>
+                  <para>Index vector of rows or columns to permute.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>C</term>
+
+                <listitem>
+                  <para>Matrix view of output matrix.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para>The permute vector must be a proper permute vector. Proper
+            means each row or column is indexed exactly one time.</para>
+
+            <para>If A and C reference the same data space (in-place
+            operation), they must reference the exact same data space.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The matrix A and C must be conformant with each
+                other.</para>
+              </listitem>
+
+              <listitem>
+                <para>The permute vector must be conformant with the size of
+                the input/output matrices and the direction (major) of
+                permutation.</para>
+              </listitem>
+
+              <listitem>
+                <para>The views must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <programlisting><xi:include href="examples/mpermute_once.c"
+                parse="text"/></programlisting>
+
+            <para>Output of example is the same as that for
+            vsip_dmpermute_p.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

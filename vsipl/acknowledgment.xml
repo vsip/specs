@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="acknowledgment" xmlns="http://docbook.org/ns/docbook"
+	 xmlns:xi="http://www.w3.org/2001/XInclude">
+    <title>Acknowledgment</title>
+  <section>
+    <title>Acknowledgment</title>
+
+    <para>The VSIPL Forum would like to thank the participation of the
+    following organizations and individuals (<emphasis
+    role="bold">bold</emphasis> indicates a primary contributor):</para>
+
+    <informaltable frame="all">
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry><para>Alacron</para></entry>
+
+            <entry><para>Tom Charlesworth</para><para>Leo
+            Mirkin</para><para>Joe Sgro</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">CSP Inc, Multicomputer
+            Division</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">Sharon
+            Sacco</emphasis></para><para>Jim Waggett</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">Compaq Computer Corp. (Digital
+            Equipment Corp.)</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">Dwight
+            Manley</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">Defense Advanced Research Projects Agency</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">Jose Munoz</emphasis></para><para><emphasis role="bold">Col. Mark Swinson</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><para>DNA Computing Solutions, Inc.</para></entry>
+
+            <entry><para>Win Smith</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">Georgia Institute of Technology</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">Dan Campbell</emphasis></para><para><emphasis role="bold">Tom Egolf</emphasis></para><para><emphasis role="bold">Randy Janka</emphasis></para><para><emphasis role="bold">Mark Richards</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><emphasis role="bold">Hughes Electronic</emphasis></entry>
+            <entry><para><emphasis role="bold">E. Robert Tisdale</emphasis></para></entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">HRL Laboratories, LLC</emphasis></entry>
+            <entry><emphasis role="bold">David Schwartz</emphasis></entry>
+          </row>
+
+          <row>
+            <entry><emphasis role="bold">Khoral Research</emphasis></entry>
+            <entry><para>Joe Fogler</para><para><emphasis role="bold">Tom Robey</emphasis></para><para><emphasis role="bold">Jeremy Worley</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><emphasis role="bold">LNK Corp.</emphasis></entry>
+
+            <entry><emphasis role="bold">Carl Stevens</emphasis></entry>
+          </row>
+
+          <row>
+            <entry><emphasis role="bold">Lockheed Martin</emphasis></entry>
+
+            <entry><para>Billy Chin</para>
+	    <para>Mark Law</para>
+	    <para><emphasis role="bold">Rick Pancoast</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><emphasis role="bold">Mercury Computer
+            Systems</emphasis></entry>
+
+            <entry><para>Jon Green</para><para>Barry Isenstein</para><para><emphasis role="bold">Jamie Kenny</emphasis></para><para><emphasis role="bold">Arlan Pool</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry>
+	      <para><emphasis role="bold">Mississippi State University</emphasis></para>
+	    </entry>
+
+            <entry><para><emphasis role="bold">Purushotham (Puri) Bangalore</emphasis></para><para><emphasis role="bold">Avi Purkayastha</emphasis></para><para>Tony Skjellum</para></entry>
+          </row>
+
+          <row>
+            <entry><emphasis role="bold">MIT Lincoln Laboratory</emphasis></entry>
+            <entry><para>Bob Bond</para><para><emphasis role="bold">James Lebak</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><para>MITRE</para></entry>
+
+            <entry><para>Mike Butler</para><para>Richard
+            Games</para><para>Brian Sroka</para></entry>
+          </row>
+
+          <row>
+            <entry><para>MPI Software Technology, Inc.</para></entry>
+
+            <entry><para>Clay Taylor</para></entry>
+          </row>
+
+          <row>
+            <entry><para>Northrop Grumman</para></entry>
+
+            <entry><para>Marc Campbell</para></entry>
+          </row>
+
+          <row>
+            <entry><para>Ohio State University</para></entry>
+
+            <entry><para>Stan Ahalt</para></entry>
+          </row>
+
+          <row>
+            <entry><emphasis role="bold">ORINCON</emphasis></entry>
+
+            <entry><para>John Carbone</para><para><emphasis role="bold">Robert
+            Redfield</emphasis></para><para><emphasis role="bold">Tom
+            Johnson</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><para>Raytheon Systems Company</para></entry>
+
+            <entry><para>Frank Miville</para><para>Gary Corbitt</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">Science and Technology
+            Associates</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">Jon
+            Hiller</emphasis></para><para>Ed Monachino</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">Silicon Graphics
+            Inc.</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">Bill
+            Harrod</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">SKY
+            Computers</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">Dimitris ChristodoulouJoe
+            Germann</emphasis></para><para>Richard
+            Jaenicke</para><para><emphasis role="bold">Michael
+            LeBlanc</emphasis></para><para>Leo Mirkin</para><para><emphasis
+            role="bold">Steve Paavola</emphasis></para><para><emphasis
+            role="bold">Sharon Sacco</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><para>Texas Instruments (Spectron)</para></entry>
+
+            <entry><para>David Friedland</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">Texas
+            Instruments</emphasis></para></entry>
+
+            <entry><para>Jacqueline Brenner</para><para><emphasis
+            role="bold">Dave Syiek</emphasis></para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">Texas Memory
+            Systems</emphasis></para></entry>
+
+            <entry><para><emphasis role="bold">John
+            Marsh</emphasis></para><para>Brian Shoemaker</para><para>Jonathon
+            Brauer</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">U.S. Air
+            Force</emphasis></para></entry>
+
+            <entry><para>Ralph Kohler</para><para>Rich
+            Linderman</para></entry>
+          </row>
+
+          <row>
+            <entry><para>Univ. of San Diego Supercomputing
+            Center</para></entry>
+
+            <entry><para>Tim Kaiser</para><para>Stuart Johnson</para></entry>
+          </row>
+
+          <row>
+            <entry><para><emphasis role="bold">U.S.
+            Navy</emphasis></para></entry>
+
+            <entry><para>Kris Briggs</para><para><emphasis role="bold">Keith
+            Bromley</emphasis></para><para><emphasis role="bold">Chuck
+            Browne</emphasis></para><para><emphasis role="bold">Jim
+            Broughton</emphasis></para><para><emphasis role="bold">Rob
+            Ginn</emphasis></para><para><emphasis role="bold">Clair
+            Guthrie</emphasis></para><para><emphasis role="bold">Roger
+            Hillson</emphasis></para><para><emphasis role="bold">Randall
+            Judd</emphasis></para><para><emphasis role="bold">Tony
+            Lee</emphasis></para><para><emphasis role="bold">Tim
+            Singleton</emphasis></para></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    <para>Special thanks to DARPA’s ITO Embedded High Performance Computing
+    program and the Navy’s TASP (PMS411) program for partial support of the
+    VSIPL Forum.</para>
+  </section>
+</chapter>

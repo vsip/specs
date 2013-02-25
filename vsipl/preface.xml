@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preface role="not.in.toc" version="5.0" xml:id="preface"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Preface</title>
+
+  <section>
+    <title>About the Object Management Group</title>
+
+    <section>
+      <title>OMG</title>
+
+      <para>Founded in 1989, the Object Management Group, Inc. (OMG) is an
+      open membership, not-for-profit computer industry standards consortium
+      that produces and maintains computer industry specifications for
+      interoperable, portable and reusable enterprise applications in
+      distributed, heterogeneous environments. Membership includes Information
+      Technology vendors, end users, government agencies and academia.</para>
+
+      <para>OMG member companies write, adopt, and maintain its specifications
+      following a mature, open process. OMG's specifications implement the
+      Model Driven Architecture® (MDA®), maximizing ROI through a
+      full-lifecycle approach to enterprise integration that covers multiple
+      operating systems, programming languages, middleware and networking
+      infrastructures, and software development environments. OMG's
+      specifications include: UML® (Unified Modeling Language™); CORBA®
+      (Common Object Request Broker Architecture); CWM™ (Common Warehouse
+      Metamodel); and industry-specific standards for dozens of vertical
+      markets.</para>
+
+      <para>More information on the OMG is available at <link
+      xlink:href="http://www.omg.org/"/>.</para>
+    </section>
+
+    <section>
+      <title>OMG Specifications</title>
+
+      <para>As noted, OMG specifications address middleware, modeling and
+      vertical domain frameworks. All OMG Specifications are available from
+      this URL:</para>
+
+      <para><link xlink:href="http://www.omg.org/spec"/></para>
+
+      <para>Specifications are organized by the following
+      categories:<itemizedlist>
+          <listitem>
+            <para>Business Modeling Specifications</para>
+          </listitem>
+
+          <listitem>
+            <para>Middleware Specifications</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>CORBA/IIOP</para>
+              </listitem>
+
+              <listitem>
+                <para>Data Distribution Services</para>
+              </listitem>
+
+              <listitem>
+                <para>Specialized CORBA</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>IDL/Language Mapping Specifications</para>
+          </listitem>
+
+          <listitem>
+            <para>Modeling and Metadata Specifications<itemizedlist>
+                <listitem>
+                  <para>UML, MOF, CWM, XMI</para>
+                </listitem>
+
+                <listitem>
+                  <para>UML Profile</para>
+                </listitem>
+              </itemizedlist></para>
+          </listitem>
+
+          <listitem>
+            <para>Modernization Specifications</para>
+          </listitem>
+
+          <listitem>
+            <para>Platform Independent Model (PIM), Platform Specific Model
+            (PSM), Interface Specifications</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>CORBAServices</para>
+              </listitem>
+
+              <listitem>
+                <para>CORBAFacilities</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>OMG Domain Specifications</para>
+          </listitem>
+
+          <listitem>
+            <para>CORBA Embedded Intelligence Specifications</para>
+          </listitem>
+
+          <listitem>
+            <para>CORBA Security Specifications</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <para>All of OMG’s formal specifications may be downloaded without
+      charge from our website. (Products implementing OMG specifications are
+      available from individual suppliers.) Copies of specifications,
+      available in PostScript and PDF format, may be obtained from the
+      Specifications Catalog cited above or by contacting the Object
+      Management Group, Inc. at:</para>
+
+      <address>Object Management Group
+109 Highland Avenue
+Needham, MA  02494 
+USA
+Tel: +1-781-444-0404
+Fax: +1-781-444-0320
+Email: pubs@omg.org</address>
+
+      <para>Certain OMG specifications are also available as ISO standards.
+      Please consult http://www.iso.org</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Typographical Conventions</title>
+
+    <para>The type styles shown below are used in this document to distinguish
+    programming statements from ordinary English. However, these conventions
+    are not used in tables or section headings where no distinction is
+    necessary.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>code</code></term>
+
+        <listitem>
+          <para>Programming language elements</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><function>function</function></term>
+
+        <listitem>
+          <para>A function reference</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><parameter>parameter</parameter></term>
+
+        <listitem>
+          <para>A function / template parameter</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section>
+    <title>Issues</title>
+
+    <para>The reader is encouraged to report any technical or editing
+    issues/problems with this specification to
+    http://www.omg.org/report_issue.htm.</para>
+  </section>
+
+  <section>
+    <title>Acknowledgment</title>
+
+    <para>VSIPL 1.1 API by David A. Schwartz, Randall R. Judd, William J.
+    Harrod, and Dwight P. Manley, 2002 June 11, as approved by the VSIPL
+    Forum.</para>
+
+    <para>Submitted by OMG members Anthony Skjellum, RunTime Computing
+    Solutions, LLC and Stefan Seefeld, Mentor Graphics.</para>
+  </section>
+</preface>

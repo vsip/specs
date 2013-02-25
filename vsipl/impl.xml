@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="impl" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Notes to Implementers</title>
+
+  <section>
+    <title>Incomplete Type Definitions</title>
+
+    <para>VSIPL objects are implemented via incomplete type definitions. All
+    members of the resulting objects are opaque. Incomplete type definitions
+    are accomplished in the following manner. Example: The library
+    implementation uses a header file that contains the following definition
+    of the type <type>vsip_bar</type>:</para>
+
+    <para><programlisting>struct foo 
+{ 
+  int x; 
+  int y; 
+  float *x;
+   … 
+}; 
+typedef struct foo vsip_bar; </programlisting></para>
+
+    <para>The application programmer is provided a related header file (but
+    not given access to the implementation header files) that contains the
+    following definition of the type <type>vsip_bar</type>:</para>
+
+    <para><programlisting>struct foo; 
+typedef struct foo vsip_bar; </programlisting></para>
+
+    <para>This allows the application programmer to declare pointers to
+    objects of type vsip_bar. Functions are provided by the implementation to
+    create the vsip_bar structure and return the pointer to the structure. for
+    instance</para>
+
+    <para><programlisting>vsip_bar *bar =vsip_bar_create(arg);</programlisting></para>
+
+    <para>This returned pointer is then used as an argument to functions.
+    Since the user has no knowledge of the private structures the implementor
+    must supply all functions which operate on the structure. The purpose here
+    is to prevent the user from producing non-portable applications, and to
+    allow the implementor maximum ability to optimize their code in a portable
+    library. The compiler provides strict type checking. It does not allow the
+    application programmer to access any of the elements of the
+    structure.</para>
+  </section>
+
+  <section>
+    <title>Checking for Object Validity</title>
+
+    <para>All VSIPL objects in development mode should be implemented with a
+    “magic number” data tag. When an object is destroyed the magic number
+    should be set to a value that indicates an invalid object. This is so that
+    development mode can detect attempts to operate on destroyed objects. This
+    is what is implied by an errors requirement such as, “All the objects must
+    be valid.”</para>
+
+    <para>It is further suggested that the magic number be unique for each
+    object type. This is a convenience for debugging. The application
+    programmer relies on the compiler to enforce type correctness of
+    arguments.</para>
+  </section>
+</chapter>

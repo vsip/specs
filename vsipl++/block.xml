@@ -1,0 +1,3222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xreflabel="[block]" xml:id="block"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Blocks</title>
+
+  <titleabbrev>block</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause describes components that VSIPL++ programs may use to
+      store and use data. A block is an interface to a logically contiguous
+      array of data. The Dense class is a block. A view is an interface
+      supporting data-parallel operations. Vector, Matrix, and Tensor classes
+      satisfy this interface.</para>
+    </listitem>
+
+    <listitem>
+      <para>A map specifies how a block can be divided into subblocks.
+      [<emphasis>Note: </emphasis> For a program executing on a single
+      processor, there should be no need to indicate any particular map since
+      default template arguments and default function arguments should
+      suffice. A VSIPL++ implementation restricted to supporting only a single
+      processor will probably just define empty map classes and will probably
+      not define the view constructors in <olink targetdoc="vsiplxx-par"
+      targetptr="view.vector.constructors"/>, <olink targetdoc="vsiplxx-par"
+      targetptr="view.matrix.constructors"/>, and <olink
+      targetdoc="vsiplxx-par" targetptr="view.tensor.constructors"/>. ]</para>
+    </listitem>
+  </orderedlist>
+
+  <section xml:id="block.req">
+    <title>Block requirements</title>
+
+    <titleabbrev>block.req</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Every <emphasis>block</emphasis> is a logically contiguous array
+        of data. Blocks provide element-wise operations to access the data.
+        Blocks do not, in general, provide data-parallel access to the data.
+        [<emphasis>Note: </emphasis> There is no requirement that a block
+        store data by allocating memory to hold the data. For example, a block
+        may compute the data dynamically. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>A block is said to be <emphasis><inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional</emphasis> (where <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> is a positive integer) if it supports
+        <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional access. An <emphasis><inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>,<inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional block</emphasis> may be both
+        <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional and <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional, where <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> and <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> are distinct positive integers. [<emphasis>Note:
+        </emphasis> For example, a single block may support both 1- and
+        2-dimensional access. A 1,2-dimensional block can be used as the
+        underlying storage for both vector and matrix views. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>The type of objects stored in these components must meet the
+        same requirements as types specified for numeric types (ISO14882,
+        [lib.numeric.requirements]). [<emphasis>Note: </emphasis> (ISO14882,
+        [lib.numeric.requirements]/2) states that, if any operation on such a
+        type throws an exception, the effects are undefined. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>A block may store only one type of values.</para>
+      </listitem>
+
+      <listitem>
+        <para>Blocks may be modifiable or non-modifiable. The data of a
+        <emphasis>modifiable block</emphasis> can be changed; the data of a
+        <emphasis>non-modifiable block</emphasis> cannot be changed.</para>
+      </listitem>
+
+      <listitem>
+        <para>Every block shall satisfy the requirements in <xref
+        linkend="blockrequirements"/>. In <xref linkend="blockrequirements"/>,
+        <type>B</type> denotes an <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional block class containing objects of type
+        T, b denotes a value of type B, X denotes a dimension_type instance
+        with value <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, i_1,…,i_x denote <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> values of type index_type, d denotes a value of
+        type dimension_type, and M denotes a map type. <table
+            xml:id="blockrequirements">
+            <caption>Block requirements</caption>
+
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>assertion/note, pre/post-condition</th>
+            </tr>
+
+            <tr>
+              <td><code>B::value_type</code></td>
+
+              <td><type>T</type></td>
+
+              <td/>
+            </tr>
+
+            <tr>
+              <td><code>B::reference_type</code></td>
+
+              <td><para>lvalue of <type>T</type></para></td>
+
+              <td/>
+            </tr>
+
+            <tr>
+              <td><code>B::const_reference_type</code></td>
+
+              <td><para>const lvalue of <type>T</type></para></td>
+
+              <td/>
+            </tr>
+
+            <tr>
+              <td><code>B::map_type</code></td>
+
+              <td><type>M</type></td>
+
+              <td/>
+            </tr>
+
+            <tr>
+              <td><code>b.get(i_1,i_2,…,i_x)</code></td>
+
+              <td><type>value_type</type></td>
+
+              <td/>
+            </tr>
+
+            <tr>
+              <td><code>b.size()</code></td>
+
+              <td><type>length_type</type></td>
+
+              <td><para>post: product of <code>size(d)</code> over all
+              <inlineequation>
+                  <m:math display="inline">
+                    <m:mrow>
+                      <m:mi>0</m:mi>
+
+                      <m:mo>≤</m:mo>
+
+                      <m:mi>d</m:mi>
+
+                      <m:mo>&lt;</m:mo>
+
+                      <m:mi>x</m:mi>
+                    </m:mrow>
+                  </m:math>
+                </inlineequation></para></td>
+            </tr>
+
+            <tr>
+              <td><code>b.size(X, d)</code></td>
+
+              <td><type>length_type</type></td>
+
+              <td><para>pre: <inlineequation>
+                  <m:math display="inline">
+                    <m:mrow>
+                      <m:mi>0</m:mi>
+
+                      <m:mo>≤</m:mo>
+
+                      <m:mi>d</m:mi>
+
+                      <m:mo>&lt;</m:mo>
+
+                      <m:mi>x</m:mi>
+                    </m:mrow>
+                  </m:math>
+                </inlineequation></para></td>
+            </tr>
+
+            <tr>
+              <td><code>b.increment_count()</code></td>
+
+              <td>none</td>
+
+              <td/>
+            </tr>
+
+            <tr>
+              <td><code>b.decrement_count()</code></td>
+
+              <td>none</td>
+
+              <td/>
+            </tr>
+
+            <tr>
+              <td><code>b.map()</code></td>
+
+              <td><para>reference to an <type>M</type></para></td>
+
+              <td><para>post: returns a map object</para></td>
+            </tr>
+          </table></para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> The above requirements imply that
+        an <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>,<inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional block will have two get functions; one
+        with <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> parameters and one with <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> parameters. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>For an <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>,<inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional block b, let Y represent a
+        dimension_type instance with value <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> and <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mi>j</m:mi>
+
+                    <m:mi>0</m:mi>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>,…,<inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mrow>
+                      <m:mi>j</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>y</m:mi>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> denote <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> values of type index_type. Let <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msubsup>
+                    <m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>x</m:mi>
+                    </m:mrow>
+                  </m:msubsup>
+
+                  <m:msubsup>
+                    <m:mrow>
+                      <m:mo>,</m:mo>
+
+                      <m:mi>d</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>x</m:mi>
+                    </m:mrow>
+                  </m:msubsup>
+
+                  <m:mo>,</m:mo>
+
+                  <m:mo>…</m:mo>
+
+                  <m:mo>,</m:mo>
+
+                  <m:msubsup>
+                    <m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>x</m:mi>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>x</m:mi>
+                    </m:mrow>
+                  </m:msubsup>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> represent the block’s <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional dimension-ordering. and
+        <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msubsup>
+                    <m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>y</m:mi>
+                    </m:mrow>
+                  </m:msubsup>
+
+                  <m:mo>,</m:mo>
+
+                  <m:msubsup>
+                    <m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>y</m:mi>
+                    </m:mrow>
+                  </m:msubsup>
+
+                  <m:mo>,</m:mo>
+
+                  <m:mo>…</m:mo>
+
+                  <m:mo>,</m:mo>
+
+                  <m:msubsup>
+                    <m:mrow>
+                      <m:mi>d</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>y</m:mi>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>y</m:mi>
+                    </m:mrow>
+                  </m:msubsup>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> represent the block’s <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional dimension-ordering. If and only if
+        offsets:<informalequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mtable>
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mo>(</m:mo>
+
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>i</m:mi>
+
+                            <m:msubsup>
+                              <m:mi>d</m:mi>
+
+                              <m:mi>0</m:mi>
+
+                              <m:mi>x</m:mi>
+                            </m:msubsup>
+                          </m:msub>
+
+                          <m:mo>∗</m:mo>
+
+                          <m:mrow>
+                            <m:mtext>b.size</m:mtext>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mi>X</m:mi>
+
+                              <m:msubsup>
+                                <m:mi>d</m:mi>
+
+                                <m:mi>1</m:mi>
+
+                                <m:mi>x</m:mi>
+                              </m:msubsup>
+                            </m:mfenced>
+                          </m:mrow>
+
+                          <m:mo>∗</m:mo>
+
+                          <m:mi>…</m:mi>
+
+                          <m:mo>∗</m:mo>
+
+                          <m:mrow>
+                            <m:mtext>b.size</m:mtext>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mi>X</m:mi>
+
+                              <m:msubsup>
+                                <m:mi>d</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mo>-</m:mo>
+
+                                  <m:mi>1</m:mi>
+                                </m:mrow>
+
+                                <m:mi>x</m:mi>
+                              </m:msubsup>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+
+                        <m:mo>)</m:mo>
+
+                        <m:mo>+</m:mo>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>i</m:mi>
+
+                              <m:msubsup>
+                                <m:mi>d</m:mi>
+
+                                <m:mi>1</m:mi>
+
+                                <m:mi>x</m:mi>
+                              </m:msubsup>
+                            </m:msub>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mrow>
+                              <m:mtext>b.size</m:mtext>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mi>X</m:mi>
+
+                                <m:msubsup>
+                                  <m:mi>d</m:mi>
+
+                                  <m:mi>2</m:mi>
+
+                                  <m:mi>x</m:mi>
+                                </m:msubsup>
+                              </m:mfenced>
+                            </m:mrow>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mi>…</m:mi>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mrow>
+                              <m:mtext>b.size</m:mtext>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mi>X</m:mi>
+
+                                <m:msubsup>
+                                  <m:mi>d</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>x</m:mi>
+
+                                    <m:mo>-</m:mo>
+
+                                    <m:mi>1</m:mi>
+                                  </m:mrow>
+
+                                  <m:mi>x</m:mi>
+                                </m:msubsup>
+                              </m:mfenced>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mo>)</m:mo>
+
+                          <m:mo>+</m:mo>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd columnalign="left">
+                        <m:mrow>
+                          <m:mi>…</m:mi>
+
+                          <m:mo>+</m:mo>
+
+                          <m:msub>
+                            <m:mi>i</m:mi>
+
+                            <m:msubsup>
+                              <m:mi>d</m:mi>
+
+                              <m:mrow>
+                                <m:mi>x</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mi>1</m:mi>
+                              </m:mrow>
+
+                              <m:mi>x</m:mi>
+                            </m:msubsup>
+                          </m:msub>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </informalequation>and <informalequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mtable>
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>j</m:mi>
+
+                              <m:msubsup>
+                                <m:mi>d</m:mi>
+
+                                <m:mi>0</m:mi>
+
+                                <m:mi>y</m:mi>
+                              </m:msubsup>
+                            </m:msub>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mrow>
+                              <m:mtext>b.size</m:mtext>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mi>Y</m:mi>
+
+                                <m:msubsup>
+                                  <m:mi>d</m:mi>
+
+                                  <m:mi>1</m:mi>
+
+                                  <m:mi>y</m:mi>
+                                </m:msubsup>
+                              </m:mfenced>
+                            </m:mrow>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mi>…</m:mi>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mrow>
+                              <m:mtext>b.size</m:mtext>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mi>Y</m:mi>
+
+                                <m:msubsup>
+                                  <m:mi>d</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>y</m:mi>
+
+                                    <m:mo>-</m:mo>
+
+                                    <m:mi>1</m:mi>
+                                  </m:mrow>
+
+                                  <m:mi>y</m:mi>
+                                </m:msubsup>
+                              </m:mfenced>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mo>)</m:mo>
+
+                          <m:mo>+</m:mo>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>j</m:mi>
+
+                              <m:msubsup>
+                                <m:mi>d</m:mi>
+
+                                <m:mi>1</m:mi>
+
+                                <m:mi>y</m:mi>
+                              </m:msubsup>
+                            </m:msub>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mrow>
+                              <m:mtext>b.size</m:mtext>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mi>Y</m:mi>
+
+                                <m:msubsup>
+                                  <m:mi>d</m:mi>
+
+                                  <m:mi>2</m:mi>
+
+                                  <m:mi>y</m:mi>
+                                </m:msubsup>
+                              </m:mfenced>
+                            </m:mrow>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mi>…</m:mi>
+
+                            <m:mo>∗</m:mo>
+
+                            <m:mrow>
+                              <m:mtext>b.size</m:mtext>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mi>Y</m:mi>
+
+                                <m:msubsup>
+                                  <m:mi>d</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>y</m:mi>
+
+                                    <m:mo>-</m:mo>
+
+                                    <m:mi>1</m:mi>
+                                  </m:mrow>
+
+                                  <m:mi>y</m:mi>
+                                </m:msubsup>
+                              </m:mfenced>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mo>)</m:mo>
+
+                          <m:mo>+</m:mo>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd columnalign="left">
+                        <m:mrow>
+                          <m:mi>…</m:mi>
+
+                          <m:mo>+</m:mo>
+
+                          <m:msub>
+                            <m:mi>j</m:mi>
+
+                            <m:msubsup>
+                              <m:mi>d</m:mi>
+
+                              <m:mrow>
+                                <m:mi>y</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mi>1</m:mi>
+                              </m:mrow>
+
+                              <m:mi>y</m:mi>
+                            </m:msubsup>
+                          </m:msub>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </informalequation> are equal, then accessors b.get(<inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, …, <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>x</m:mi>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>) and b.get(<inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mrow>
+                      <m:mi>j</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>0</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mrow>
+                      <m:mi>j</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, …, <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:msub>
+                    <m:mrow>
+                      <m:mi>j</m:mi>
+                    </m:mrow>
+
+                    <m:mrow>
+                      <m:mi>y</m:mi>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:msub>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>) access the same value.</para>
+
+        <figure xml:id="two-d-view">
+          <title>A two-dimensional view of a 1,2-dimensional block. Each
+          rectangle contains a value. Row and column indices are labelled on
+          the left and top, respectively.</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="images/2d-view.svg"
+                         format="SVG" scale="100"/>
+            </imageobject>
+
+            <imageobject>
+              <imagedata align="center" fileref="images/2d-view.png"
+                         format="PNG" scale="60"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <figure xml:id="one-d-view">
+          <title>A one-dimensional view of a 1,2-dimensional block. Each
+          rectangle contains a value. Value indices are labelled along the
+          top.</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="images/1d-view.svg"
+                         format="SVG" scale="100"/>
+            </imageobject>
+
+            <imageobject>
+              <imagedata align="center" fileref="images/1d-view.png"
+                         format="PNG" scale="80"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>[<emphasis>Example: </emphasis> Consider a 1,2-dimensional block
+        b with <code>b.size(2,0) == 2</code>, <code>b.size(2,1) == 4</code>,
+        and <code>b.size(1,0) == 8</code>. <xref linkend="two-d-view"
+        xrefstyle="select: label"/> has a 2-dimensional illustration of b,
+        which has two rows and four columns. Each value is labelled. <xref
+        linkend="one-d-view" xrefstyle="select: label"/> has a 1-dimensional
+        illustration of b, having eight values. Value <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>g</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> can be accessed using <code>b.get(6)</code> and
+        <code>b.get(1,2)</code> since <code>1 * b.size(2,1) + 2 == 6</code>.
+        ]</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> The ordering of indices and the
+        ordering of actual value storage (if values are stored) need not be
+        the same. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> Maps are specified in <olink
+        targetdoc="vsiplxx-par" targetptr="map"/>. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>Every modifiable block shall satisfy the requirements in Table
+        <xref linkend="modblockrequirements"/> in addition to the requirements
+        in <xref linkend="blockrequirements"/>. In <xref
+        linkend="modblockrequirements"/>, b denotes a modifiable block and t
+        denotes a value of type <type>T</type>. <table
+            xml:id="modblockrequirements">
+            <caption>Modifiable block requirements</caption>
+
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>assertion/note, pre/post-condition</th>
+            </tr>
+
+            <tr>
+              <td><code>b.put(i_1,i_2,…,i_x,t)</code></td>
+
+              <td>implementation-defined</td>
+
+              <td><para>post: <code>b.get(i_1,…,i_x) == t</code></para></td>
+            </tr>
+          </table></para>
+      </listitem>
+
+      <listitem>
+        <para>For a block that is <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional, b.map() must yield a <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional map where <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>y</m:mi>
+
+                  <m:mo>≥</m:mo>
+
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>. [<emphasis>Note: </emphasis> An <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional block will access at most the smallest
+        <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> dimensions of <code>b.map()</code>. The other
+        dimensions are ignored. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>For a block explicitly created by a VSIPL++ user, the effect of
+        creation should also include the effect of invoking
+        <function>increment_count</function> once.</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> For a block explicitly created by a
+        VSIPL++ user, the number of increment_count invocations should exceed
+        the number of decrement_count invocations if the block is to be used.
+        Such a block may go out of scope or be explicitly destroyed even if
+        the number of increment_count invocations exceeds the number of
+        decrement_count invocations. ]</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="block.alloc">
+      <title>Allocatable Block</title>
+
+      <titleabbrev>block.alloc</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> Some view constructors allocate
+          their underlying blocks. Such constructors must be invoked only if
+          the view’s underlying block is allocatable. ]</para>
+        </listitem>
+
+        <listitem>
+          <para>Blocks may be allocatable or non-allocatable. An
+          <emphasis>allocatable block</emphasis> has a specified interface
+          permitting its creation. A <emphasis>non-allocatable
+          block</emphasis> does not have the specified interface.</para>
+        </listitem>
+
+        <listitem>
+          <para>Let B denote an D-dimensional block class containing objects
+          of type T, dom denote a Domain&lt;D&gt;, map denote an object with
+          type B::map_type or a reference to an object with type B::map_type,
+          and value denote a value of type T. D must be positive. Let i0, i1,
+          …, ix be D index_types less than <code>dom[0].size()</code>,
+          <code>dom[1].size()</code>, …, <code>dom[D-1].size()</code>,
+          respectively.</para>
+        </listitem>
+
+        <listitem>
+          <para>B is allocatable if both of the following hold.</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>B(dom, map) is a valid expression constructing a B block
+              b, <code>b.get(i0, i1, ..., ix)</code> is valid, and b.map() is
+              a reference to map.</para>
+            </listitem>
+
+            <listitem>
+              <para>B(dom, value, map) is a valid expression constructing a B
+              block, <code>b.get(i0, i1, ..., ix)</code> is valid,
+              <code>b.get(i0, i1, ..., ix) == value</code>, and b.map() is a
+              reference to map.</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> An allocatable block can be
+          either modifiable or non-modifiable. ]</para>
+        </listitem>
+
+        <listitem>
+          <para>For a block allocated by a view constructor, the effect of
+          creation should include the effect of invoking
+          <function>increment_count</function>.</para>
+        </listitem>
+
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> For a block allocated by a view
+          constructor, the number of <function>increment_count</function>
+          invocations should meet or exceed the number of
+          <function>decrement_count</function> invocations if the block is to
+          be used. When the number of <function>decrement_count</function>
+          invocations exceeds, not just equals,
+          <function>increment_count</function> invocations, the block should
+          be deallocated. ]</para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="block.layout">
+    <title>Block layout</title>
+
+    <titleabbrev>block.layout</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>[<emphasis>Note</emphasis>: Layout attributes may be used to
+        describe specific blocks, as well as to capture layout requirements
+        for particular operations.]</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Header <emphasis>&lt;vsip/layout.hpp&gt;</emphasis> synopsis:</para>
+
+    <xi:include href="code/layout.hpp"/>
+
+    <section>
+      <title>Packing</title>
+
+      <titleabbrev>block.layout.packing</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The pack_type enumerators provide a taxonomy to capture the
+          packing of data in a multi-dimensional block:</para>
+
+          <synopsis>namespace vsip
+{
+  enum pack_type { any_packing, unit_stride, dense, 
+                   aligned, aligned_8, aligned_16, ..., aligned_1024};
+}</synopsis>
+        </listitem>
+
+        <listitem>
+          <para>These enumerators may be used to describe a given block, as
+          well as to express packing requirements for a given
+          operation.</para>
+        </listitem>
+
+        <listitem>
+          <para><constant>unit_stride</constant> specifies a block whose
+          minor-dimension stride is 1; <constant>dense</constant> additionally
+          specifies that the data is unpadded such that the block may be
+          accessed as a 1-D block. The <constant>aligned</constant> and
+          <constant>aligned_N</constant> values specify a unit-stride block
+          where the major-dimension strides are aligned to a particular data
+          alignment (where <constant>N</constant> is a value in bytes), or, in
+          the case of <constant>aligned</constant>, to an appropriate "best"
+          alignment for the hardware. Finally,
+          <constant>any_packing</constant> expresses that no particular
+          packing is known or required.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section>
+      <title>Storage Format</title>
+
+      <titleabbrev>block.layout.storage</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The storage_format_type enumerators indicate the storage
+          format of data:</para>
+
+          <synopsis>enum storage_format_type { any_storage_format, array, split_complex, interleaved_complex};</synopsis>
+        </listitem>
+
+        <listitem>
+          <para>These enumerators may be used to describe a given block, as
+          well as to express storage format requirements for a given
+          operation.</para>
+        </listitem>
+
+        <listitem>
+          <para>The storage format of a real-valued block is
+          <constant>array</constant>. For a block with value-type
+          <type>complex&lt;T&gt;</type>, the storage-format
+          <constant>array</constant> indicates that the data is held in an
+          array of type <type>complex&lt;T&gt;[]</type>. The storage-format
+          <constant>split_complex</constant> indicates that the data is held
+          in two distinct arrays of type <type>T[]</type>, while the
+          storage-format <constant>interleaved_complex</constant> indicates
+          that the data is held in an array of type <type>T[]</type>, with
+          real and imaginary values alternating.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section>
+      <title>The Layout class template</title>
+
+      <titleabbrev>block.layout.layoutclass</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The Layout class template encapsulates different data layout
+          attributes in a single type:</para>
+
+          <synopsis>template &lt;dimension_type D,
+          typename O,
+          pack_type P,
+          storage_format_type S = array&gt;
+struct Layout
+{
+  static dimension_type const dim = D;
+  typedef O order_type;
+  static pack_type const packing = P;
+  static storage_format_type const storage_format = S;
+};</synopsis>
+        </listitem>
+
+        <listitem>
+          <para>The possible values for dim, packing, and storage_format are
+          described above. The order_type type is either a tuple&lt;n,m,p&gt;
+          type or <type>any_order_type</type>.</para>
+        </listitem>
+
+        <listitem>
+          <para>A meta-function is provided to query the layout attributes of
+          any given block type:</para>
+
+          <synopsis>template &lt;typename Block&gt;
+struct get_block_layout
+{
+  Layout&lt;<emphasis>dimension-of-Block</emphasis>,
+         <emphasis>dimension-ordering-of-Block</emphasis>,
+         <emphasis>packing-of-Block</emphasis>,
+         <emphasis>storage-format-of-Block</emphasis>&gt; type;
+}</synopsis>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="block.dense">
+    <title>Dense block</title>
+
+    <titleabbrev>block.dense</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A Dense block is a modifiable, allocatable 1-dimensional block
+        or a <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>,<inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>-dimensional block, for a fixed <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>x</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, that explicitly stores one value for each Index
+        in its domain.</para>
+
+        <para>Header <emphasis>&lt;vsip/dense.hpp&gt;</emphasis>
+        synopsis</para>
+
+        <xi:include href="code/dense.hpp"/>
+      </listitem>
+
+      <listitem>
+        <para>If T is a complex type, let uT be its underlying type.</para>
+
+        <para>[<emphasis>Note: </emphasis> This header file is usually
+        included in views’ header files so direct inclusion is rarely
+        necessary. ]</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="block.dense.uservocab">
+      <title>User-specified storage vocabulary</title>
+
+      <titleabbrev>block.dense.uservocab</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> A VSIPL++ user can rely on the
+          library to allocate a Dense block’s storage or can explicitly
+          provide storage. Terminology for the latter, called blocks with
+          user-specified storage, are described here. ]</para>
+        </listitem>
+
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> A VSIPL++ user may provide one or
+          two arrays for a Dense object to use to store values. Each
+          one-dimensional array of memory is presented as a pointer to a Dense
+          constructor or a subsequent rebind call. The block must be admitted
+          before its use by VSIPL++ functions and objects. The pointer(s) and
+          the associated data storage must not be accessed except by VSIPL++
+          functions and objects while the block is admitted. Releasing the
+          block ends the admission so the pointer(s) and the associated data
+          storage may be used by non-VSIPL++ functions and objects. Rebinding
+          a block changes its pointer(s). A block’s pointer(s) can also be
+          found, i.e., returned to the user. This functionality provides some
+          of the functionality of VSIPL user data arrays. ]</para>
+        </listitem>
+
+        <listitem>
+          <para>A <emphasis>block with user-specified storage</emphasis> is a
+          Dense block created by a constructor taking one or two pointers.
+          [<emphasis>Note: </emphasis> The pointer or pointers should indicate
+          storage for the block’s data. ] A block that is not a block with
+          user-specified storage is a <emphasis>block without user-specified
+          storage</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>A block with user-specified storage can be
+          <emphasis>bound</emphasis> to a single pointer or to two pointers.
+          The data pointed to by these pointers must be in one of three
+          formats. A single pointer can point to a data array with
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> values in <emphasis>array format</emphasis> if
+          it points to a contiguous array with <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> values. If T is a complex type, a single pointer
+          can point to a data array in <emphasis>interleaved
+          format</emphasis>. The pointer to the underlying type has
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mn>2</m:mn>
+
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> values with even-indexed values represent the
+          real portions of <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> complex numbers and the odd-indexed values
+          represent the imaginary portions. Two pointers and a complex type T
+          are required to represent <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> complex values in a <emphasis>split
+          format</emphasis>. One pointer points to a data array of length
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> of the underlying type containing the real
+          portions of the complex numbers, while the other pointer points to
+          the <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> imaginary portions.</para>
+        </listitem>
+
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> enum user_storage_type indicates
+          a data array’s array, interleaved, or split format. no_user_format,
+          indicating a block without user-specified storage, equals the value
+          false. ]</para>
+        </listitem>
+
+        <listitem>
+          <para>The <emphasis>admit-release</emphasis> sequence of a block
+          with user-specified storage is the sequence of admit and release
+          invocations on the block.</para>
+        </listitem>
+
+        <listitem>
+          <para>An <emphasis>admitted block</emphasis> is a block with
+          user-specified storage such that its admit-release sequence ends
+          with an admit invocation. A block without user-specified storage is
+          also considered admitted at all times. A <emphasis>released
+          block</emphasis> is a block with user-specified storage such that
+          its admit-release sequence ends with a release invocation, or (the
+          sequence) is empty. [<emphasis>Note: </emphasis> A block with
+          user-specified storage that has been newly created is defined to be
+          released. ]</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="block.dense.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>block.dense.template</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><type>D</type> specifies a dimension that is at least one and
+          at most VSIP_MAX_DIMENSION. If D is 1, then the block will be a
+          1-dimensional block. If D is greater than 1, then the block will be
+          a 1,D-dimensional block.</para>
+        </listitem>
+
+        <listitem>
+          <para><type>T </type>specifies the type of values stored in the
+          Dense object. If D == 1, the only specializations which must be
+          supported have T the same as <type>scalar_f</type>,
+          <type>scalar_i</type>, <type>cscalar_f</type>,
+          <type>cscalar_i</type>, <type>bool</type>, <type>index_type</type>,
+          <type>Index&lt;1&gt;</type>, <type>Index&lt;2&gt;</type>, or
+          <type>Index&lt;3&gt;</type>. If D &gt; 1, the only specializations
+          which must be supported have T the same as <type>scalar_f</type>,
+          <type>scalar_i</type>, <type>cscalar_f</type>,
+          <type>cscalar_i</type>, or bool. An implementation is permitted to
+          prevent instantiation for other choices of T.</para>
+        </listitem>
+
+        <listitem>
+          <para><type>O</type> specifies the storage dimension ordering. Its
+          default value is the row_type type definition explicitly specifying
+          the first D dimensions, i.e., row-major ordering.
+          [<emphasis>Example: </emphasis> For D == 2, the default value is
+          row2_type. ]</para>
+
+          <para>If the implementation does not store the block’s values in a
+          one-dimensional ordering, this template parameter is ignored. This
+          template parameter does not affect program correctness or value
+          access.</para>
+
+          <para>If an implementation chooses to store a Dense block’s values
+          in a one-dimensional ordering, the storage dimension ordering
+          indicates how a multi-dimensional block’s values are linearized into
+          the ordering.</para>
+
+          <para>The one-dimensional ordering must obey the ordering determined
+          by <inlineequation>
+              <m:math display="inline">
+                <m:mo>&lt;</m:mo>
+              </m:math>
+            </inlineequation>, where <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>v</m:mi>
+
+                    <m:mo>&lt;</m:mo>
+
+                    <m:mi>w</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> indicates <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>v</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> is stored at a memory address less than
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>w</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation>. Given a tuple tuple&lt;<inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>d</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mn>0</m:mn>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation>, <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>d</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation>, …, <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>d</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mi>D</m:mi>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation>, …&gt;, the value with D-dimensional index
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mn>0</m:mn>
+
+                        <m:mo>,</m:mo>
+
+                        <m:mn>0</m:mn>
+                      </m:mrow>
+                    </m:msub>
+
+                    <m:mo>,</m:mo>
+
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mn>1</m:mn>
+
+                        <m:mo>,</m:mo>
+
+                        <m:mn>0</m:mn>
+                      </m:mrow>
+                    </m:msub>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mo>…</m:mo>
+
+                    <m:mo>,</m:mo>
+
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mi>D</m:mi>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mn>1</m:mn>
+
+                        <m:mo>,</m:mo>
+
+                        <m:mn>0</m:mn>
+                      </m:mrow>
+                    </m:msub>
+
+                    <m:mo stretchy="false">)</m:mo>
+
+                    <m:mo>&lt;</m:mo>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> the value with D-dimensional index
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mn>0</m:mn>
+
+                        <m:mo>,</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:msub>
+
+                    <m:mo>,</m:mo>
+
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mn>1</m:mn>
+
+                        <m:mo>,</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:msub>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mo>…</m:mo>
+
+                    <m:mo>,</m:mo>
+
+                    <m:msub>
+                      <m:mrow>
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mrow>
+                        <m:mi>D</m:mi>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mn>1</m:mn>
+
+                        <m:mo>,</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:msub>
+
+                    <m:mo stretchy="false">)</m:mo>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> if and only if <orderedlist>
+              <listitem>
+                <para>there is some <inlineequation>
+                    <m:math>
+                      <m:mstyle displaystyle="true">
+                        <m:mrow>
+                          <m:mi>j</m:mi>
+
+                          <m:mo>∈</m:mo>
+
+                          <m:mo stretchy="false">[</m:mo>
+
+                          <m:mn>0</m:mn>
+
+                          <m:mo>,</m:mo>
+
+                          <m:mi>D</m:mi>
+
+                          <m:mo stretchy="false">)</m:mo>
+                        </m:mrow>
+                      </m:mstyle>
+                    </m:math>
+                  </inlineequation> such that for all <inlineequation>
+                    <m:math>
+                      <m:mstyle displaystyle="true">
+                        <m:mrow>
+                          <m:mi>k</m:mi>
+
+                          <m:mo>∈</m:mo>
+
+                          <m:mo stretchy="false">[</m:mo>
+
+                          <m:mn>0</m:mn>
+
+                          <m:mo>,</m:mo>
+
+                          <m:mi>j</m:mi>
+
+                          <m:mo stretchy="false">)</m:mo>
+                        </m:mrow>
+                      </m:mstyle>
+                    </m:math>
+                  </inlineequation>, <inlineequation>
+                    <m:math>
+                      <m:mstyle displaystyle="true">
+                        <m:mrow>
+                          <m:msub>
+                            <m:mrow>
+                              <m:mi>c</m:mi>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>d</m:mi>
+
+                              <m:mo stretchy="false">(</m:mo>
+
+                              <m:mi>k</m:mi>
+
+                              <m:mo stretchy="false">)</m:mo>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>0</m:mn>
+                            </m:mrow>
+                          </m:msub>
+                        </m:mrow>
+                      </m:mstyle>
+                    </m:math>
+                  </inlineequation> == <inlineequation>
+                    <m:math>
+                      <m:mstyle displaystyle="true">
+                        <m:mrow>
+                          <m:msub>
+                            <m:mrow>
+                              <m:mi>c</m:mi>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>d</m:mi>
+
+                              <m:mo stretchy="false">(</m:mo>
+
+                              <m:mi>k</m:mi>
+
+                              <m:mo stretchy="false">)</m:mo>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+                          </m:msub>
+                        </m:mrow>
+                      </m:mstyle>
+                    </m:math>
+                  </inlineequation> and</para>
+              </listitem>
+
+              <listitem>
+                <para><inlineequation>
+                    <m:math>
+                      <m:mstyle displaystyle="true">
+                        <m:mrow>
+                          <m:msub>
+                            <m:mrow>
+                              <m:mi>c</m:mi>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>d</m:mi>
+
+                              <m:mo stretchy="false">(</m:mo>
+
+                              <m:mi>j</m:mi>
+
+                              <m:mo stretchy="false">)</m:mo>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>0</m:mn>
+                            </m:mrow>
+                          </m:msub>
+
+                          <m:mo>&lt;</m:mo>
+
+                          <m:msub>
+                            <m:mrow>
+                              <m:mi>c</m:mi>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>d</m:mi>
+
+                              <m:mo stretchy="false">(</m:mo>
+
+                              <m:mi>j</m:mi>
+
+                              <m:mo stretchy="false">)</m:mo>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+                          </m:msub>
+                        </m:mrow>
+                      </m:mstyle>
+                    </m:math>
+                  </inlineequation>.</para>
+              </listitem>
+            </orderedlist></para>
+        </listitem>
+
+        <listitem>
+          <para>M must be a map type with a default constructor. Its default
+          value is the Local_map type.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="block.dense.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>block.dense.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom, T const &amp;value, map_type const &amp;map = map_type())
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a modifiable Dense object containing the map map
+            and exactly dom.size() values equal to value.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para>std::bad_alloc indicating memory allocation for the returned
+            Dense failed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If <code>D == 1</code>, <code>*this</code> will have a
+            one-dimensional Domain&lt;1&gt; denoted domain with
+            Index&lt;1&gt;es 0, …, <code>dom.size()-1</code> and
+            <code>domain.first() == 0</code>. If <code>D != 1</code>,
+            <code>*this</code> will have two domains: Domain&lt;1&gt; domain1
+            with Index&lt;1&gt;es 0, …, <code>dom.size()-1</code> and
+            <code>domain1.first() == 0</code> and a Domain&lt;D&gt; domainD
+            with, for each 0 &lt;= d &lt; D, <code>domainD[d].size() ==
+            dom[d].size()</code>, <code>domainD[d].stride() == 1</code>, and
+            <code>domainD[d].first() == 0</code>. The object’s use count will
+            be one. <code>this-&gt;user_storage() ==
+            NO_USER_STORAGE</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom, map_type const &amp;map = map_type()) VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a modifiable Dense object containing dom.size()
+            unspecified values and the map map.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para>std::bad_alloc indicating memory allocation for the returned
+            Dense failed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If <code>D == 1</code>, <code>*this</code> will have a
+            one-dimensional Domain&lt;1&gt; denoted domain with
+            Index&lt;1&gt;es containing 0, …, <code>dom.size()-1</code>. If
+            <code>D != 1</code>, <code>*this</code> will have two domains:
+            Domain&lt;1&gt; domain1 with Index&lt;1&gt;es containing 0, …,
+            <code>dom.size()-1</code> and a Domain&lt;D&gt; domainD with, for
+            each <code>0 &lt;= d &lt; D</code>, <code>domainD[d].size() ==
+            dom[d].size()</code>, <code>domainD[d].stride() == 1</code>, and
+            <code>domainD[d].first() == 0</code>. The object’s use count will
+            be one. <code>this-&gt;user_storage() ==
+            NO_USER_STORAGE</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The block’s values are unspecified.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom, T*const pointer, map_type const &amp;map = map_type())
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>For all i such that <code>0 &lt;= i &amp;&amp; i &lt;
+            dom.size()</code>, <code>pointer[i] = T()</code> must be a valid
+            C++ expression.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a modifiable Dense object containing the map map.
+            If map indicates a distributed block, this subblock contains
+            dom.size() unspecified values.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para>std::bad_alloc indicating memory allocation for the returned
+            Dense failed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If <code>D == 1</code>, <code>*this</code> will have a
+            one-dimensional <type>Domain&lt;1&gt;</type> denoted domain with
+            Index&lt;1&gt;es containing 0, …, dom.size()-1. If <code>D !=
+            1</code>, <code>*this</code> will have two domains:
+            Domain&lt;1&gt; domain1 with Index&lt;1&gt;es containing 0, …,
+            dom.size()-1 and a Domain&lt;D&gt; domainD with, for each 0 &lt;=
+            d &lt; D, domainD[d].size() == dom[d].size(), domainD[d].stride()
+            == 1, and domainD[d].first() == 0. The object’s use count will be
+            one. this-&gt;user_storage() == array_format.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The block’s values are unspecified. This block’s values can
+            only be accessed after an admit call and before its corresponding
+            release call. When the block is admitted, the pointer[i] values
+            listed above may be modified by the block.</para>
+
+            <para>A VSIPL++ Library implemented using a VSIPL implementation
+            cannot provide this constructor for complex type T in a portable
+            way because the C++ and VSIPL++ standards do not specify a
+            particular complex number representation. Thus, it cannot be
+            guaranteed to match VSIPL functionality.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom, uT *const pointer, map_type const &amp;map = map_type())
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>T must be a complex type. For all i such that 0 &lt;= i
+            &amp;&amp; i &lt; 2*dom.size(), pointer[i] = uT() must be a valid
+            C++ expression.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a modifiable Dense object containing the map map.
+            If map indicates a distributed block, this subblock contains
+            dom.size() unspecified values.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para>std::bad_alloc indicating memory allocation for the returned
+            Dense failed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If D == 1, *this will have a one-dimensional Domain&lt;1&gt;
+            denoted domain with Index&lt;1&gt;es containing 0, …,
+            dom.size()-1. If D != 1, *this will have two domains:
+            Domain&lt;1&gt; domain1 with Index&lt;1&gt;es containing 0, …,
+            dom.size()-1 and a Domain&lt;D&gt; domainD with, for each 0 &lt;=
+            d &lt; D, domainD[d].size() == dom[d].size(), domainD[d].stride()
+            == 1, and domainD[d].first() == 0. The object’s use count will be
+            one. this-&gt;user_storage() == interleaved_format.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The block’s values are unspecified. This block’s values can
+            only be accessed after an admit call and before its corresponding
+            release call. When the block is admitted, the pointer[i] values
+            listed above may be modified by the block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom,
+      uT *const real_pointer,
+      uT *const imag_pointer,
+      map_type const &amp;map = map_type())
+   VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>T must be a complex type. For all i such that 0 &lt;= i
+            &amp;&amp; i &lt; dom.size(), real_pointer[i] = uT() and
+            imag_pointer[i] = uT() must be valid C++ expressions.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a modifiable Dense object containing the map map.
+            If map indicates a distributed block, this subblock contains
+            dom.size() unspecified values.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para>std::bad_alloc indicating memory allocation for the returned
+            Dense failed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If D == 1, *this will have a one-dimensional Domain&lt;1&gt;
+            denoted domain with Index&lt;1&gt;es containing 0, …,
+            dom.size()-1. If D != 1, *this will have two domains:
+            Domain&lt;1&gt; domain1 with Index&lt;1&gt;es containing 0, …,
+            dom.size()-1 and a Domain&lt;D&gt; domainD with, for each 0 &lt;=
+            d &lt; D, domainD[d].size() == dom[d].size(), domainD[d].stride()
+            == 1, and domainD[d].first() == 0. The object’s use count will be
+            one. this-&gt;user_storage() == split_format.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The block’s values are unspecified. This block’s values can
+            only be accessed after an admit call and before its corresponding
+            release call. When the block is admitted, the real_pointer[i] and
+            imag_pointer[i] values listed above may be modified by the
+            block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Dense</emphasis>(Domain&lt;D&gt; const &amp;dom,
+      std::pair&lt;uT*,uT*&gt; pointer,
+      map_type const &amp;map = map_type())
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>T must be a complex type. For all i such that <code>0 &lt;=
+            i &amp;&amp; i &lt; dom.size()</code>, <code>pointer.first[i] =
+            uT()</code> and <code>pointer.second[i] = uT()</code> must be
+            valid C++ expressions.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a modifiable Dense object containing the map map.
+            If map indicates a distributed block, this subblock contains
+            dom.size() unspecified values.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para>std::bad_alloc indicating memory allocation for the returned
+            Dense failed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If <code>D == 1</code>, <code>*this</code> will have a
+            one-dimensional Domain&lt;1&gt; denoted domain with
+            Index&lt;1&gt;es containing 0, …, dom.size()-1. If <code>D !=
+            1</code>, <code>*this</code> will have two domains:
+            Domain&lt;1&gt; domain1 with Index&lt;1&gt;es containing 0, …,
+            <code>dom.size()-1</code> and a Domain&lt;D&gt; domainD with, for
+            each 0 &lt;= d &lt; D, <code>domainD[d].size() ==
+            dom[d].size()</code>, <code>domainD[d].stride() == 1</code>, and
+            <code>domainD[d].first() == 0</code>. The object’s use count will
+            be one.<code> this-&gt;user_storage() ==
+            split_format.</code></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The block’s values are unspecified. This block’s values can
+            only be accessed after an admit call and before its corresponding
+            release call. When the block is admitted, the pointer.first[i] and
+            pointer.second[i] values listed above may be modified by the
+            block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">~Dense</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Destroys the Dense object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>It should no longer be used.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The object is destroyed regardless of its reference
+            count.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="block.dense.userdata">
+      <title>User-specified storage</title>
+
+      <titleabbrev>block.dense.userdata</titleabbrev>
+
+      <synopsis>void <emphasis role="bold">admit</emphasis>(bool update = true) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If <code>*this</code> is not a block with user-specified
+            storage or <code>*this</code> is an admitted block with
+            user-specified storage, there is no effect.</para>
+
+            <para>Otherwise, the block is admitted so that its data can be
+            used by VSIPL++ functions and objects. If <code>update ==
+            true</code>, the values of <code>*this</code> are updated. That
+            is, assuming<code> this-&gt;user_storage() == array_format</code>,
+            for all i such that <code>0 &lt;= i &amp;&amp; i &lt;
+            this-&gt;size()</code>, <code>this-&gt;get(i) ==
+            pointer[i]</code>, where pointer is the value returned by
+            this-&gt;find. Assuming <code>this-&gt;user_storage() ==
+            interleaved_format</code>, for all i such that <code>0 &lt;= i
+            &amp;&amp; i &lt; this-&gt;size()</code>,<code> this-&gt;get(i) ==
+            complex(pointer[2i], pointer[2i+1])</code>, where pointer is the
+            value returned by this-&gt;find. Assuming<code>
+            this-&gt;user_storage() == split_format</code>, for all i such
+            that <code>0 &lt;= i &amp;&amp; i &lt;
+            this-&gt;size()</code>,<code> this-&gt;get(i) ==
+            complex(real_pointer[i], imag_pointer[i])</code>, where
+            real_pointer and imag_pointer are the values returned by
+            this-&gt;find.</para>
+
+            <para>If <code>update == false</code>, the result of<code>
+            this-&gt;get(i)</code> for all<code> 0 &lt;= i &amp;&amp; i &lt;
+            this-&gt;size()</code> is unspecified.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Invoking admit on an admitted block is permitted. The intent
+            of using a false update flag is that, if the data in the
+            user-specified storage is not needed, then there is no need to
+            force consistency between the block’s storage and the
+            user-specified storage possibly through copies.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">release</emphasis>(bool update = false) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage or *this
+            is a released block with user-specified storage, there is no
+            effect. Otherwise, the block is released so that its data cannot
+            be used by VSIPL++ functions and objects.</para>
+
+            <para>If update == true, the values in the user-specified storage
+            are updated. Assuming this-&gt;user_storage() == array_format, for
+            all i such that 0 &lt;= i &amp;&amp; i &lt; this-&gt;size(),
+            this-&gt;get(i) == pointer[i], where pointer is the value returned
+            by this-&gt;find. Assuming this-&gt;user_storage() ==
+            interleaved_format, for all i such that 0 &lt;= i &amp;&amp; i
+            &lt; this-&gt;size(), this-&gt;get(i) == complex(pointer[2i],
+            pointer[2i+1]), where pointer is the value returned by
+            this-&gt;find. Assuming this-&gt;user_storage() == split_format,
+            for all i such that 0 &lt;= i &amp;&amp; i &lt; this-&gt;size(),
+            this-&gt;get(i) == complex(real_pointer[i], imag_pointer[i]),
+            where real_pointer and imag_pointer are the values returned by
+            this-&gt;find.</para>
+
+            <para>If update == false, the values in the user-specified storage
+            are unspecified. Assuming this-&gt;user_storage() == array_format
+            and pointer is the value returned by this-&gt;find, for all 0
+            &lt;= i &amp;&amp; i &lt; this-&gt;size(), pointer[i] is
+            unspecified. Assuming this-&gt;user_storage() ==
+            interleaved_format and pointer is the value returned by
+            this-&gt;find, for all 0 &lt;= i &amp;&amp; i &lt;
+            2*this-&gt;size(), pointer[i] is unspecified. Assuming
+            this-&gt;user_storage() == split_format and real_pointer and
+            imag_pointer are the values returned by this-&gt;find, for all 0
+            &lt;= i &amp;&amp; i &lt; this-&gt;size(), real_pointer[i] and
+            imag_pointer[i] are unspecified.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Invoking release on a released block is permitted. The
+            intent of using a false update flag is that, if the data in the
+            user-specified storage is no longer needed, then there is no need
+            to force consistency between the block’s storage and the
+            user-specified storage possibly through copies.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">release</emphasis>(bool update, T *&amp;pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with user-specified storage such that
+            this-&gt;user_storage() == array_format.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage, pointer
+            is assigned NULL, but there are no other effects. If *this is a
+            released block with user-specified storage, pointer is assigned
+            the value returned by this-&gt;find, but there are no other
+            effects.</para>
+
+            <para>Otherwise, the block is released so that its data may not be
+            used by VSIPL++ functions and objects. pointer is assigned the
+            value returned by this-&gt;find. If update == true, the values in
+            the user-specified storage are updated. For all i such that 0
+            &lt;= i &amp;&amp; i &lt; this-&gt;size(), this-&gt;get(i) ==
+            pointer[i]. If update == false, the values in the user-specified
+            storage are unspecified.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Invoking release on a released block is permitted. The
+            intent of using a false update flag is that, if the data in the
+            user-specified storage is no longer needed, then there is no need
+            to force consistency between the block’s storage and the
+            user-specified storage possibly through copies.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">release</emphasis>(bool update, uT *&amp;pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with user-specified storage such that
+            this-&gt;user_storage() == interleaved_format. T must be a complex
+            type.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage, pointer
+            is assigned NULL, but there are no other effects. If *this is a
+            released block with user-specified storage, pointer is assigned
+            the value returned by this-&gt;find, but there are no other
+            effects.</para>
+
+            <para>Otherwise, the block is released so that its data may not be
+            used by VSIPL++ functions and objects. pointer is assigned the
+            value returned by this-&gt;find. If update == true, the values in
+            the user-specified storage are updated. For all i such that 0
+            &lt;= i &amp;&amp; i &lt; this-&gt;size(), this-&gt;get(i) ==
+            complex(pointer[2i], pointer[2i+1]). If update == false, the
+            values in the user-specified storage are unspecified.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Invoking release on a released block is permitted. The
+            intent of using a false update flag is that, if the data in the
+            user-specified storage is no longer needed, then there is no need
+            to force consistency between the block’s storage and the
+            user-specified storage possibly through copies.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">release</emphasis>(bool update, uT *&amp;real_pointer, uT *&amp;imag_pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with user-specified storage such that
+            this-&gt;user_storage() equals interleaved_format or split_format.
+            T must be a complex type.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage,
+            real_pointer and imag_pointer are assigned NULL, but there are no
+            other effects. If *this is a released block with user-specified
+            storage, real_pointer and imag_pointer are assigned the values
+            returned by this-&gt;find, but there are no other effects.
+            Otherwise, the block is released so that its data may not be used
+            by VSIPL++ functions and objects. real_pointer and imag_pointer
+            are assigned the values returned by this-&gt;find.</para>
+
+            <para>If update == true, the values in the user-specified storage
+            are updated. Assuming this-&gt;user_storage() ==
+            interleaved_format, this-&gt;get(i) == complex(real_pointer[2i],
+            real_pointer[2i+1]) for all i such that 0 &lt;= i &amp;&amp; i
+            &lt; this-&gt;size(). Assuming this-&gt;user_storage() ==
+            split_format, this-&gt;get(i) == complex(real_pointer[i],
+            imag_pointer[i]) for all i such that 0 &lt;= i &amp;&amp; i &lt;
+            this-&gt;size().</para>
+
+            <para>If update == false, the values in the user-specified storage
+            are unspecified. Assuming this-&gt;user_storage() ==
+            interleaved_format, for all 0 &lt;= i &amp;&amp; i &lt; 2 *
+            this-&gt;size(), real_pointer[i] is unspecified. Assuming
+            this-&gt;user_storage() == split_format, for all 0 &lt;= i
+            &amp;&amp; i &lt; this-&gt;size(), real_pointer[i] and
+            imag_pointer[i] are unspecified.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Invoking release on a released block is permitted. The
+            intent of using a false update flag is that, if the data in the
+            user-specified storage is no longer needed, then there is no need
+            to force consistency between the block’s storage and the
+            user-specified storage possibly through copies.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">release</emphasis>(bool update, std::pair&lt;uT*,uT*&gt; &amp;pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with user-specified storage such that
+            this-&gt;user_storage() equals interleaved_format or split_format.
+            T must be a complex type.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage,
+            pointer.first and pointer.second are assigned NULL, but there are
+            no other effects. If *this is a released block with user-specified
+            storage, pointer.first and pointer.second are assigned the values
+            returned by this-&gt;find, but there are no other effects.
+            Otherwise, the block is released so that its data may not be used
+            by VSIPL++ functions and objects. pointer.first and pointer.second
+            are assigned the values returned by this-&gt;find.</para>
+
+            <para>If update == true, the values in the user-specified storage
+            are updated. Assuming this-&gt;user_storage() ==
+            interleaved_format, this-&gt;get(i) == complex(pointer.first[2i],
+            pointer.first[2i+1]) for all i such that 0 &lt;= i &amp;&amp; i
+            &lt; this-&gt;size(). Assuming this-&gt;user_storage() ==
+            split_format, this-&gt;get(i) == complex(pointer.first[i],
+            pointer.second[i]) for all i such that 0 &lt;= i &amp;&amp; i &lt;
+            this-&gt;size().</para>
+
+            <para>If update == false, the values in the user-specified storage
+            are unspecified. Assuming this-&gt;user_storage() ==
+            interleaved_format, for all 0 &lt;= i &amp;&amp; i &lt; 2 *
+            this-&gt;size(), pointer.first[i] is unspecified. Assuming
+            this-&gt;user_storage() == split_format, for all 0 &lt;= i
+            &amp;&amp; i &lt; this-&gt;size(), pointer.first[i] and
+            pointer.second[i] are unspecified.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Invoking release on a released block is permitted. The
+            intent of using a false update flag is that, if the data in the
+            user-specified storage is no longer needed, then there is no need
+            to force consistency between the block’s storage and the
+            user-specified storage possibly through copies.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">find</emphasis>(T *&amp;pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with this-&gt;user_storage() ==
+            array_format.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage, pointer
+            is assigned NULL. If *this is an admitted block with
+            user-specified storage, pointer is assigned NULL. If
+            !this-&gt;admitted(), pointer is assigned the latest pointer bound
+            to the block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">find</emphasis>(uT *&amp;pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with this-&gt;user_storage() ==
+            interleaved_format. T must be a complex type.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage, pointer
+            is assigned NULL. If *this is an admitted block with
+            user-specified storage, pointer is assigned NULL. If
+            !this-&gt;admitted(), pointer is assigned the latest pointer bound
+            to the block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">find</emphasis>(uT *&amp;real_pointer, uT *&amp;imag_pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with this-&gt;user_storage() equaling either
+            interleaved_format or split_format. T must be a complex
+            type.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage,
+            real_pointer and imag_pointer are assigned NULL. If *this is an
+            admitted block with user-specified storage, real_pointer and
+            imag_pointer are assigned NULL.</para>
+
+            <para>Otherwise !this-&gt;admitted(). If this-&gt;user_storage()
+            == interleaved_format, real_pointer is assigned the latest pointer
+            bound to the block, and imag_pointer is assigned NULL. If
+            this-&gt;user_storage() == split_format, real_pointer and
+            imag_pointer are assigned to the latest pointers bound to the
+            block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">find</emphasis>(std::pair&lt;uT*,uT*&gt; &amp;pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>*this must not be a block with user-specified storage or it
+            must be a block with this-&gt;user_storage() equaling either
+            interleaved_format or split_format. T must be a complex
+            type.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage,
+            pointer.first and pointer.second are assigned NULL. If *this is an
+            admitted block with user-specified storage, pointer.first and
+            pointer.second are assigned NULL.</para>
+
+            <para>Otherwise !this-&gt;admitted(). If this-&gt;user_storage()
+            == interleaved_format, pointer.first is assigned the latest
+            pointer bound to the block, and pointer.second is assigned NULL.
+            If this-&gt;user_storage() == split_format, pointer.first and
+            pointer.second are assigned to the latest pointers bound to the
+            block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(T *const pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>!this-&gt;admitted(). For all i such that 0 &lt;= i
+            &amp;&amp; i &lt; dom.size(), pointer[i] = T() must be a valid C++
+            expression.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Replaces the block’s user-specified storage pointer with
+            pointer.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(T *const pointer, Domain&lt;D&gt; const &amp;dom) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>!this-&gt;admitted()</code>. For all i such that
+            <code>0 &lt;= i &amp;&amp; i &lt; dom.size()</code>,
+            <code>pointer[i] = T()</code> must be a valid C++
+            expression.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Replaces the block’s user-specified storage pointer with
+            pointer. The block will be resized according to dom.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(uT *const pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>!this-&gt;admitted()</code>. T must be a complex type.
+            For all i such that 0 &lt;= i &amp;&amp; i &lt; 2 * dom.size(),
+            pointer[i] = T() must be a valid C++ expression.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Replaces the block’s user-specified storage pointer with
+            pointer.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;user_storage() ==
+            interleaved_format</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(uT *const pointer, Domain&lt;D&gt; const &amp;dom) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>!this-&gt;admitted()</code>. this-&gt;user_storage()
+            equals interleaved_format or split_format. T must be a complex
+            type. For all i such that 0 &lt;= i &amp;&amp; i &lt; 2 *
+            dom.size(), pointer[i] = T() must be a valid C++
+            expression.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Replaces the block’s user-specified storage pointer with
+            pointer. The block will be resized according to dom.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;user_storage() ==
+            interleaved_format</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(uT *const real_pointer, uT *const imag_pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>!this-&gt;admitted()</code>. T must be a complex type.
+            For all i such that <code>0 &lt;= i &amp;&amp; i &lt;
+            dom.size()</code>, <code>real_pointer[i] = T()</code> and
+            <code>imag_pointer[i] = T()</code> must be valid C++
+            expressions.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If <code>*this</code> is not a block with user-specified
+            storage, this function has no effect. Otherwise, replaces the
+            block’s user-specified storage pointers with real_pointer and
+            imag_pointer.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;user_storage() == split_format</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(uT*const real_pointer, uT*const imag_pointer, Domain&lt;D&gt; const &amp;dom) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>!this-&gt;admitted()</code>. T must be a complex type.
+            For all i such that <code>0 &lt;= i &amp;&amp; i &lt;
+            dom.size()</code>, <code>real_pointer[i] = T()</code> and
+            <code>imag_pointer[i] = T()</code> must be valid C++
+            expressions.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If <code>*this</code> is not a block with user-specified
+            storage, this function has no effect. Otherwise, replaces the
+            block’s user-specified storage pointers with real_pointer and
+            imag_pointer. The block will be resized according to
+            <parameter>dom</parameter>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;user_storage() == split_format</code>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(std::pair&lt;uT*,uT*&gt; pointer) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>!this-&gt;admitted()</code>. T must be a complex type.
+            For all i such that <code>0 &lt;= i &amp;&amp; i &lt;
+            dom.size()</code>, <code>pointer.first[i] = T()</code> and
+            <code>pointer.second[i] = T()</code> must be valid C++
+            expressions.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If <code>*this</code> is not a block with user-specified
+            storage, this function has no effect. Otherwise, replaces the
+            block’s user-specified storage pointers with
+            <code>pointer.first</code> and <code>pointer.second</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>this-&gt;user_storage() == split_format.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">rebind</emphasis>(std::pair&lt;uT*,uT*&gt; pointer, Domain&lt;D&gt; const &amp;dom) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>!this-&gt;admitted()</code>. T must be a complex type.
+            For all i such that <code>0 &lt;= i &amp;&amp; i &lt;
+            dom.size()</code>, <code>pointer.first[i] = T()</code> and
+            <code>pointer.second[i] = T()</code> must be valid C++
+            expressions.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>If *this is not a block with user-specified storage, this
+            function has no effect. Otherwise, replaces the block’s
+            user-specified storage pointers with <code>pointer.first</code>
+            and <code>pointer.second</code>. The block will be resized
+            according to <parameter>dom</parameter>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>this-&gt;user_storage() == split_format.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="block.dense.valaccess">
+      <title>Value Accessors</title>
+
+      <titleabbrev>block.dense.valaccess</titleabbrev>
+
+      <para>[<emphasis>Note: </emphasis> <xref linkend="block.dense"/>
+      requires get and put functions taking one index_type operand and, if D
+      != 1, taking exactly D operands. The restrictions for get and put follow
+      from the block requirements in <xref linkend="block.req"/>. Only
+      additional restrictions occur here. ]</para>
+
+      <para>A Dense block must be admitted to use get or put.</para>
+
+      <synopsis>value_type <emphasis role="bold">get</emphasis>(index_type, ..., index_type) const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>This member function is present only if D != 1.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis>unspecified</emphasis> <emphasis role="bold">put</emphasis>(index_type, ..., index_type, T const&amp;) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>This member function is present only if D != 1.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="block.dense.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>block.dense.accessors</titleabbrev>
+
+      <synopsis>length_type <emphasis role="bold">size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The number of values in the block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">size</emphasis>(dimension_type Dim, dimension_type d) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>Dim == 1 or Dim == D. 0 &lt;= d &amp;&amp; d &lt;
+            Dim.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>The number of values in dimension d of the block when viewed
+            as a Dim-dimensional block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">increment_count</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Increase the object’s use count.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">decrement_count</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Decrease the object’s use count. If the count becomes zero,
+            the block deallocates itself.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>map_type const &amp;<emphasis role="bold">map</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The block’s map as given to the constructor.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>enum user_storage_type <emphasis role="bold">user_storage</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>no_user_format if *this is a block without user storage.
+            array_format is *this is a user-specified block bound to an array
+            with array format. interleaved_format if *this is a user-specified
+            block bound to a complex array with interleaved format.
+            split_format if *this is a user-specified block bound to a complex
+            array with split format.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>bool <emphasis role="bold">admitted</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>true if and only if *this is admitted.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

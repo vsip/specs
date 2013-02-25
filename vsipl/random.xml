@@ -1,0 +1,5035 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0 OMG" xml:id="random"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Random Number Generation</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>This section covers the VSIPL random number generation
+    functionality. Two pseudo random number generators are defined. The first
+    generates uniform random numbers over the open interval zero to one. The
+    second approximates a Gaussian random number with zero mean and unit
+    variance.</para>
+
+    <section>
+      <title>Random Numbers</title>
+
+      <para>The create and destroy random number generator state are used for
+      both scalar, and “by element” random number generation. The “by element”
+      random number generators are required to produce the equivalent result
+      to applying the scalar generators to each element in the order that
+      proceeds from the minimum stride to the maximum stride dimension.</para>
+
+      <para>[For a matrix Z, where the stride between elements of a row is
+      less than the stride between elements of a column, where <inlineequation>
+          <m:math display="inline">
+            <m:msub>
+              <m:mi>x</m:mi>
+
+              <m:mi>j</m:mi>
+            </m:msub>
+          </m:math>
+        </inlineequation> denotes the jth output of the generator:</para>
+
+      <para><inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:msub>
+                <m:mi>z</m:mi>
+
+                <m:mi>0,0</m:mi>
+              </m:msub>
+
+              <m:mo>←</m:mo>
+
+              <m:msub>
+                <m:mi>x</m:mi>
+
+                <m:mi>i</m:mi>
+              </m:msub>
+            </m:mrow>
+
+            <m:mtext>,</m:mtext>
+
+            <m:mrow>
+              <m:msub>
+                <m:mi>z</m:mi>
+
+                <m:mi>0,1</m:mi>
+              </m:msub>
+
+              <m:mo>←</m:mo>
+
+              <m:msub>
+                <m:mi>x</m:mi>
+
+                <m:mrow>
+                  <m:mi>i</m:mi>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:msub>
+            </m:mrow>
+
+            <m:mtext>,</m:mtext>
+
+            <m:mrow>
+              <m:mtext>...</m:mtext>
+            </m:mrow>
+
+            <m:mrow>
+              <m:msub>
+                <m:mi>z</m:mi>
+
+                <m:mi>1,0</m:mi>
+              </m:msub>
+
+              <m:mo>←</m:mo>
+
+              <m:msub>
+                <m:mi>x</m:mi>
+
+                <m:mrow>
+                  <m:mi>i</m:mi>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:msub>
+            </m:mrow>
+
+            <m:mtext>,</m:mtext>
+
+            <m:mrow>
+              <m:mtext>...</m:mtext>
+            </m:mrow>
+
+            <m:mtext>,</m:mtext>
+
+            <m:mrow>
+              <m:msub>
+                <m:mi>z</m:mi>
+
+                <m:mi>M-1,N-1</m:mi>
+              </m:msub>
+
+              <m:mo>←</m:mo>
+
+              <m:msub>
+                <m:mi>x</m:mi>
+
+                <m:mrow>
+                  <m:mi>i</m:mi>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mi>M</m:mi>
+
+                  <m:mo>*</m:mo>
+
+                  <m:mi>N</m:mi>
+
+                  <m:mo>-</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:msub>
+            </m:mrow>
+          </m:math>
+        </inlineequation>]</para>
+    </section>
+
+    <section>
+      <title>VSIPL Random Number Generator Functions</title>
+
+      <para>VSIPL specifies a portable random number generator. The details of
+      the generator follow.</para>
+
+      <para>The code below implements a combined 32 bit random number
+      generator comprising variants (RAN0 and RAN1) of two popular 32 bit
+      random number generators.</para>
+
+      <para>RAN0 is loosely based (the constants chosen by D.E Knuth and H.W.
+      Lewis are used) on a linear congruential random number generator
+      popularized in Numerical Recipes [1], <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:msub>
+                <m:mi>x</m:mi>
+
+                <m:mi>i</m:mi>
+              </m:msub>
+
+              <m:mo>←</m:mo>
+
+              <m:mrow>
+                <m:mo>(</m:mo>
+
+                <m:mrow>
+                  <m:mrow>
+                    <m:mi>a</m:mi>
+
+                    <m:mo>⁢</m:mo>
+
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mrow>
+                        <m:mi>i</m:mi>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mi>1</m:mi>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mi>c</m:mi>
+                </m:mrow>
+
+                <m:mo>)</m:mo>
+              </m:mrow>
+
+              <m:mo>mod</m:mo>
+
+              <m:mi>m</m:mi>
+            </m:mrow>
+          </m:math>
+        </inlineequation>, where <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>a</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:mn>1664525</m:mn>
+            </m:mrow>
+          </m:math>
+        </inlineequation>, <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>c</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:mn>1013904223</m:mn>
+            </m:mrow>
+          </m:math>
+        </inlineequation>, and <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>m</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:msup>
+                <m:mn>2</m:mn>
+
+                <m:mn>32</m:mn>
+              </m:msup>
+            </m:mrow>
+          </m:math>
+        </inlineequation>.</para>
+
+      <para>RAN1 is based on the popular random number generator,
+      <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:msub>
+                <m:mi>y</m:mi>
+
+                <m:mi>i</m:mi>
+              </m:msub>
+
+              <m:mo>←</m:mo>
+
+              <m:mrow>
+                <m:mo>(</m:mo>
+
+                <m:mrow>
+                  <m:mrow>
+                    <m:mi>a</m:mi>
+
+                    <m:mo>⁢</m:mo>
+
+                    <m:msub>
+                      <m:mi>y</m:mi>
+
+                      <m:mrow>
+                        <m:mi>i</m:mi>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mi>1</m:mi>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mi>c</m:mi>
+                </m:mrow>
+
+                <m:mo>)</m:mo>
+              </m:mrow>
+
+              <m:mo>mod</m:mo>
+
+              <m:mi>m</m:mi>
+            </m:mrow>
+          </m:math>
+        </inlineequation>, where <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>a</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:mn>69069</m:mn>
+            </m:mrow>
+          </m:math>
+        </inlineequation>, <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>c</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:mn>1</m:mn>
+            </m:mrow>
+          </m:math>
+        </inlineequation>, and <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>m</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:msup>
+                <m:mn>2</m:mn>
+
+                <m:mn>32</m:mn>
+              </m:msup>
+            </m:mrow>
+          </m:math>
+        </inlineequation>. In the VSIPL version of RAN1, the addend c is set
+      equal to three instead of one.</para>
+
+      <para>The uniformly distributed 32 bit unsigned random integer created
+      by the combined generator represents the difference between the
+      uniformly distributed 32 bit unsigned integers created by RAN0 and RAN1.
+      The combined random number generator maintains two separate seed
+      sequences. One for RAN0, and the other for RAN1.</para>
+
+      <para>Both RAN0 and RAN1 have periods of <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+
+                <m:mn>32</m:mn>
+              </m:msup>
+
+              <m:mo>-</m:mo>
+
+              <m:mn>1</m:mn>
+            </m:mrow>
+          </m:math>
+        </inlineequation> iterations. Starting with a given pair of seeds for
+      the initial state, RAN0 and RAN1 complete periods and generate a state
+      with the starting seed pair at the same iteration. To increase the
+      period of the combined generator, the seed for RAN1 is incremented by
+      one at the end of each full period. This ensures that the starting state
+      (pair of seeds) will not be generated until RAN1 has passed through
+      <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+
+                <m:mn>32</m:mn>
+              </m:msup>
+            </m:mrow>
+          </m:math>
+        </inlineequation> periods. Thus, the period for the combined generator
+      is <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>64</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> iterations.</para>
+
+      <para>To promote independence in a parallel processing environment, two
+      actions are taken. The period of RAN0 is evenly divided among the
+      parallel threads, and the addend constant used by RAN1 is uniquely
+      assigned to each thread. These actions ensure that no two threads ever
+      use exactly the same sequence of initial state seed pairs.</para>
+
+      <para>To divide the period of RAN0 evenly among threads we first note
+      that we can generate the sequence <inlineequation>
+          <m:math display="inline">
+            <m:msub>
+              <m:mi>x</m:mi>
+
+              <m:mn>0</m:mn>
+            </m:msub>
+
+            <m:mo>,</m:mo>
+
+            <m:msub>
+              <m:mi>x</m:mi>
+
+              <m:mn>1</m:mn>
+            </m:msub>
+
+            <m:mo>,</m:mo>
+
+            <m:msub>
+              <m:mi>x</m:mi>
+
+              <m:mn>2</m:mn>
+            </m:msub>
+
+            <m:mo>,</m:mo>
+
+            <m:msub>
+              <m:mi>x</m:mi>
+
+              <m:mn>4</m:mn>
+            </m:msub>
+
+            <m:mo>,</m:mo>
+
+            <m:msub>
+              <m:mi>x</m:mi>
+
+              <m:mn>8</m:mn>
+            </m:msub>
+
+            <m:mo>,</m:mo>
+
+            <m:mo>⋯</m:mo>
+          </m:math>
+        </inlineequation> by applying the following recursion:</para>
+
+      <para><inlineequation>
+          <m:math display="inline">
+            <m:mtable columnalign="left" groupalign="{left}">
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mi>0</m:mi>
+                    </m:msub>
+
+                    <m:maligngroup/>
+
+                    <m:mo/>
+
+                    <m:mi/>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mi>1</m:mi>
+                    </m:msub>
+
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>x</m:mi>
+
+                            <m:mi>0</m:mi>
+                          </m:msub>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>a</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mi>2</m:mi>
+                    </m:msub>
+
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>x</m:mi>
+
+                            <m:mi>1</m:mi>
+                          </m:msub>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>a</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mi>0</m:mi>
+                                </m:msub>
+
+                                <m:mo>⁢</m:mo>
+
+                                <m:mi>a</m:mi>
+                              </m:mrow>
+
+                              <m:mo>+</m:mo>
+
+                              <m:mi>c</m:mi>
+                            </m:mrow>
+
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>a</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>x</m:mi>
+
+                            <m:mi>0</m:mi>
+                          </m:msub>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mi>2</m:mi>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mi>a</m:mi>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>x</m:mi>
+
+                            <m:mi>0</m:mi>
+                          </m:msub>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>a</m:mi>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>a</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+
+                            <m:mrow>
+                              <m:mi>a</m:mi>
+
+                              <m:mo>+</m:mo>
+
+                              <m:mi>1</m:mi>
+                            </m:mrow>
+
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mi>4</m:mi>
+                    </m:msub>
+
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>x</m:mi>
+
+                            <m:mi>0</m:mi>
+                          </m:msub>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mi>4</m:mi>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mi>3</m:mi>
+                          </m:msup>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mi>2</m:mi>
+                          </m:msup>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mi>a</m:mi>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>c</m:mi>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>x</m:mi>
+
+                              <m:mn>0</m:mn>
+                            </m:msub>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:msup>
+                              <m:mi>a</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msup>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2</m:mn>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mrow>
+                                  <m:msup>
+                                    <m:mi>a</m:mi>
+
+                                    <m:mn>3</m:mn>
+                                  </m:msup>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:msup>
+                                    <m:mi>a</m:mi>
+
+                                    <m:mn>2</m:mn>
+                                  </m:msup>
+                                </m:mrow>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mi>a</m:mi>
+                              </m:mrow>
+
+                              <m:mo>+</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>x</m:mi>
+
+                              <m:mn>0</m:mn>
+                            </m:msub>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:msup>
+                              <m:mi>a</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msup>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2</m:mn>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:msup>
+                                  <m:mi>a</m:mi>
+
+                                  <m:mn>2</m:mn>
+                                </m:msup>
+
+                                <m:mo>⁢</m:mo>
+
+                                <m:mrow>
+                                  <m:mo>(</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>a</m:mi>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mn>1</m:mn>
+                                  </m:mrow>
+
+                                  <m:mo>)</m:mo>
+                                </m:mrow>
+                              </m:mrow>
+
+                              <m:mo>+</m:mo>
+
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>a</m:mi>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mn>1</m:mn>
+                                </m:mrow>
+
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                            </m:mrow>
+
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>x</m:mi>
+
+                              <m:mn>0</m:mn>
+                            </m:msub>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:msup>
+                              <m:mi>a</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msup>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>2</m:mn>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+
+                              <m:mrow>
+                                <m:msup>
+                                  <m:mi>a</m:mi>
+
+                                  <m:mn>2</m:mn>
+                                </m:msup>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+
+                              <m:mrow>
+                                <m:mi>a</m:mi>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mi>8</m:mi>
+                    </m:msub>
+
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>x</m:mi>
+
+                              <m:mn>0</m:mn>
+                            </m:msub>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:msup>
+                              <m:mi>a</m:mi>
+
+                              <m:mn>4</m:mn>
+                            </m:msup>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:mn>4</m:mn>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+
+                                <m:mrow>
+                                  <m:msup>
+                                    <m:mi>a</m:mi>
+
+                                    <m:mn>4</m:mn>
+                                  </m:msup>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mn>1</m:mn>
+                                </m:mrow>
+
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+
+                              <m:mo>⁢</m:mo>
+
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+
+                                <m:mrow>
+                                  <m:msup>
+                                    <m:mi>a</m:mi>
+
+                                    <m:mn>2</m:mn>
+                                  </m:msup>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mn>1</m:mn>
+                                </m:mrow>
+
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                            </m:mrow>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+
+                              <m:mrow>
+                                <m:mi>a</m:mi>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:maligngroup/>
+
+                  <m:mo>⋯</m:mo>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:msup>
+                        <m:mi>2</m:mi>
+
+                        <m:mi>j</m:mi>
+                      </m:msup>
+                    </m:msub>
+
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mi>A</m:mi>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msub>
+                            <m:mi>x</m:mi>
+
+                            <m:mn>0</m:mn>
+                          </m:msub>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>C</m:mi>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+
+              <m:mtr>
+                <m:mtd>
+                  <m:mrow>
+                    <m:maligngroup/>
+
+                    <m:mo>=</m:mo>
+
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>x</m:mi>
+
+                            <m:mn>0</m:mn>
+                          </m:msub>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:msup>
+                            <m:mi>a</m:mi>
+
+                            <m:msup>
+                              <m:mi>2</m:mi>
+
+                              <m:mi>i</m:mi>
+                            </m:msup>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+
+                                <m:mrow>
+                                  <m:msup>
+                                    <m:mi>a</m:mi>
+
+                                    <m:msup>
+                                      <m:mi>2</m:mi>
+
+                                      <m:mrow>
+                                        <m:mi>i</m:mi>
+
+                                        <m:mo>-</m:mo>
+
+                                        <m:mi>1</m:mi>
+                                      </m:mrow>
+                                    </m:msup>
+                                  </m:msup>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mn>1</m:mn>
+                                </m:mrow>
+
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+
+                              <m:mo>⁢</m:mo>
+
+                              <m:mrow>
+                                <m:mo>(</m:mo>
+
+                                <m:mrow>
+                                  <m:msup>
+                                    <m:mi>a</m:mi>
+
+                                    <m:msup>
+                                      <m:mi>2</m:mi>
+
+                                      <m:mrow>
+                                        <m:mi>i</m:mi>
+
+                                        <m:mo>-</m:mo>
+
+                                        <m:mi>2</m:mi>
+                                      </m:mrow>
+                                    </m:msup>
+                                  </m:msup>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mn>1</m:mn>
+                                </m:mrow>
+
+                                <m:mo>)</m:mo>
+                              </m:mrow>
+                            </m:mrow>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mrow>
+                              <m:mo>⋯</m:mo>
+                            </m:mrow>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mrow>
+                              <m:mo>(</m:mo>
+
+                              <m:mrow>
+                                <m:mi>a</m:mi>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+
+                              <m:mo>)</m:mo>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mi>c</m:mi>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>mod</m:mo>
+
+                    <m:mi>m</m:mi>
+                  </m:mrow>
+                </m:mtd>
+              </m:mtr>
+            </m:mtable>
+          </m:math>
+        </inlineequation></para>
+
+      <para>After i-1 iterations, each term of new generator (using A and C)
+      skips over <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mi>i</m:mi>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms of the basic sequence generated by
+      RAN0.</para>
+
+      <para>The term A may be calculated by repeated squaring of a, (i-1)
+      times modulo m. The term C may be calculated in parallel with A by
+      repeatedly adding one to the previous partial product of A and
+      multiplying the previous partial product of C by the sum, (i-1) times.
+      The algorithm is shown below.</para>
+
+      <informaltable>
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry align="center">Iteration</entry>
+
+              <entry align="center">A</entry>
+
+              <entry align="center">C</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>0</entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:mi>a</m:mi>
+                  </m:math>
+                </inlineequation></entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:mi>c</m:mi>
+                  </m:math>
+                </inlineequation></entry>
+            </row>
+
+            <row>
+              <entry>1</entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:msup>
+                      <m:mi>a</m:mi>
+
+                      <m:mn>2</m:mn>
+                    </m:msup>
+                  </m:math>
+                </inlineequation></entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mo>(</m:mo>
+
+                        <m:mrow>
+                          <m:mi>a</m:mi>
+
+                          <m:mo>+</m:mo>
+
+                          <m:mn>1</m:mn>
+                        </m:mrow>
+
+                        <m:mo>)</m:mo>
+                      </m:mrow>
+
+                      <m:mo>⁢</m:mo>
+
+                      <m:mi>c</m:mi>
+                    </m:mrow>
+                  </m:math>
+                </inlineequation></entry>
+            </row>
+
+            <row>
+              <entry>2</entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:msup>
+                      <m:mi>a</m:mi>
+
+                      <m:mn>4</m:mn>
+                    </m:msup>
+                  </m:math>
+                </inlineequation></entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:mrow>
+                            <m:msup>
+                              <m:mi>a</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msup>
+
+                            <m:mo>+</m:mo>
+
+                            <m:mn>1</m:mn>
+                          </m:mrow>
+
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+
+                        <m:mo>⁢</m:mo>
+
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:mrow>
+                            <m:mi>a</m:mi>
+
+                            <m:mo>+</m:mo>
+
+                            <m:mn>1</m:mn>
+                          </m:mrow>
+
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>⁢</m:mo>
+
+                      <m:mi>c</m:mi>
+                    </m:mrow>
+                  </m:math>
+                </inlineequation></entry>
+            </row>
+
+            <row>
+              <entry>3</entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:msup>
+                      <m:mi>a</m:mi>
+
+                      <m:mn>8</m:mn>
+                    </m:msup>
+                  </m:math>
+                </inlineequation></entry>
+
+              <entry><inlineequation>
+                  <m:math display="inline">
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+
+                            <m:mrow>
+                              <m:msup>
+                                <m:mi>a</m:mi>
+
+                                <m:mn>4</m:mn>
+                              </m:msup>
+
+                              <m:mo>+</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+
+                          <m:mo>⁢</m:mo>
+
+                          <m:mrow>
+                            <m:mo>(</m:mo>
+
+                            <m:mrow>
+                              <m:msup>
+                                <m:mi>a</m:mi>
+
+                                <m:mn>2</m:mn>
+                              </m:msup>
+
+                              <m:mo>+</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+
+                            <m:mo>)</m:mo>
+                          </m:mrow>
+                        </m:mrow>
+
+                        <m:mo>⁢</m:mo>
+
+                        <m:mrow>
+                          <m:mo>(</m:mo>
+
+                          <m:mrow>
+                            <m:mi>a</m:mi>
+
+                            <m:mo>+</m:mo>
+
+                            <m:mn>1</m:mn>
+                          </m:mrow>
+
+                          <m:mo>)</m:mo>
+                        </m:mrow>
+                      </m:mrow>
+
+                      <m:mo>⁢</m:mo>
+
+                      <m:mi>c</m:mi>
+                    </m:mrow>
+                  </m:math>
+                </inlineequation></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>The technique is used in the first “for” loop within
+      vsip_randcreate to efficiently skip to the starting state assigned to a
+      given thread for use by RAN0.</para>
+
+      <para>In a parallel environment, each thread is assigned an addend for
+      RAN1 which corresponds to the prime number taken from the sequence of
+      prime numbers greater than or equal to three. Thus the first thread uses
+      three as the addend for RAN1, the second uses five as the addend for
+      RAN1, the third uses seven as the addend for RAN1, etc. This technique
+      assigns a different RAN1 random number generator to each thread.</para>
+
+      <para>By using the two techniques together, we define a very low
+      overhead random number generator with sub-sequence statistical
+      characteristics better than those of either RAN0 or RAN1. The new
+      generator has a period of <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>64</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> and can be used safely in many parallel processing
+      environments. In particular, statistically independent subsequences of
+      lengths up to approximately 264/N, where N is the number of parallel
+      sub-sequences required, are ensured.</para>
+
+      <para>References: [1] See pp. 275-276 of Numerical Recipes in FORTRAN,
+      The Art of Scientific Computing, Second Edition, William H. Press, et
+      al., Cambridge University Press, 1992.</para>
+    </section>
+
+    <section>
+      <title>Sample Implementation</title>
+
+      <para>The following is a sample C implementation of two uniform random
+      number generators. The comments have been formatted for
+      readability.</para>
+
+      <programlisting>#include &lt;float.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#include "private/vsip_scalar_typedefs.h"
+#include "vsip.h"
+/* Typedefs for unsigned and signed exactly 32 bit integers uint32_t and int32_t */
+#include "inttypes.h"
+#define A0 1664525 /* Parameters for RAN0 */
+#define C0 1013904223
+#define A1 69069 /* Parameters for RAN1 */
+#define C1 3
+#define RAN(state, A, C ) A*( state )+C
+#define RAN0( ptr ) RAN( ptr-&gt;seed0,ptr-&gt;a0,ptr-&gt;c0 )
+#define RAN1( ptr ) RAN( ptr-&gt;seed1,ptr-&gt;a1,ptr-&gt;c1 )</programlisting>
+
+      <para>The type of vsip_randstate in “vsip.h” should be an incomplete
+      type definition. The actual type should be opaque and defined in a place
+      like <filename>private/pvsip_scalar_typedefs.h</filename>
+      <programlisting>typedef struct vsip_rand_object 
+{ 
+  double double_scale; 
+  float float_scale; 
+  uint32_t seed0; 
+  uint32_t seed1; 
+  uint32_t seed2; 
+  int32_t numseqs; 
+  int32_t id; 
+  uint32_t a0; 
+  uint32_t c0; 
+  uint32_t a1; 
+  uint32_t c1; 
+} vsip_randstate;</programlisting><programlisting>vsip_randstate *
+vsip_randcreate(vsip_index seed,    /* Initial user seed */
+                vsip_index numseqs, /* Number of sub-sequences */
+                vsip_index id,      /* Subsequence id (0 &lt; id 2 numseqs) */
+                vsip_rng portable)  /* Portable or non-portable sequence */
+{ 
+  /* portable is ignored */
+  uint32_t A=A0,C=C0; /* Initialize RAN */
+  int32_t i;
+  uint32_t mask,skip;
+  vsip_randstate* state;
+  state = (vsip_randstate* )malloc(sizeof(vsip_randstate));
+  state-&gt;double_scale = (double)pow((double)2.0,(double)(-32));
+  state-&gt;float_scale = (float)pow((double)2.0,(double)(-24));
+  state-&gt;seed0 = seed;
+  state-&gt;seed1 = 1;
+  state-&gt;seed2 = 1;
+  state-&gt;numseqs = numseqs;
+  state-&gt;id = id;
+  state-&gt;a0 = A0;
+  state-&gt;c0 = C0;
+  state-&gt;a1 = A1;
+  state-&gt;c1 = C1;</programlisting></para>
+
+      <para>Find the skip size by dividing <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+
+                <m:mn>31</m:mn>
+              </m:msup>
+
+              <m:mo>-</m:mo>
+
+              <m:mn>1</m:mn>
+            </m:mrow>
+          </m:math>
+        </inlineequation> (<inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>32</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> cannot be represented in 32 bits), and multiplying
+      the quotient by the relative thread id.</para>
+
+      <programlisting>  skip = ((UINT_MAX/numseqs)*(id-1));</programlisting>
+
+      <para>Given a starting seed, the code below generates the starting seed
+      for the id'th sub-sequence of a set of numseqs sub-sequences of
+      RAN0.</para>
+
+      <para>With each loop iteration, a new random number generator is created
+      – on the fly – from the base random number generator RAN0. The new
+      generator issues a sub-sequence of the original sequence generated by
+      RAN0, such that given the same starting seed, each term of the
+      subsequence corresponds to every (<inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mi>i</m:mi>
+            </m:msup>
+          </m:math>
+        </inlineequation>)'th term of the original RAN0 sequence, where i
+      corresponds to the loop iteration.</para>
+
+      <para>To understand how this is used below, first note that the 32 bit
+      unsigned integer skip may be viewed as a polynomial</para>
+
+      <para><inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>skip</m:mi>
+
+              <m:mo>≡</m:mo>
+
+              <m:mrow>
+                <m:mrow>
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mi>P</m:mi>
+
+                          <m:mo>⁡</m:mo>
+
+                          <m:mfenced>
+                            <m:mn>31</m:mn>
+                          </m:mfenced>
+                        </m:mrow>
+
+                        <m:mo>⁢</m:mo>
+
+                        <m:msup>
+                          <m:mn>2</m:mn>
+
+                          <m:mn>31</m:mn>
+                        </m:msup>
+                      </m:mrow>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mi>P</m:mi>
+
+                          <m:mo>⁡</m:mo>
+
+                          <m:mfenced>
+                            <m:mn>30</m:mn>
+                          </m:mfenced>
+                        </m:mrow>
+
+                        <m:mo>⁢</m:mo>
+
+                        <m:msup>
+                          <m:mn>2</m:mn>
+
+                          <m:mn>30</m:mn>
+                        </m:msup>
+                      </m:mrow>
+                    </m:mrow>
+
+                    <m:mo>+</m:mo>
+
+                    <m:mo>⋯</m:mo>
+                  </m:mrow>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mi>P</m:mi>
+
+                      <m:mo>⁡</m:mo>
+
+                      <m:mfenced>
+                        <m:mn>1</m:mn>
+                      </m:mfenced>
+                    </m:mrow>
+
+                    <m:mo>⁢</m:mo>
+
+                    <m:mn>2</m:mn>
+                  </m:mrow>
+                </m:mrow>
+
+                <m:mo>+</m:mo>
+
+                <m:mrow>
+                  <m:mi>P</m:mi>
+
+                  <m:mo>⁡</m:mo>
+
+                  <m:mfenced>
+                    <m:mn>0</m:mn>
+                  </m:mfenced>
+                </m:mrow>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </inlineequation></para>
+
+      <para>where</para>
+
+      <para>P(i) ∈ {0,1}, for i = 0, 1, 2, …, 31</para>
+
+      <para>Thus, each value P(i) is the setting (1 or 0) of the ith bit of
+      skip.</para>
+
+      <para>In the loop below, the current generator (starting with RAN0) is
+      applied to the current seed S if and only if the ith (i is the loop
+      iterator) bit of skip is a one, i.e. P(i) = 1. At each loop iteration, a
+      new generator is created that skips the next <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:msup>
+                <m:mn>2</m:mn>
+
+                <m:mrow>
+                  <m:mi>i</m:mi>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:msup>
+            </m:mrow>
+          </m:math>
+        </inlineequation> (i is the loop iterator) terms of the original RAN0
+      sequence. After 32 iterations, the thirty two bits of skip are exhausted
+      and the current value of seed S is returned as the starting seed for the
+      idth thread.</para>
+
+      <para>As an example of how the scheme works, assume that we are creating
+      the seed for the fifth of fifteen threads. The value of skip is</para>
+
+      <para><inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>skip</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:mrow>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mo>(</m:mo>
+
+                      <m:mrow>
+                        <m:msup>
+                          <m:mn>2</m:mn>
+
+                          <m:mn>32</m:mn>
+                        </m:msup>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+
+                      <m:mo>)</m:mo>
+                    </m:mrow>
+
+                    <m:mo>/</m:mo>
+
+                    <m:mn>15</m:mn>
+                  </m:mrow>
+
+                  <m:mo>)</m:mo>
+                </m:mrow>
+
+                <m:mo>⁢</m:mo>
+
+                <m:mrow>
+                  <m:mo>(</m:mo>
+
+                  <m:mrow>
+                    <m:mn>5</m:mn>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mn>1</m:mn>
+                  </m:mrow>
+
+                  <m:mo>)</m:mo>
+                </m:mrow>
+              </m:mrow>
+
+              <m:mo>=</m:mo>
+
+              <m:mrow>
+                <m:mrow>
+                  <m:mo>(</m:mo>
+
+                  <m:mrow>
+                    <m:mn>4294967295</m:mn>
+
+                    <m:mo>/</m:mo>
+
+                    <m:mn>15</m:mn>
+                  </m:mrow>
+
+                  <m:mo>)</m:mo>
+                </m:mrow>
+
+                <m:mo>⁢</m:mo>
+
+                <m:mn>4</m:mn>
+              </m:mrow>
+
+              <m:mo>=</m:mo>
+
+              <m:mrow>
+                <m:mn>286331153</m:mn>
+
+                <m:mo>⁢</m:mo>
+
+                <m:mn>4</m:mn>
+              </m:mrow>
+
+              <m:mo>=</m:mo>
+
+              <m:mn>1145324612</m:mn>
+            </m:mrow>
+          </m:math>
+        </inlineequation></para>
+
+      <para>which in hexadecimal is</para>
+
+      <para><inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mi>skip</m:mi>
+
+              <m:mo>=</m:mo>
+
+              <m:mn>44444444</m:mn>
+
+              <m:mo>=</m:mo>
+
+              <m:mrow>
+                <m:mrow>
+                  <m:mrow>
+                    <m:mrow>
+                      <m:mrow>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msup>
+                              <m:mn>2</m:mn>
+
+                              <m:mn>30</m:mn>
+                            </m:msup>
+
+                            <m:mo>+</m:mo>
+
+                            <m:msup>
+                              <m:mn>2</m:mn>
+
+                              <m:mn>26</m:mn>
+                            </m:msup>
+                          </m:mrow>
+
+                          <m:mo>+</m:mo>
+
+                          <m:msup>
+                            <m:mn>2</m:mn>
+
+                            <m:mn>22</m:mn>
+                          </m:msup>
+                        </m:mrow>
+
+                        <m:mo>+</m:mo>
+
+                        <m:msup>
+                          <m:mn>2</m:mn>
+
+                          <m:mn>18</m:mn>
+                        </m:msup>
+                      </m:mrow>
+
+                      <m:mo>+</m:mo>
+
+                      <m:msup>
+                        <m:mn>2</m:mn>
+
+                        <m:mn>14</m:mn>
+                      </m:msup>
+                    </m:mrow>
+
+                    <m:mo>+</m:mo>
+
+                    <m:msup>
+                      <m:mn>2</m:mn>
+
+                      <m:mn>10</m:mn>
+                    </m:msup>
+                  </m:mrow>
+
+                  <m:mo>+</m:mo>
+
+                  <m:msup>
+                    <m:mn>2</m:mn>
+
+                    <m:mn>6</m:mn>
+                  </m:msup>
+                </m:mrow>
+
+                <m:mo>+</m:mo>
+
+                <m:msup>
+                  <m:mn>2</m:mn>
+
+                  <m:mn>2</m:mn>
+                </m:msup>
+              </m:mrow>
+            </m:mrow>
+          </m:math>
+        </inlineequation></para>
+
+      <para>Thus, to create the correct seed we need to skip, in succession,
+      <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>2</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms, <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>6</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms, <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>10</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms, <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>14</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms, <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>18</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms, <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>22</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms, and <inlineequation>
+          <m:math display="inline">
+            <m:msup>
+              <m:mn>2</m:mn>
+
+              <m:mn>26</m:mn>
+            </m:msup>
+          </m:math>
+        </inlineequation> terms of the base RAN0 sequence. This is
+      accomplished in the loop below by applying the current random number
+      generator only on iterations 2, 6, 10, 14, 18, 22, 26, and 30. Although
+      used on only eight of thirty two iterations, a new generator is created
+      on each iteration.</para>
+
+      <programlisting>  mask = 1;
+  for( i=0; i&lt;32; i++ )
+  { /* Update seed if bit is set */
+    if( mask &amp; skip )
+    {
+      state-&gt;seed0 = A*(state-&gt;seed0) + C;
+    }
+    C = (A+1)*C; /* Generate new offset constant */
+    A = A*A; /* Generate new multiplier constant */
+    mask &lt;&lt;= 1;
+  }</programlisting>
+
+      <para>Set C1 to the idth prime, starting at C1 = 3. (The following is a
+      very simple prime number generator. A pre-computed table of primes could
+      be substituted.)</para>
+
+      <programlisting>  for( i=1; i&lt;id; i++ )
+  {
+    int32_t loop_max;
+    state-&gt;c1 += 2;
+    loop_max = (int32_t)sqrt( (double)state-&gt;c1 );
+    C = 3;
+    while( C &lt;= loop_max )
+    {
+      while( ( (state-&gt;c1 % C) != 0 ) &amp;&amp; ( C &lt;= loop_max ) ) C += 2;
+      if( (state-&gt;c1 % C) == 0 )
+      {
+        C = 3;
+        state-&gt;c1 += 2;
+        loop_max = (int32_t)sqrt( (double)state-&gt;c1 );
+      }
+    }
+  }
+  return state;
+}
+
+void vsip_randdestroy(vsip_randstate* state) { free(state);}</programlisting>
+
+      <para>IEEE-754 Dependent Code</para>
+
+      <para>The following is implementation dependent. It is defined for
+      IEEE-754 single and double precision floating point where float is
+      single and double is double precision. (For non-IEEE 754 implementations
+      the closest representable floating point number to the IEEE-754 number
+      should be returned.)</para>
+
+      <para>Create the mask used to convert an unsigned integer to a single
+      precision IEEE-754 float. The mask forces the sign and excess 127
+      exponent for a single precision IEEE-754 floating point number (1.0)
+      into the upper nine bits of a 32 bit unsigned integer that has been
+      shifted right nine bit positions. The low mantissa bit is set to one to
+      force the number away from a true IEEE zero when it is normalized by
+      subtracting 1.0.</para>
+
+      <programlisting>static uint32_t vsip_random_fmask = 0x3f800001;</programlisting>
+
+      <para>Function <function>vsip_randu_f</function>:</para>
+
+      <para><itemizedlist>
+          <listitem>
+            <para>Takes a vsip_randstate* argument (which was created by
+            vsip_randcreate);</para>
+          </listitem>
+
+          <listitem>
+            <para>Updates the state seeds using macro functions RAN0 and
+            RAN1;</para>
+          </listitem>
+
+          <listitem>
+            <para>Forms a temporary 32 bit unsigned seed from the difference
+            between the two state seeds;</para>
+          </listitem>
+
+          <listitem>
+            <para>Right shifts the temporary seed eight bit positions (the
+            width of a single precision IEEE- 754 floating point number's
+            exponent field);</para>
+          </listitem>
+
+          <listitem>
+            <para>Bitwise OR's a one into the low bit; converts the integer
+            contained in the interval <inlineequation>
+                <m:math display="inline">
+                  <m:mrow>
+                    <m:mfenced>
+                      <m:mn>0</m:mn>
+
+                      <m:mrow>
+                        <m:msup>
+                          <m:mn>2</m:mn>
+
+                          <m:mn>24</m:mn>
+                        </m:msup>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:mfenced>
+                  </m:mrow>
+                </m:math>
+              </inlineequation> to a single precision IEEE-754 floating point
+            number;</para>
+          </listitem>
+
+          <listitem>
+            <para>Scales the floating point number by <inlineequation>
+                <m:math display="inline">
+                  <m:msup>
+                    <m:mn>2</m:mn>
+
+                    <m:mrow>
+                      <m:mo>-</m:mo>
+
+                      <m:mn>24</m:mn>
+                    </m:mrow>
+                  </m:msup>
+                </m:math>
+              </inlineequation> to force the result into the open interval
+            (0.0,1.0);</para>
+          </listitem>
+
+          <listitem>
+            <para>And finally returns the floating point result as the
+            function return value.</para>
+          </listitem>
+        </itemizedlist></para>
+
+      <programlisting>float vsip_randu_f( vsip_randstate* state )
+/* Returns a float uniform random number within the open interval (0, 1) */
+{
+  float temp;
+  uint32_t itemp;
+  state-&gt;seed0 = RAN0( state );
+  state-&gt;seed1 = RAN1( state );
+  itemp = (state-&gt;seed0 - state-&gt;seed1);
+  if (state-&gt;seed1 == state-&gt;seed2) 
+  {
+    state-&gt;seed1 += 1;
+    state-&gt;seed2 += 1;
+  }
+  itemp = (itemp&gt;&gt;8)|0x00000001;
+  temp = (float)(itemp)*state-&gt;float_scale;
+  return( temp );
+}</programlisting>
+
+      <para>Function <function>vsip_randu_d</function>:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Accepts a vsip_randstate* argument (which was created by
+          vsip_randcreate);</para>
+        </listitem>
+
+        <listitem>
+          <para>Updates the state seeds using macro functions RAN0 and
+          RAN1;</para>
+        </listitem>
+
+        <listitem>
+          <para>Forms a temporary 32 bit unsigned seed from the difference
+          between the two state seeds;</para>
+        </listitem>
+
+        <listitem>
+          <para>Bitwise OR's a one into the low bit; converts the integer
+          contained in the interval <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mfenced>
+                    <m:mn>0</m:mn>
+
+                    <m:mrow>
+                      <m:msup>
+                        <m:mn>2</m:mn>
+
+                        <m:mn>32</m:mn>
+                      </m:msup>
+
+                      <m:mo>-</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:mfenced>
+                </m:mrow>
+              </m:math>
+            </inlineequation> to a double precision IEEE-754 floating point
+          number;</para>
+        </listitem>
+
+        <listitem>
+          <para>Scales the floating point number by <inlineequation>
+              <m:math display="inline">
+                <m:msup>
+                  <m:mn>2</m:mn>
+
+                  <m:mrow>
+                    <m:mo>-</m:mo>
+
+                    <m:mn>32</m:mn>
+                  </m:mrow>
+                </m:msup>
+              </m:math>
+            </inlineequation> to force the result into the open interval
+          (0.0,1.0);</para>
+        </listitem>
+
+        <listitem>
+          <para>And finally returns the floating point result as the function
+          return value.</para>
+        </listitem>
+      </itemizedlist>
+
+      <programlisting>double vsip_randu_d( vsip_randstate *state )
+{
+  double temp;
+  uint32_t itemp;
+  state-&gt;seed0 = RAN0( state );
+  state-&gt;seed1 = RAN1( state );
+  itemp = (state-&gt;seed0 - state-&gt;seed1);
+  if (state-&gt;seed1 == state-&gt;seed2) 
+  {
+    state-&gt;seed1 += 1;
+    state-&gt;seed2 += 1;
+  }
+  temp = ((double)(itemp) + 0.5)*state-&gt;double_scale;
+  return( temp );
+}</programlisting>
+    </section>
+  </section>
+
+  <section>
+    <title>Random Number Functions</title>
+
+    <para><informaltable>
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>vsip_randcreate</entry>
+
+              <entry>Create Random State</entry>
+            </row>
+
+            <row>
+              <entry>vsip_randdestroy</entry>
+
+              <entry>Destroy Random State</entry>
+            </row>
+
+            <row>
+              <entry>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randu_<replaceable>p</replaceable></entry>
+
+              <entry>Uniform Random Numbers</entry>
+            </row>
+
+            <row>
+              <entry>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randn_<replaceable>p</replaceable></entry>
+
+              <entry>Gaussian Random Numbers</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable></para>
+
+    <section xml:id="randcreate">
+      <title>vsip_randcreate</title>
+
+      <para>Create a random number generator state object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Creates a state object for use by a VSIPL random number
+            generation function. The random number generator is characterized
+            by specifying the number of random number generators the
+            application is expected to create, and the index of this
+            generator. If the portable sequence is specified, than the number
+            of random number generators specifies how many sub-sequences the
+            primary sequence is partitioned into. If the non-portable sequence
+            is specified, the characteristics of the random number generator
+            are implementation dependent.</para>
+
+            <para>The function returns a random state object which holds the
+            state information for the random number sequence generator, or
+            null if the create fails.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>vsip_randstate *vsip_randcreate(vsip_index seed, vsip_index numprocs,
+                                vsip_index id, vsip_rng portable);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>seed</term>
+
+                <listitem>
+                  <para>Seed to initialize generator.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>numprocs</term>
+
+                <listitem>
+                  <para>Number of processors (number of sub-sequences
+                  sequences into which the primary sequence is to be
+                  partitioned).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>id</term>
+
+                <listitem>
+                  <para>Processor ID (index to select a particular
+                  sub-sequence from the group of numprocs
+                  sub-sequences).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>portable</term>
+
+                <listitem>
+                  <para>Select between portable and non-portable random number
+                  sequences.</para>
+
+                  <synopsis>typedef enum
+{
+  VSIP_PRNG = 0, /* Portable random number generator */
+  VSIP_NPRNG = 1 /* Non-portable trandom number generator */
+} vsip_rng;</synopsis>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Returns a pointer to a random number state object of type
+            vsip_randstate, or null if the create fails.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The arguments must conform to the following: <orderedlist>
+                <listitem>
+                  <para><inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mn>0</m:mn>
+
+                          <m:mo>&lt;</m:mo>
+
+                          <m:mi>id</m:mi>
+
+                          <m:mo>≤</m:mo>
+
+                          <m:mi>numprocs</m:mi>
+
+                          <m:mo>≤</m:mo>
+
+                          <m:mrow>
+                            <m:msup>
+                              <m:mn>2</m:mn>
+
+                              <m:mn>32</m:mn>
+                            </m:msup>
+
+                            <m:mo>-</m:mo>
+
+                            <m:mn>1</m:mn>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation></para>
+                </listitem>
+              </orderedlist></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>You must call vsip_randcreate for each random number
+            sequence/stream the application needs. This might be one per
+            processor, one per thread, etc. For the portable sequence to have
+            the desired pseudo-random properties, each create must specify the
+            same number of processors/sub-sequences.</para>
+
+            <para>Note to Implementors: All implementations of vsip_randcreate
+            must support the portable sequence. The vendor defined
+            non-portable sequence may be the same sequence as the defined
+            portable sequence, or an implementation dependent uniform random
+            number generator.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See <link
+            linkend="dsrandu"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randu_<replaceable>p</replaceable></function></link>
+            for example.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><link
+            linkend="dsrandn"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randn_<replaceable>p</replaceable></function></link>,
+            <link
+            linkend="dsrandu"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randu_<replaceable>p</replaceable></function></link>,
+            and <link
+            linkend="randdestroy"><function>vsip_randdestroy</function></link></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="randdestroy">
+      <title>vsip_randdestroy</title>
+
+      <para>Destroy a random number generator state object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Destroys a random number state object created by a
+            <function>vsip_randcreate</function>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>int vsip_randdestroy(vsip_randstate *state);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>state</term>
+
+                <listitem>
+                  <para>Pointer to random number state object.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Returns zero on success and non-zero on failure.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The arguments must conform to the following: <orderedlist>
+                <listitem>
+                  <para>The random number state object must be valid. An
+                  argument of null is not an error.</para>
+                </listitem>
+              </orderedlist></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>An argument of null is not an error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>See <link
+            linkend="dsrandu"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randu_<replaceable>p</replaceable></function></link>
+            for example.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><link
+            linkend="randcreate"><function>vsip_randcreate</function></link>,
+            <link
+            linkend="dsrandu"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randu_<replaceable>p</replaceable></function></link>,
+            and <link
+            linkend="dsrandn"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randn_<replaceable>p</replaceable></function></link></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="dsrandu">
+      <title>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randu_<replaceable>p</replaceable></title>
+
+      <para>Generate a uniformly distributed (pseudo-)random number. Floating
+      point values are uniformly distributed over the open interval
+      <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mo>(</m:mo>
+
+              <m:mrow>
+                <m:mi>0</m:mi>
+
+                <m:mo>,</m:mo>
+
+                <m:mi>1</m:mi>
+              </m:mrow>
+
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:math>
+        </inlineequation>. Integer deviates are uniformly distributed over the
+      open interval <inlineequation>
+          <m:math display="inline">
+            <m:mrow>
+              <m:mo>(</m:mo>
+
+              <m:mrow>
+                <m:mn>0</m:mn>
+
+                <m:mo>,</m:mo>
+
+                <m:mrow>
+                  <m:msup>
+                    <m:mn>2</m:mn>
+
+                    <m:mn>31</m:mn>
+                  </m:msup>
+
+                  <m:mo>-</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:mrow>
+
+              <m:mo>)</m:mo>
+            </m:mrow>
+          </m:math>
+        </inlineequation>.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Real</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mtable columnalign="left">
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mi>r</m:mi>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>Uniform</m:mi>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mn>0</m:mn>
+
+                              <m:mn>1</m:mn>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd/>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>r</m:mi>
+
+                            <m:mi>n</m:mi>
+                          </m:msub>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>Uniform</m:mi>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mn>0</m:mn>
+
+                              <m:mn>1</m:mn>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>r</m:mi>
+
+                            <m:mi>n,m</m:mi>
+                          </m:msub>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>Uniform</m:mi>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mn>0</m:mn>
+
+                              <m:mn>1</m:mn>
+                            </m:mfenced>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>;</m:mo>
+
+                              <m:mtext>for</m:mtext>
+
+                              <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>m</m:mi>
+
+                              <m:mo>=</m:mo>
+
+                              <m:mn>0</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mi>...</m:mi>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mrow>
+                                <m:mi>M</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+                </m:math>
+              </inlineequation></para>
+
+            <para>Complex</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mtable columnalign="left">
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mi>r</m:mi>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>Uniform</m:mi>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mn>0</m:mn>
+
+                              <m:mn>1</m:mn>
+                            </m:mfenced>
+                          </m:mrow>
+
+                          <m:mo>+</m:mo>
+
+                          <m:mrow>
+                            <m:mi>j</m:mi>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mrow>
+                              <m:mi>Uniform</m:mi>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mn>0</m:mn>
+
+                                <m:mn>1</m:mn>
+                              </m:mfenced>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd/>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>r</m:mi>
+
+                            <m:mi>n</m:mi>
+                          </m:msub>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>Uniform</m:mi>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mn>0</m:mn>
+
+                              <m:mn>1</m:mn>
+                            </m:mfenced>
+                          </m:mrow>
+
+                          <m:mo>+</m:mo>
+
+                          <m:mrow>
+                            <m:mi>j</m:mi>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mrow>
+                              <m:mi>Uniform</m:mi>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mn>0</m:mn>
+
+                                <m:mn>1</m:mn>
+                              </m:mfenced>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>r</m:mi>
+
+                            <m:mi>n,m</m:mi>
+                          </m:msub>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>Uniform</m:mi>
+
+                            <m:mo>⁡</m:mo>
+
+                            <m:mfenced>
+                              <m:mn>0</m:mn>
+
+                              <m:mn>1</m:mn>
+                            </m:mfenced>
+                          </m:mrow>
+
+                          <m:mo>+</m:mo>
+
+                          <m:mrow>
+                            <m:mi>j</m:mi>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mrow>
+                              <m:mi>Uniform</m:mi>
+
+                              <m:mo>⁡</m:mo>
+
+                              <m:mfenced>
+                                <m:mn>0</m:mn>
+
+                                <m:mn>1</m:mn>
+                              </m:mfenced>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>;</m:mo>
+
+                              <m:mtext>for</m:mtext>
+
+                              <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>m</m:mi>
+
+                              <m:mo>=</m:mo>
+
+                              <m:mn>0</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mi>...</m:mi>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mrow>
+                                <m:mi>M</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+                </m:math>
+              </inlineequation></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <para>Scalar:</para>
+
+            <synopsis>vsip_scalar_f vsip_randu_f(vsip_randstate *state);
+vsip_cscalar_f vsip_crandu_f(vsip_randstate *state);</synopsis>
+
+            <para>By Element:</para>
+
+            <synopsis>void vsip_vrandu_f(vsip_randstate *state, const vsip_vview_f *r);
+void vsip_cvrandu_f(vsip_randstate *state, const vsip_cvview_f *r);
+void vsip_mrandu_f(vsip_randstate *state, const vsip_mview_f *r);
+void vsip_cmrandu_f(vsip_randstate *state, const vsip_cmview_f *r);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>state</term>
+
+                <listitem>
+                  <para>Pointer to random number state object.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>r</term>
+
+                <listitem>
+                  <para>Output vector or matrix view object.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>The arguments must conform to the following:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>The random number state object must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The output view object must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The pointer to a random number state object must be
+            valid.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>The complex random number has real and imaginary components
+            where each component is Uniform(0,1). The mean of the complex
+            sequence is therefore <inlineequation>
+                <m:math display="inline">
+                  <m:mfrac bevelled="true">
+                    <m:msqrt>
+                      <m:mi>2</m:mi>
+                    </m:msqrt>
+
+                    <m:mi>2</m:mi>
+                  </m:mfrac>
+                </m:math>
+              </inlineequation>.</para>
+
+            <para>The “by element” random number generators are required to
+            produce the equivalent result to applying the scalar generators to
+            each element in the order that proceeds from the minimum stride to
+            the maximum stride dimension. For example for a matrix Z, where
+            the stride between elements of a row is less than the stride
+            between elements of a column, where <inlineequation>
+                <m:math display="inline">
+                  <m:msub>
+                    <m:mi>x</m:mi>
+
+                    <m:mi>j</m:mi>
+                  </m:msub>
+                </m:math>
+              </inlineequation> denotes the jth output of the
+            generator:</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>z</m:mi>
+
+                      <m:mi>0,0</m:mi>
+                    </m:msub>
+
+                    <m:mo>←</m:mo>
+
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mi>i</m:mi>
+                    </m:msub>
+                  </m:mrow>
+
+                  <m:mtext>,</m:mtext>
+
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>z</m:mi>
+
+                      <m:mi>0,1</m:mi>
+                    </m:msub>
+
+                    <m:mo>←</m:mo>
+
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mrow>
+                        <m:mi>i</m:mi>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+
+                  <m:mtext>,</m:mtext>
+
+                  <m:mrow>
+                    <m:mtext>...</m:mtext>
+                  </m:mrow>
+
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>z</m:mi>
+
+                      <m:mi>1,0</m:mi>
+                    </m:msub>
+
+                    <m:mo>←</m:mo>
+
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mrow>
+                        <m:mi>i</m:mi>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>N</m:mi>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+
+                  <m:mtext>,</m:mtext>
+
+                  <m:mrow>
+                    <m:mtext>...</m:mtext>
+                  </m:mrow>
+
+                  <m:mtext>,</m:mtext>
+
+                  <m:mrow>
+                    <m:msub>
+                      <m:mi>z</m:mi>
+
+                      <m:mi>M-1,N-1</m:mi>
+                    </m:msub>
+
+                    <m:mo>←</m:mo>
+
+                    <m:msub>
+                      <m:mi>x</m:mi>
+
+                      <m:mrow>
+                        <m:mi>i</m:mi>
+
+                        <m:mo>+</m:mo>
+
+                        <m:mi>M</m:mi>
+
+                        <m:mo>*</m:mo>
+
+                        <m:mi>N</m:mi>
+
+                        <m:mo>-</m:mo>
+
+                        <m:mn>1</m:mn>
+                      </m:mrow>
+                    </m:msub>
+                  </m:mrow>
+                </m:math>
+              </inlineequation></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>Generate 10 Uniform random numbers in the interval -π to
+            π.</para>
+
+            <programlisting>#include &lt;stdio.h&gt;
+#include &lt;vsip.h&gt;
+main()
+{
+  int i;
+  int seed =0, num_procs=1, id=1;
+  vsip_scalar_d x;
+  vsip_cscalar_d z;
+  vsip_rand_state *state;
+  vsip_init((void *)0);
+  state = vsip_randcreate(seed, num_procs, id, VSIP_PRNG);
+  printf("Uniform\n");
+  for(i=0; i&lt;10; i++) 
+  {
+    x = 2*M_PI*vsip_randu_d(state) - M_PI;
+    printf("%g\n",x);
+  }
+  printf("Complex Uniform\n");
+  for(i=0; i&lt;10; i++) 
+  {
+    vsip_rcmul_d(M_PI, vsip_crandu_d(state), &amp;z);
+    vsip_rcadd_d(-M_PI, z, &amp;z);
+    printf("(%f, %f)\n",vsip_real_d(z),vsip_imag_d(z));
+  }
+  vsip_randdestroy(state);
+  vsip_finalize((void *)0);
+  return 0;
+}</programlisting>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><link
+            linkend="randcreate"><function>vsip_randcreate</function></link>,
+            <link
+            linkend="dsrandn"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randn_<replaceable>p</replaceable></function></link>,
+            and <link
+            linkend="randdestroy"><function>vsip_randdestroy</function></link></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="dsrandn">
+      <title>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randn_<replaceable>p</replaceable></title>
+
+      <para>Generate an approximately normally distributed (pseudo-)random
+      deviate having mean zero and unit variance; N(0,1).</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Real</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mtable columnalign="left">
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mi>r</m:mi>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>6</m:mi>
+
+                            <m:mo>-</m:mo>
+
+                            <m:mrow>
+                              <m:munderover>
+                                <m:mo>∑</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>k</m:mi>
+
+                                  <m:mo>=</m:mo>
+
+                                  <m:mn>0</m:mn>
+                                </m:mrow>
+
+                                <m:mn>11</m:mn>
+                              </m:munderover>
+
+                              <m:msub>
+                                <m:mi>x</m:mi>
+
+                                <m:mi>k</m:mi>
+                              </m:msub>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd/>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>r</m:mi>
+
+                            <m:mi>n</m:mi>
+                          </m:msub>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>6</m:mi>
+
+                            <m:mo>-</m:mo>
+
+                            <m:mrow>
+                              <m:munderover>
+                                <m:mo>∑</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>k</m:mi>
+
+                                  <m:mo>=</m:mo>
+
+                                  <m:mn>0</m:mn>
+                                </m:mrow>
+
+                                <m:mn>11</m:mn>
+                              </m:munderover>
+
+                              <m:msub>
+                                <m:mi>x</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>k</m:mi>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mrow>
+                                    <m:mn>12</m:mn>
+
+                                    <m:mo>⁢</m:mo>
+
+                                    <m:mi>n</m:mi>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>r</m:mi>
+
+                            <m:mi>n,m</m:mi>
+                          </m:msub>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>6</m:mi>
+
+                            <m:mo>-</m:mo>
+
+                            <m:mrow>
+                              <m:munderover>
+                                <m:mo>∑</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>k</m:mi>
+
+                                  <m:mo>=</m:mo>
+
+                                  <m:mn>0</m:mn>
+                                </m:mrow>
+
+                                <m:mn>11</m:mn>
+                              </m:munderover>
+
+                              <m:msub>
+                                <m:mi>x</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>k</m:mi>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mrow>
+                                    <m:mn>12</m:mn>
+
+                                    <m:mo>⁢</m:mo>
+
+                                    <m:mrow>
+                                      <m:mo>(</m:mo>
+
+                                      <m:mrow>
+                                        <m:mi>n</m:mi>
+
+                                        <m:mo>+</m:mo>
+
+                                        <m:mrow>
+                                          <m:mi>m</m:mi>
+
+                                          <m:mo>⁢</m:mo>
+
+                                          <m:mi>N</m:mi>
+                                        </m:mrow>
+                                      </m:mrow>
+
+                                      <m:mo>)</m:mo>
+                                    </m:mrow>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>;</m:mo>
+
+                              <m:mtext>for</m:mtext>
+
+                              <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>m</m:mi>
+
+                              <m:mo>=</m:mo>
+
+                              <m:mn>0</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mi>...</m:mi>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mrow>
+                                <m:mi>M</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mtext>(row major)</m:mtext>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:msub>
+                            <m:mi>r</m:mi>
+
+                            <m:mi>n,m</m:mi>
+                          </m:msub>
+
+                          <m:maligngroup/>
+
+                          <m:mo>←</m:mo>
+
+                          <m:mrow>
+                            <m:mi>6</m:mi>
+
+                            <m:mo>-</m:mo>
+
+                            <m:mrow>
+                              <m:munderover>
+                                <m:mo>∑</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>k</m:mi>
+
+                                  <m:mo>=</m:mo>
+
+                                  <m:mn>0</m:mn>
+                                </m:mrow>
+
+                                <m:mn>11</m:mn>
+                              </m:munderover>
+
+                              <m:msub>
+                                <m:mi>x</m:mi>
+
+                                <m:mrow>
+                                  <m:mi>k</m:mi>
+
+                                  <m:mo>+</m:mo>
+
+                                  <m:mrow>
+                                    <m:mn>12</m:mn>
+
+                                    <m:mo>⁢</m:mo>
+
+                                    <m:mrow>
+                                      <m:mo>(</m:mo>
+
+                                      <m:mrow>
+                                        <m:mi>m</m:mi>
+
+                                        <m:mo>+</m:mo>
+
+                                        <m:mrow>
+                                          <m:mi>n</m:mi>
+
+                                          <m:mo>⁢</m:mo>
+
+                                          <m:mi>M</m:mi>
+                                        </m:mrow>
+                                      </m:mrow>
+
+                                      <m:mo>)</m:mo>
+                                    </m:mrow>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:msub>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>;</m:mo>
+
+                              <m:mtext>for</m:mtext>
+
+                              <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>m</m:mi>
+
+                              <m:mo>=</m:mo>
+
+                              <m:mn>0</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mi>...</m:mi>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mrow>
+                                <m:mi>M</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mtext>(column major)</m:mtext>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+                </m:math>
+              </inlineequation></para>
+
+            <para>Complex</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:mtable columnalign="left">
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>1</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mi>k</m:mi>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mtext>,</m:mtext>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mi>k</m:mi>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd/>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:mi>r</m:mi>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mn>3</m:mn>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mrow>
+                                  <m:mo>(</m:mo>
+
+                                  <m:mrow>
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>1</m:mn>
+                                    </m:msub>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>2</m:mn>
+                                    </m:msub>
+                                  </m:mrow>
+
+                                  <m:mo>)</m:mo>
+                                </m:mrow>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>j</m:mi>
+
+                                  <m:mo>⁢</m:mo>
+
+                                  <m:mrow>
+                                    <m:mo>(</m:mo>
+
+                                    <m:mrow>
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>1</m:mn>
+                                      </m:msub>
+
+                                      <m:mo>-</m:mo>
+
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>2</m:mn>
+                                      </m:msub>
+                                    </m:mrow>
+
+                                    <m:mo>)</m:mo>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd/>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>1</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mrow>
+                                      <m:mn>6</m:mn>
+
+                                      <m:mo>⁢</m:mo>
+
+                                      <m:mi>n</m:mi>
+                                    </m:mrow>
+                                  </m:mrow>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mtext>,</m:mtext>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mrow>
+                                      <m:mn>6</m:mn>
+
+                                      <m:mo>⁢</m:mo>
+
+                                      <m:mi>n</m:mi>
+                                    </m:mrow>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mn>3</m:mn>
+                                  </m:mrow>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>r</m:mi>
+
+                              <m:mi>n</m:mi>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mn>3</m:mn>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mrow>
+                                  <m:mo>(</m:mo>
+
+                                  <m:mrow>
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>1</m:mn>
+                                    </m:msub>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>2</m:mn>
+                                    </m:msub>
+                                  </m:mrow>
+
+                                  <m:mo>)</m:mo>
+                                </m:mrow>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>j</m:mi>
+
+                                  <m:mo>⁢</m:mo>
+
+                                  <m:mrow>
+                                    <m:mo>(</m:mo>
+
+                                    <m:mrow>
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>1</m:mn>
+                                      </m:msub>
+
+                                      <m:mo>-</m:mo>
+
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>2</m:mn>
+                                      </m:msub>
+                                    </m:mrow>
+
+                                    <m:mo>)</m:mo>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd/>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>1</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mrow>
+                                      <m:mn>6</m:mn>
+
+                                      <m:mo>⁢</m:mo>
+
+                                      <m:mrow>
+                                        <m:mo>(</m:mo>
+
+                                        <m:mrow>
+                                          <m:mi>n</m:mi>
+
+                                          <m:mo>+</m:mo>
+
+                                          <m:mrow>
+                                            <m:mi>m</m:mi>
+
+                                            <m:mo>⁢</m:mo>
+
+                                            <m:mi>N</m:mi>
+                                          </m:mrow>
+                                        </m:mrow>
+
+                                        <m:mo>)</m:mo>
+                                      </m:mrow>
+                                    </m:mrow>
+                                  </m:mrow>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mtext>,</m:mtext>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mrow>
+                                      <m:mn>6</m:mn>
+
+                                      <m:mo>⁢</m:mo>
+
+                                      <m:mrow>
+                                        <m:mo>(</m:mo>
+
+                                        <m:mrow>
+                                          <m:mi>n</m:mi>
+
+                                          <m:mo>+</m:mo>
+
+                                          <m:mrow>
+                                            <m:mi>m</m:mi>
+
+                                            <m:mo>⁢</m:mo>
+
+                                            <m:mi>N</m:mi>
+                                          </m:mrow>
+                                        </m:mrow>
+
+                                        <m:mo>)</m:mo>
+                                      </m:mrow>
+                                    </m:mrow>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mn>3</m:mn>
+                                  </m:mrow>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>;</m:mo>
+
+                              <m:mtext>for</m:mtext>
+
+                              <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>m</m:mi>
+
+                              <m:mo>=</m:mo>
+
+                              <m:mn>0</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mi>...</m:mi>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mrow>
+                                <m:mi>M</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>r</m:mi>
+
+                              <m:mi>n,m</m:mi>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mn>3</m:mn>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mrow>
+                                  <m:mo>(</m:mo>
+
+                                  <m:mrow>
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>1</m:mn>
+                                    </m:msub>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>2</m:mn>
+                                    </m:msub>
+                                  </m:mrow>
+
+                                  <m:mo>)</m:mo>
+                                </m:mrow>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>j</m:mi>
+
+                                  <m:mo>⁢</m:mo>
+
+                                  <m:mrow>
+                                    <m:mo>(</m:mo>
+
+                                    <m:mrow>
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>1</m:mn>
+                                      </m:msub>
+
+                                      <m:mo>-</m:mo>
+
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>2</m:mn>
+                                      </m:msub>
+                                    </m:mrow>
+
+                                    <m:mo>)</m:mo>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mtext>(row major)</m:mtext>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>1</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mrow>
+                                      <m:mn>6</m:mn>
+
+                                      <m:mo>⁢</m:mo>
+
+                                      <m:mrow>
+                                        <m:mo>(</m:mo>
+
+                                        <m:mrow>
+                                          <m:mi>m</m:mi>
+
+                                          <m:mo>+</m:mo>
+
+                                          <m:mrow>
+                                            <m:mi>n</m:mi>
+
+                                            <m:mo>⁢</m:mo>
+
+                                            <m:mi>M</m:mi>
+                                          </m:mrow>
+                                        </m:mrow>
+
+                                        <m:mo>)</m:mo>
+                                      </m:mrow>
+                                    </m:mrow>
+                                  </m:mrow>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+
+                          <m:mtext>,</m:mtext>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>t</m:mi>
+
+                              <m:mn>2</m:mn>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:munderover>
+                                  <m:mo>∑</m:mo>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>=</m:mo>
+
+                                    <m:mn>0</m:mn>
+                                  </m:mrow>
+
+                                  <m:mn>2</m:mn>
+                                </m:munderover>
+
+                                <m:msub>
+                                  <m:mi>x</m:mi>
+
+                                  <m:mrow>
+                                    <m:mi>k</m:mi>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mrow>
+                                      <m:mn>6</m:mn>
+
+                                      <m:mo>⁢</m:mo>
+
+                                      <m:mrow>
+                                        <m:mo>(</m:mo>
+
+                                        <m:mrow>
+                                          <m:mi>m</m:mi>
+
+                                          <m:mo>+</m:mo>
+
+                                          <m:mrow>
+                                            <m:mi>n</m:mi>
+
+                                            <m:mo>⁢</m:mo>
+
+                                            <m:mi>M</m:mi>
+                                          </m:mrow>
+                                        </m:mrow>
+
+                                        <m:mo>)</m:mo>
+                                      </m:mrow>
+                                    </m:mrow>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:mn>3</m:mn>
+                                  </m:mrow>
+                                </m:msub>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mtext>for</m:mtext>
+
+                          <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+
+                          <m:mrow>
+                            <m:mi>n</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mn>0</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mn>1</m:mn>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mi>...</m:mi>
+
+                            <m:mo>,</m:mo>
+
+                            <m:mrow>
+                              <m:mi>N</m:mi>
+
+                              <m:mo>-</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>;</m:mo>
+
+                              <m:mtext>for</m:mtext>
+
+                              <m:mspace depth="0.5ex" height="0.5ex" width="1ex"/>
+                            </m:mrow>
+
+                            <m:mrow>
+                              <m:mi>m</m:mi>
+
+                              <m:mo>=</m:mo>
+
+                              <m:mn>0</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mn>1</m:mn>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mi>...</m:mi>
+
+                              <m:mo>,</m:mo>
+
+                              <m:mrow>
+                                <m:mi>M</m:mi>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mn>1</m:mn>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+                    </m:mtr>
+
+                    <m:mtr>
+                      <m:mtd>
+                        <m:mrow>
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>r</m:mi>
+
+                              <m:mi>n,m</m:mi>
+                            </m:msub>
+
+                            <m:maligngroup/>
+
+                            <m:mo>←</m:mo>
+
+                            <m:mrow>
+                              <m:mrow>
+                                <m:mn>3</m:mn>
+
+                                <m:mo>-</m:mo>
+
+                                <m:mrow>
+                                  <m:mo>(</m:mo>
+
+                                  <m:mrow>
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>1</m:mn>
+                                    </m:msub>
+
+                                    <m:mo>+</m:mo>
+
+                                    <m:msub>
+                                      <m:mi>t</m:mi>
+
+                                      <m:mn>2</m:mn>
+                                    </m:msub>
+                                  </m:mrow>
+
+                                  <m:mo>)</m:mo>
+                                </m:mrow>
+
+                                <m:mo>+</m:mo>
+
+                                <m:mrow>
+                                  <m:mi>j</m:mi>
+
+                                  <m:mo>⁢</m:mo>
+
+                                  <m:mrow>
+                                    <m:mo>(</m:mo>
+
+                                    <m:mrow>
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>1</m:mn>
+                                      </m:msub>
+
+                                      <m:mo>-</m:mo>
+
+                                      <m:msub>
+                                        <m:mi>t</m:mi>
+
+                                        <m:mn>2</m:mn>
+                                      </m:msub>
+                                    </m:mrow>
+
+                                    <m:mo>)</m:mo>
+                                  </m:mrow>
+                                </m:mrow>
+                              </m:mrow>
+                            </m:mrow>
+                          </m:mrow>
+                        </m:mrow>
+                      </m:mtd>
+
+                      <m:mtd>
+                        <m:mtext>(column major)</m:mtext>
+                      </m:mtd>
+                    </m:mtr>
+                  </m:mtable>
+                </m:math>
+              </inlineequation></para>
+
+            <para>Where:</para>
+
+            <para><inlineequation>
+                <m:math display="inline">
+                  <m:msub>
+                    <m:mi>x</m:mi>
+
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:math>
+              </inlineequation> is a uniformly distributed random number over
+            the open interval (0,1). <inlineequation>
+                <m:math display="inline">
+                  <m:msub>
+                    <m:mi>x</m:mi>
+
+                    <m:mi>k</m:mi>
+                  </m:msub>
+                </m:math>
+              </inlineequation> is generated in order using the same method as
+            the uniform scalar function <function>vsip_randu_f</function>. For
+            matrices the dimension with the smallest stride is filled
+            first.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <para>Scalar:</para>
+
+            <synopsis>vsip_scalar_<replaceable>f</replaceable> vsip_randn_<replaceable>f</replaceable>(vsip_randstate *state);
+vsip_cscalar_<replaceable>f</replaceable> vsip_crandn_f(vsip_randstate *state);</synopsis>
+
+            <para>By Element:</para>
+
+            <synopsis>void vsip_vrandn_<replaceable>f</replaceable>(vsip_randstate *state, const vsip_vview_<replaceable>f</replaceable> *r);
+void vsip_cvrandn_<replaceable>f</replaceable>(vsip_randstate *state, const vsip_cvview_<replaceable>f</replaceable> *r);
+void vsip_mrandn_<replaceable>f</replaceable>(vsip_randstate *state, const vsip_mview_<replaceable>f</replaceable> *r);
+void vsip_cmrandn_<replaceable>f</replaceable>(vsip_randstate *state, const vsip_cmview_<replaceable>f</replaceable> *r);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>state</term>
+
+                <listitem>
+                  <para>Pointer to random number state object.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>r</term>
+
+                <listitem>
+                  <para>Output vector or matrix view object.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>Returns a Gaussian random number.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The pointer to a random number state object must be
+            valid.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para>Both the real and complex Gaussian random number are N(0,1).
+            The complex random number has real and imaginary components that
+            are uncorrelated.</para>
+
+            <para>If a true Gaussian random deviate is needed, the Box-Muller
+            algorithm should be used. See Knuth, Donald E., Seminumerical
+            Algorithms, 2nd ed., vol. 2, pp. 117 of The Art of Computer
+            Programming, Addison-Wesley, 1981.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>Generate 10 Uniform Gaussian numbers with zero mean and a
+            variance of π.</para>
+
+            <programlisting>#include &lt;stdio.h&gt;
+#include &lt;vsip.h&gt;
+main()
+{
+  int i;
+  int seed =0, num_procs=1, id=1;
+  vsip_scalar_d x;
+  vsip_cscalar_d z;
+  vsip_rand_state *state;
+  vsip_init((void *)0);
+  state = vsip_randcreate(seed, num_procs, id, VSIP_PRNG);
+  printf("Normal\n");
+  for(i=0; i&lt;10; i++) 
+  {
+    x = M_PI*vsip_randn_d(state);
+    printf("%g\n",x);
+  }
+  printf("Complex Normal\n");
+  for(i=0; i&lt;10; i++) 
+  {
+    vsip_rcmul_d(M_PI, vsip_crandn_d(state), &amp;z);
+    printf("(%f, %f)\n",vsip_real_d(z),vsip_imag_d(z));
+  }
+  vsip_randdestroy(state);
+  vsip_finalize((void *)0);
+  return 0;
+}</programlisting>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><link
+            linkend="randcreate"><function>vsip_randcreate</function></link>,
+            <link
+            linkend="dsrandu"><function>vsip_<replaceable>d</replaceable><replaceable>s</replaceable>randu_<replaceable>p</replaceable></function></link>,
+            and <link
+            linkend="randdestroy"><function>vsip_randdestroy</function></link></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

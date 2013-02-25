@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xml:id="vsiplxx-par" 
+      xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <info>
+    <title>VSIPL++ Parallel</title>
+    <subtitle>Version 1.2</subtitle>
+    <titleabbrev>VSIPL++ Parallel 1.2</titleabbrev>
+    <authorgroup>
+      <author>
+        <orgname>
+	  <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="images/omg-logo.svg" format="SVG"/>
+            </imageobject>
+            <imageobject>
+              <imagedata fileref="images/omg-logo.png" format="PNG"/>
+            </imageobject>
+          </inlinemediaobject>
+	</orgname>
+      </author>
+    </authorgroup>
+
+    <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
+  </info>
+
+  <preface role="not.in.toc" xml:id="title1">
+    <!-- FIXME: DB requires a title but the OMG spec doesn't allow one. -->
+
+    <title/>
+
+    <para><emphasis role="bold">OMG Document Number:</emphasis>
+    formal/12-12-05</para>
+
+    <para><emphasis role="bold">Normative reference:</emphasis>
+    http://www.omg.org/spec/VSIPL++</para>
+  </preface>
+
+  <xi:include href="legal.xml"/>
+
+  <toc/>
+
+  <xi:include href="foreword-par.xml"/>
+
+  <xi:include href="intro-par.xml"/>
+
+  <xi:include href="support-par.xml"/>
+
+  <xi:include href="map.xml"/>
+
+  <xi:include href="block-par.xml"/>
+
+  <xi:include href="view-par.xml"/>
+
+  <xi:include href="dpp.xml"/>
+
+  <xi:include href="changes-par.xml"/>
+</book>

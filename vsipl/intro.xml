@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="intro" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>Introduction</title>
+
+  <section>
+    <title>Scope</title>
+
+    <para>The purpose of the Vector, Signal, and Image Processing Library
+    (VSIPL) standard is to support portable, high performance application
+    programs. The standard is based upon existing libraries that have evolved
+    and matured over decades of scientific and engineering computing. A layer
+    of abstraction is added to support portability across diverse memory and
+    processor architectures. The primary design focus of the standard has been
+    embedded signal processing platforms. Enhanced portability of workstation
+    applications is a side benefit.</para>
+  </section>
+
+  <section>
+    <title>Platform Requirements</title>
+
+    <para>VSIPL was specified so that it could be implemented on a wide
+    variety of hardware. In order to use VSIPL functions on a given platform,
+    a VSIPL compliant library must be available for the particular hardware
+    and tool-set (linker) available for the operating system. Since the
+    library API is defined for ANSI C, for practical applications, an ANSI C
+    compiler will also be necessary.</para>
+  </section>
+
+  <section>
+    <title>Functionality</title>
+
+    <para>This specification provides a number of functions to the programmer
+    to support high performance numerical computation on dense rectangular
+    arrays. These are organized in the VSIPL documentation according to
+    category. The available categories include:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Support</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Library initialization and finalization</para>
+          </listitem>
+
+          <listitem>
+            <para>Object creation and interaction</para>
+          </listitem>
+
+          <listitem>
+            <para>Memory management</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Basic Scalar Operations</para>
+      </listitem>
+
+      <listitem>
+        <para>Basic Vector Operations</para>
+      </listitem>
+
+      <listitem>
+        <para>Random Number Generation</para>
+      </listitem>
+
+      <listitem>
+        <para>Signal Processing</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>FFT operations</para>
+          </listitem>
+
+          <listitem>
+            <para>Filtering</para>
+          </listitem>
+
+          <listitem>
+            <para>Correlation and convolution</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Linear Algebra</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Basic matrix operations</para>
+          </listitem>
+
+          <listitem>
+            <para>Linear system solution</para>
+          </listitem>
+
+          <listitem>
+            <para>Least-squares problem solution</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Conformance</title>
+
+    <para>Although there are many functions in this specification, not all
+    functions are available in all implementations. The contents of a specific
+    VSIPL library subset are defined in a <emphasis>profile</emphasis>. As of
+    the completion of VSIPL 1.0 two profiles have been approved by the VSIPL
+    Forum, referred to as the "Core" and "Core Lite" profiles. The "Core"
+    profile includes most of the signal processing and matrix algebra
+    functionality of the library. The “Core Lite” profile includes a smaller
+    subset, suitable for vector-based signal processing applications. The
+    VSIPL specification defines more functions than are present in either of
+    these profiles.</para>
+  </section>
+
+  <section>
+    <title>VSIPL Objects</title>
+
+    <para>The main difference between the proposed VSIPL standard and existing
+    libraries is a cleaner encapsulation of memory management through an
+    “object-based” design. In VSIPL, a block can be thought of as a contiguous
+    area of memory for storage of data. A block consists of a data array,
+    which is the memory used for data storage; and a block object, which is an
+    abstract data type which stores information necessary for VSIPL to access
+    the data array. VSIPL allows the user to construct a view of the data in a
+    block as a vector, matrix, or higher dimensional object. A view consists
+    of a block, which contains the data of interest; and a view object, which
+    is an abstract data type which stores information necessary for VSIPL to
+    access the data of interest.</para>
+
+    <para>Blocks and views are opaque. They can only be created, accessed and
+    destroyed via library functions. Object data members are private to hide
+    the details of non-portable memory hierarchy management. VSIPL library
+    developers may hide information peculiar to their implementations in the
+    objects in order to prevent the application programmer from accidentally
+    writing code that is neither portable nor compatible.</para>
+
+    <para>Data arrays in VSIPL exist in one of two logical data spaces. These
+    are the user data space, and VSIPL data space. VSIPL functions may only
+    operate on data in VSIPL space. User supplied functions may only operate
+    on data in user space. Data may be moved between these logical spaces.
+    Depending on the specific implementation, this move may incur actual data
+    movement penalties or may simply be a bookkeeping procedure. The user
+    should consider the data in VSIPL space to be inaccessible except through
+    VSIPL functions.</para>
+  </section>
+
+  <section>
+    <title>Other Features of the Specification</title>
+
+    <para>The VSIPL specification provides support for multiple floating-point
+    and integer data types. In addition, methods are defined for a vendor to
+    supply tools to allow the user to specify precision requirements in an
+    application. For example, a user may specify that at least 16 bits of
+    precision are needed. On an embedded platform, this might translate
+    exactly to a 16-bit type, while on a workstation during development the
+    actual type used might have 32 bits of precision. VSIPL allows the same
+    code to work on both platforms.</para>
+
+    <para>Two versions of the library are described, referred to as
+    development and performance libraries. These libraries operate the same
+    with the exception of error reporting and timing. Performance versions of
+    a VSIPL library are not guaranteed to provide any error detection or
+    handling except in the case of memory allocation. Other programming errors
+    under a VSIPL performance library may have unpredictable results, up to
+    and including complete system crashes. Development libraries are expected
+    to run slower than performance libraries but include more error detection
+    capabilities. Suppliers of VSIPL compliant libraries are not required to
+    provide both versions; they may choose to supply either version, both
+    versions, or a single library that supports both development and
+    performance modes, as desired.</para>
+  </section>
+
+  <xi:include href="concepts.xml"/>
+</chapter>

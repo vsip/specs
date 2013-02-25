@@ -1,0 +1,1600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="map" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Maps</title>
+
+  <titleabbrev>map</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause describes components that VSIPL++ programs can use to
+      describe the mapping of data to multiple processors. A map is an
+      interface that describes how data stored in blocks can be distributed
+      over multiple processors. <emphasis>Map</emphasis>,
+      <emphasis>Local_map</emphasis>, and <emphasis>Replicated_map</emphasis>
+      classes satisfy this interface.</para>
+    </listitem>
+
+    <listitem>
+      <para>[<emphasis>Note: </emphasis> As noted in [support], a
+      <emphasis>processor</emphasis> is an execution context with associated
+      memory capable of computation. Multiple processors can together compute
+      a single program’s values. ]</para>
+    </listitem>
+  </orderedlist>
+
+  <section xml:id="map.map">
+    <title>Map requirements</title>
+
+    <titleabbrev>map.map</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Every <emphasis>map</emphasis> specifies how data stored in
+        blocks can be distributed over multiple processors.</para>
+      </listitem>
+
+      <listitem>
+        <para>Applying a map to a VSIPL++ block yields a set of disjoint
+        <emphasis>subblocks</emphasis>, whose union contains all the block’s
+        indices. Each subblock is an ordered set of indices. A
+        <emphasis>patch</emphasis> is a maximal subset of a subblock with
+        contiguous indices.</para>
+      </listitem>
+
+      <listitem>
+        <para>The map defines a relation between subblocks and processors in
+        the map’s <emphasis>processor set</emphasis>. The number of subblocks
+        must be less than or equal to the number of processors, i.e. if map is
+        an object of a class with the map interface, then
+        <code>map.num_subblocks() &lt;= map.num_processors()</code>. Each
+        processor can have either 0 or 1 subblocks.</para>
+      </listitem>
+
+      <listitem>
+        <para>In enum <type>distribution_type</type>, block indicates that
+        contiguous values will be placed in the same subblock. cyclic
+        indicates that contiguous values will be distributed in a round-robin
+        manner among the subblocks. whole indicates that all values will be
+        placed in a single subblock. other indicates that values will be
+        distributed in some other fashion.</para>
+      </listitem>
+
+      <listitem>
+        <para><constant>cyclic_contiguity</constant> indicates the number of
+        contiguous values to consider as a unit when distributing in a
+        round-robin manner. cyclic with a
+        <constant>cyclic_contiguity</constant> value greater than one is
+        commonly called “block-cyclic.”</para>
+      </listitem>
+
+      <listitem>
+        <para>A map is said to be <emphasis><inlineequation>
+            <m:math display="inline">
+              <m:mi>x</m:mi>
+            </m:math>
+          </inlineequation>-dimensional</emphasis> (where <inlineequation>
+            <m:math display="inline">
+              <m:mi>x</m:mi>
+            </m:math>
+          </inlineequation> is a positive integer) if it specifies
+        distributions for all dimensions less than <inlineequation>
+            <m:math display="inline">
+              <m:mi>x</m:mi>
+            </m:math>
+          </inlineequation>.</para>
+      </listitem>
+
+      <listitem>
+        <para>Every map shall satisfy the requirements in <xref
+        linkend="mapreq" />. In <xref linkend="mapreq" />, <inlineequation>
+            <m:math display="inline">
+              <m:mi>x</m:mi>
+            </m:math>
+          </inlineequation> denotes a Dim-dimensional map object of type M, d
+        is a dimension_type value, sb is an index_type value indicating a
+        subblock, and pr is a processor_type value.</para>
+
+        <para><table xml:id="mapreq">
+            <caption>Map requirements</caption>
+
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>assertion/note pre/post-condition</th>
+            </tr>
+
+            <tr>
+              <td><para><code>m.num_subblocks()</code></para></td>
+
+              <td><para>length_type</para></td>
+
+              <td></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.num_processors()</code></para></td>
+
+              <td><para>length_type</para></td>
+
+              <td></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.processor_set()</code></para></td>
+
+              <td><para>const_Vector&lt; processor_type,
+              <emphasis>implementation-defined</emphasis>&gt;</para></td>
+
+              <td></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.distribution(d)</code></para></td>
+
+              <td><para>distribution_type</para></td>
+
+              <td><para>d &lt; Dim</para></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.num_subblocks(d)</code></para></td>
+
+              <td><para>length_type</para></td>
+
+              <td><para>pre: d &lt; Dim</para><para>post: greater than
+              zero</para></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.cyclic_contiguity(d)</code></para></td>
+
+              <td><para>length_type</para></td>
+
+              <td><para>d &lt; Dim</para></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.subblock()</code></para></td>
+
+              <td><para>index_type</para></td>
+
+              <td></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.subblock(pr)</code></para></td>
+
+              <td><para>index_type</para></td>
+
+              <td><para>pr in processor_set</para></td>
+            </tr>
+
+            <tr>
+              <td><para><code>M::processor_iterator</code></para></td>
+
+              <td><para> <emphasis>unspecified</emphasis> </para></td>
+
+              <td></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.processors_begin(sb)</code></para></td>
+
+              <td><para>processor_iterator</para></td>
+
+              <td><para>0 &lt;= sb &lt; num_subblocks()</para></td>
+            </tr>
+
+            <tr>
+              <td><para><code>m.processors_end(sb)</code></para></td>
+
+              <td><para>processor_iterator</para></td>
+
+              <td><para>0 &lt;= sb &lt; num_subblocks()</para></td>
+            </tr>
+          </table></para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.num_subblocks()</code> returns the total number of
+        subblocks in the map.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.num_processors()</code> returns the total number of
+        processors in the map’s processor set.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.processor_set()</code> returns the map’s processor
+        set.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.distribution(d)</code> returns the type of distribution
+        for dimension d.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.num_subblocks(d)</code> returns the total number of
+        subblocks when the map is projected onto dimension d.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.cyclic_contiguity(d)</code> yields a positive value if
+        and only if <code>m.distribution(d) == cyclic</code>. Otherwise it
+        yields 0.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.subblock()</code> returns the subblock held by the local
+        processor, or no_subblock if no subblock is held.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.subblock(pr)</code> returns the subblock held by
+        processor pr, or no_subblock if no subblock is held.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>M::processor_iterator</code> must satisfy random access
+        iterator requirements (ISO14882, lib.random.access.iterators) and
+        constant iterator requirements (ISO14882,
+        lib.iterator.requirements).</para>
+      </listitem>
+
+      <listitem>
+        <para><code>m.processors_begin(sb)</code> returns an iterator
+        referring to the first processor in the sequence of processors that
+        have subblock sb. m.processors_end(sb) returns an iterator which is
+        the past-the-end value for the same sequence. If the sequence is empty
+        (that is, no processors store subblock sb), then
+        m.processors_begin(sb) == m.processors_end(sb).</para>
+      </listitem>
+
+      <listitem>
+        <para>If sb = m.subblock(pr) is valid, then pr is in the sequence
+        denoted by m.processors_begin(sb) and m.processors_end(sb).</para>
+      </listitem>
+
+      <listitem>
+        <para>If pr is in the sequence denoted by
+        <code>m.processors_begin(sb)</code> and
+        <code>m.processors_end(sb)</code>, then <code>sb =
+        m.subblock(pr)</code>.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="map.blockcyclic">
+    <title>Block-Cyclic Maps</title>
+
+    <titleabbrev>map.blockcyclic</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>The Map class is a map that distributes VSIPL++ blocks with
+        block, cyclic, blockcyclic, or whole distributions in each
+        dimension.</para>
+      </listitem>
+
+      <listitem>
+        <para>The distribution of each dimension in a Map is described by a
+        distribution class Block_dist, Cyclic_dist, or Whole_dist.</para>
+
+        <para>Header <emphasis>&lt;vsip/map.hpp&gt;</emphasis> synopsis</para>
+
+        <xi:include href="code/map.hpp" />
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="map.blockcyclic.distribute">
+      <title>Data Distribution Classes</title>
+
+      <titleabbrev>map.blockcyclic.distribute</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The distribution classes Block_dist, Cyclic_dist, and
+          Whole_dist describe how a single dimension is distributed.</para>
+
+          <xi:include href="code/map-blockcyclic-distribute.hpp" />
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.blockcyclic.blockdistribution">
+      <title>Block_dist data distributions</title>
+
+      <titleabbrev>map.blockcyclic.blockdistribution</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>A Block_dist object indicates a block data distribution.
+          Applying a block distribution to a one-dimensional domain yields
+          approximately equally-sized subblocks of contiguous indices. More
+          precisely, if the domain has <inlineequation>
+              <m:math display="inline">
+                <m:mi>n</m:mi>
+              </m:math>
+            </inlineequation> indices and the Block_dist object specifies
+          <inlineequation>
+              <m:math display="inline">
+                <m:mi>s</m:mi>
+              </m:math>
+            </inlineequation> subblocks, then index <inlineequation>
+              <m:math display="inline">
+                <m:mi>i</m:mi>
+              </m:math>
+            </inlineequation> is in subblock <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mo>⌊</m:mo>
+
+                  <m:mfrac bevelled="true">
+                    <m:mi>i</m:mi>
+
+                    <m:mrow>
+                      <m:mo>⌈</m:mo>
+
+                      <m:mfrac bevelled="true">
+                        <m:mi>n</m:mi>
+
+                        <m:mi>s</m:mi>
+                      </m:mfrac>
+
+                      <m:mo>⌉</m:mo>
+                    </m:mrow>
+                  </m:mfrac>
+
+                  <m:mo>⌋</m:mo>
+                </m:mrow>
+              </m:math>
+            </inlineequation>. Since subblocks have contiguous indices, each
+          subblock has exactly one patch.</para>
+        </listitem>
+
+        <listitem>
+          <synopsis><emphasis role="bold">Block_dist</emphasis>(length_type num_subblocks = 1) VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>num_subblocks &gt; 0.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Effects:</term>
+
+              <listitem>
+                <para>Constructs an object representing a block data
+                distribution with num_subblocks subblocks.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Postconditions:</term>
+
+              <listitem>
+                <para><code>this-&gt;num_subblocks() ==
+                num_subblocks</code>.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>distribution_type <emphasis role="bold">distribution</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>block.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The number of subblocks in the distribution.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">cyclic_contiguity</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>0</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>This function does not make sense for block
+                distributions but is provided so cyclic_contiguity can be
+                called for any data distribution object.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.blockcyclic.cyclicdistribution">
+      <title>Cyclic_dist data distributions</title>
+
+      <titleabbrev>map.blockcyclic.cyclicdistribution</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>A Cyclic_dist object indicates a cyclic data distribution.
+          Conceptually, applying a cyclic distribution to a one-dimensional
+          domain divides the domain into contiguous patches which are then
+          distributed in a round-robin fashion among the subblocks. More
+          precisely, if the Cyclic_dist object specifies <inlineequation>
+              <m:math display="inline">
+                <m:mi>s</m:mi>
+              </m:math>
+            </inlineequation> subblocks and a contiguity of <inlineequation>
+              <m:math display="inline">
+                <m:mi>c</m:mi>
+              </m:math>
+            </inlineequation>, then index <inlineequation>
+              <m:math display="inline">
+                <m:mi>i</m:mi>
+              </m:math>
+            </inlineequation> is in patch <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mo>⌊</m:mo>
+
+                  <m:mfrac bevelled="true">
+                    <m:mi>i</m:mi>
+
+                    <m:mi>c</m:mi>
+                  </m:mfrac>
+
+                  <m:mo>⌋</m:mo>
+                </m:mrow>
+              </m:math>
+            </inlineequation> and subblock <inlineequation>
+              <m:math display="inline">
+                <m:mrow>
+                  <m:mo>⌊</m:mo>
+
+                  <m:mfrac bevelled="true">
+                    <m:mi>i</m:mi>
+
+                    <m:mi>c</m:mi>
+                  </m:mfrac>
+
+                  <m:mo>⌋</m:mo>
+                </m:mrow>
+              </m:math>
+            </inlineequation>.</para>
+        </listitem>
+
+        <listitem>
+          <synopsis><emphasis role="bold">Cyclic_dist</emphasis>(length_type num_subblocks = 1, length_type contiguity = 1) VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>num_subblocks &gt; 0. contiguity &gt; 0.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Effects:</term>
+
+              <listitem>
+                <para>Constructs an object representing a cyclic data
+                distribution with num_subblocks subblocks and patches having
+                contiguity indices.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Postconditions:</term>
+
+              <listitem>
+                <para>this-&gt;num_subblocks() == num_subblocks
+                this-&gt;cyclic_contiguity() == contiguity.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>distribution_type <emphasis role="bold">distribution</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>cyclic.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The number of subblocks in the distribution.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">cyclic_contiguity</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The number of contiguous indices in a patch of the
+                distribution.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.blockcyclic.wholedistribution">
+      <title>Whole_dist data distributions</title>
+
+      <titleabbrev>map.blockcyclic.wholedistribution</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>A Whole_dist object indicates a whole data distribution.
+          Applying a whole distribution to a one-dimensional domain yields one
+          contiguous subblock that contains all the indices. Since the
+          subblock has contiguous indices, it has exactly one patch.</para>
+        </listitem>
+
+        <listitem>
+          <synopsis><emphasis role="bold">Whole_dist</emphasis>(length_type num_subblocks = 1) VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>num_subblocks == 1.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Effects:</term>
+
+              <listitem>
+                <para>Constructs an object representing a whole data
+                distribution.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>Even though num_subblocks must always be 1, this
+                constructor allows the Map constructor taking a number of
+                subblocks in each dimension to work with Whole_dist.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>distribution_type <emphasis role="bold">distribution</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>whole.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>1.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">cyclic_contiguity</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>0.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>This function does not make sense for whole
+                distributions but is provided so cyclic_contiguity can be
+                called for any data distribution object.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.blockcyclic.mapclass">
+      <title>Map map</title>
+
+      <titleabbrev>map.blockcyclic.mapclass</titleabbrev>
+
+      <xi:include href="code/map-blockcyclic-mapclass.hpp" />
+    </section>
+
+    <section xml:id="map.blockcyclic.template">
+      <title>Template Parameters</title>
+
+      <titleabbrev>map.blockcyclic.template</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>There must be exactly VSIP_MAX_DIMENSION template parameters,
+          each having a default type of Block_dist.</para>
+        </listitem>
+
+        <listitem>
+          <para>Each template argument must be either Block_dist, Cyclic_dist,
+          or Whole_dist.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.blockcyclic.constructors">
+      <title>Constructors</title>
+
+      <titleabbrev>map.blockcyclic.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Map</emphasis>(Dim<emphasis>0</emphasis> const&amp; dist<emphasis>0</emphasis>, ..., Dim<emphasis>n</emphasis> const&amp; dist<emphasis>n</emphasis>) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Notation:</term>
+
+          <listitem>
+            <para>The parameter list contains VSIP_MAX_DIMENSION parameters,
+            each a constant reference to the corresponding type
+            Dim<emphasis>i</emphasis> in the template parameter list. Each
+            parameter has a default argument
+            Dim<emphasis>i</emphasis>().</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The number of subblocks specified by the data distribution
+            parameters (this-&gt;num_subblocks()) must be less than or equal
+            the total number or processors running the data-parallel program
+            (vsip::num_processors() or equivalently
+            vsip::processor_set().size()).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a Map object whose processor set is the full
+            processor set of the data-parallel program
+            (vsip::processor_set()). The <inlineequation>
+                <m:math display="inline">
+                  <m:mi>i</m:mi>
+                </m:math>
+              </inlineequation>th sub-block is mapped to the <inlineequation>
+                <m:math display="inline">
+                  <m:mi>i</m:mi>
+                </m:math>
+              </inlineequation>th processor in the processor set.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>this-&gt;num_processors() == vsip::processor_set.size().
+            this- &gt;processor_set() contains the same processors as
+            vsip::processor_set(), in the same order.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;typename BlockT&gt; <emphasis role="bold">
+Map</emphasis>(const_Vector&lt;processor_type, BlockT&gt; processor_set, 
+    Dim<emphasis>0</emphasis> const &amp;dist<emphasis>0</emphasis>, ..., Dim<emphasis>n</emphasis> const &amp;dist<emphasis>n</emphasis>) 
+  VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Notation:</term>
+
+          <listitem>
+            <para>The parameter list contains VSIP_MAX_DIMENSION data
+            distribution parameters, each a constant reference to the
+            corresponding type Dim<emphasis>i</emphasis> in the template
+            parameter list. Each parameter has a default argument
+            Dim<emphasis>i</emphasis>().</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>processor set.size() must be at least the number of
+            subblocks specified by the data distribution parameters
+            (this-&gt;num_subblocks()). This number is the product of each
+            data distribution’s number of subblocks. This function is present
+            only if an implementation permits instantiation of const
+            Vector&lt;processor_type&gt;.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a Map object with the specified processor set
+            processor_set. The <inlineequation>
+                <m:math display="inline">
+                  <m:mi>i</m:mi>
+                </m:math>
+              </inlineequation>th sub-block is mapped to the <inlineequation>
+                <m:math display="inline">
+                  <m:mi>i</m:mi>
+                </m:math>
+              </inlineequation>th processor in the processor set.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;num_processors() ==
+            processor_set.size()</code>. <code>this-&gt;processor_set()</code>
+            contains the same processors as processor_set, in the same
+            order.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="map.blockcyclic.accessors">
+      <title>Accessor functions</title>
+
+      <titleabbrev>map.blockcyclic.accessors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>For notational simplicity in this subclause, let dd[i]
+          indicate the ith constructor data distribution object when i &gt;= 0
+          &amp;&amp; i &lt; VSIP_MAX_DIMENSION .</para>
+        </listitem>
+
+        <listitem>
+          <synopsis>distribution_type <emphasis role="bold">distribution</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The distribution type of the dth data distribution
+                dd[d].distribution().</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The number of subblocks for the dth data distribution
+                dd[d].num_subblocks().</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">cyclic_contiguity</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The cyclic contiguity of the d th data distribution
+                dd[d].cyclic_contiguity().</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The total number of subblocks for *this map. This is the
+                product of each data distribution’s number of subblocks.
+                this-&gt;num_subblocks() = <inlineequation>
+                    <m:math display="inline">
+                      <m:mrow>
+                        <m:munderover>
+                          <m:mo>∏</m:mo>
+
+                          <m:mrow>
+                            <m:mi>d</m:mi>
+
+                            <m:mo>=</m:mo>
+
+                            <m:mi>0</m:mi>
+                          </m:mrow>
+
+                          <m:mrow>
+                            <m:msub>
+                              <m:mi>D</m:mi>
+
+                              <m:mi>max</m:mi>
+                            </m:msub>
+
+                            <m:mo>-</m:mo>
+
+                            <m:mi>1</m:mi>
+                          </m:mrow>
+                        </m:munderover>
+                      </m:mrow>
+                    </m:math>
+                  </inlineequation> this-&gt;num_subblocks(<inlineequation>
+                    <m:math display="inline">
+                      <m:mi>d</m:mi>
+                    </m:math>
+                  </inlineequation>). where <inlineequation>
+                    <m:math display="inline">
+                      <m:msub>
+                        <m:mi>D</m:mi>
+
+                        <m:mi>max</m:mi>
+                      </m:msub>
+                    </m:math>
+                  </inlineequation> == VSIP_MAX_DIMENSION</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_processors</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The total number of processors for *this’ processor set.
+                (<code>this-&gt;num_processors() ==
+                this-&gt;processor_set().size()</code>).</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.blockcyclic.gridfn">
+      <title>Subblock and processor iterator accessors</title>
+
+      <titleabbrev>map.blockcyclic.gridfn</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>index_type <emphasis role="bold">subblock</emphasis>(processor_type pr) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The subblock held by processor pr, or no_subblock if pr
+                does not hold a subblock.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>index_type <emphasis role="bold">subblock</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The subblock held by the local processor, or no_subblock
+                if the local processor does not hold a subblock.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>const_Vector&lt;processor_type,
+      <emphasis>implementation-defined</emphasis>&gt; <emphasis role="bold">processor_set</emphasis>() const VSIP_THROW(std::bad_alloc);</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The processor set for *this.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>processor_iterator <emphasis role="bold">processors_begin</emphasis>(index_type sb) const
+      VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>sb to be a valid subblock of *this
+                this-&gt;num_subblocks()) or no_subblock.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The beginning of a sequence containing only
+                processor_set.get(sb).</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>processor_iterator <emphasis role="bold">processors_end</emphasis>(index_type sb) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>sb to be a valid subblock of *this (0 &lt;= sb &lt;
+                this-&gt;num_subblocks()) or no_subblock.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The end of the sequence returned by
+                processors_begin(sb).</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="map.localmap">
+    <title>Local_map map</title>
+
+    <titleabbrev>map.localmap</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>The class Local_map is a <emphasis>map</emphasis> that describes
+        data that is stored locally on a single processor and is not
+        distributed.</para>
+      </listitem>
+    </orderedlist>
+
+    <xi:include href="code/localmap-localmap.hpp" />
+
+    <section xml:id="map.localmap.constructors">
+      <title>Constructors</title>
+
+      <titleabbrev>map.localmap.constructors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis><emphasis role="bold">Local_map</emphasis>() VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Effects:</term>
+
+              <listitem>
+                <para>Constructs a Local_map object with the local processor
+                as the processor set.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.localmap.accessors">
+      <title>Accessor functions</title>
+
+      <titleabbrev>map.localmap.accessors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>distribution_type <emphasis role="bold">distribution</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>whole.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>1.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">cyclic_contiguity</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>0.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>1.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_processors</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>1.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.localmap.gridfn">
+      <title>Subblock and processor iterator accessors</title>
+
+      <titleabbrev>map.localmap.gridfn</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>index_type <emphasis role="bold">subblock</emphasis>(processor_type pr) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>0 if pr is the local processor, no_subblock
+                otherwise.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>index_type <emphasis role="bold">subblock</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>0 (the subblock held by the local processor).</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>const_Vector&lt;processor_type, <emphasis>implementation-defined</emphasis>&gt; <emphasis
+              role="bold">
+processor_set</emphasis>() const VSIP_THROW(std::bad_alloc);</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>A vector containing the local processor.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>processor_iterator <emphasis role="bold">processors_begin</emphasis>(index_type sb) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>sb to be a valid subblock (sb == 0).</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The beginning of a sequence containing only the local
+                processor.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>processor_iterator <emphasis role="bold">processors_end</emphasis>(index_type sb) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>sb to be a valid subblock (sb == 0).</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The end of the sequence returned by processors_begin
+                .</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="map.replicatedmap">
+    <title>Replicated_map map</title>
+
+    <titleabbrev>map.replicatedmap</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>The class Replicated_map is a <emphasis>map</emphasis> that
+        describes data that is replicated. Each processor in the map’s
+        processor set owns an entire copy of the data.</para>
+      </listitem>
+    </orderedlist>
+
+    <xi:include href="code/replicatedmap-replicatedmap.hpp" />
+
+    <section xml:id="map.replicatedmap.template">
+      <title>Template Parameters</title>
+
+      <titleabbrev>map.replicatedmap.template</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>Dim specifies the dimensionality of the Replicated_map. It is
+          at least one and at most VSIP_MAX_DIMENSION.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.replicatedmap.constructors">
+      <title>Constructors</title>
+
+      <titleabbrev>map.replicatedmap.constructors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis><emphasis role="bold">Replicated_map</emphasis>() VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Effects:</term>
+
+              <listitem>
+                <para>Constructs a Replicated_map object with the full
+                processor set.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>template &lt;typename Block&gt; <emphasis
+                role="bold">
+Replicated_map</emphasis>(const_Vector&lt;processor_type, Block&gt; processor_set) VSIP_NOTHROW;</synopsis><variablelist>
+              <varlistentry>
+                <term>Effects:</term>
+
+                <listitem>
+                  <para>Constructs a Replicated_map object with the processor
+                  set specified by processor_set.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.replicatedmap.accessors">
+      <title>Accessor functions</title>
+
+      <titleabbrev>map.replicatedmap.accessors</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>distribution_type <emphasis role="bold">distribution</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>whole.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <para><synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis><variablelist>
+              <varlistentry>
+                <term>Requires:</term>
+
+                <listitem>
+                  <para>d &lt; VSIP_MAX_DIMENSION.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Returns:</term>
+
+                <listitem>
+                  <para>1, if the current
+                  processor is part of *this’ processor set, 0
+                  otherwise.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist></para>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">cyclic_contiguity</emphasis>(dimension_type d) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>d &lt; VSIP_MAX_DIMENSION.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>0.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_subblocks</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>1, if the current processor
+                is part of *this’ processor set, 0 otherwise.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>length_type <emphasis role="bold">num_processors</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The total number of processors for *this’ processor
+                set.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="map.replicatedmap.gridfn">
+      <title>Subblock and processor iterator accessors</title>
+
+      <titleabbrev>map.replicatedmap.gridfn</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <synopsis>index_type <emphasis role="bold">subblock</emphasis>(processor_type pr) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>pr to be a valid processor in *this’ processor
+                set.</para>
+
+                <para>0, if pr is part of *this’ processor set, no_subblock
+                otherwise.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>index_type <emphasis role="bold">subblock</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>0, if pr is part of *this’ processor set, no_subblock
+                otherwise.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>const_Vector&lt;processor_type, <emphasis>implementation-deﬁned</emphasis>&gt; <emphasis
+              role="bold">processor_set</emphasis>() const 
+  VSIP_THROW(std::bad_alloc);</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The processor set for *this.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>processor_iterator <emphasis role="bold">processors_begin</emphasis>(index_type sb) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>sb to be a valid subblock (sb == 0).</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The beginning of a sequence containing *this processor
+                set.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <synopsis>processor_iterator <emphasis role="bold">processors_end</emphasis>(index_type sb) const VSIP_NOTHROW;</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>sb to be a valid subblock (sb == 0).</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Returns:</term>
+
+              <listitem>
+                <para>The end of the sequence returned by
+                processors_begin(sb).</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+</chapter>

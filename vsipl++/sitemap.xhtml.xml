@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<targetset xmlns:xi="http://www.w3.org/2003/XInclude">
+  <targetsetinfo>
+    This target database describes the VSIPL++ spec HTML hierarchy.
+  </targetsetinfo>
+
+  <!-- Site map for generating relative paths between documents -->
+  <sitemap>
+    <dir>
+      <dir name="vsiplxx">
+        <document targetdoc="vsiplxx" baseuri="./">
+          <xi:include href="vsipl++.xhtml.xref"/>
+        </document>
+      </dir>
+      <dir name="vsiplxx-par">
+        <document targetdoc="vsiplxx-par" baseuri="./">
+          <xi:include href="vsipl++-par.xhtml.xref"/>
+        </document>
+      </dir>
+    </dir>
+  </sitemap>
+</targetset>

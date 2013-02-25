@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="types" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:ns6="http://www.w3.org/1999/xlink"
+         xmlns:ns5="http://www.w3.org/2000/svg"
+         xmlns:ns4="http://www.w3.org/1999/xhtml"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Summary of VSIPL Types</title>
+
+  <section>
+    <title>Type - Introduction</title>
+
+    <para>Notes: Highlight (in the VSIPL TYPES section only) denotes an
+    implementation dependent name, type or value. ANSI C macros found in this
+    section are defined in float.h and limits.h. The basic scalar types
+    are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Floating point</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Denoted with suffix <replaceable>_f</replaceable>, which is
+            one or more of the types:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>_f (float)</para>
+              </listitem>
+
+              <listitem>
+                <para>_d (double)</para>
+              </listitem>
+
+              <listitem>
+                <para>and _l (long double)</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Portable precision types</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>_f6 Floating point types with at least 6 decimal digits
+                of accuracy. IEEE 754 single precision (32 bit) has 6 decimal
+                digits of accuracy.</para>
+              </listitem>
+
+              <listitem>
+                <para>_f15 Floating point types with at least 15 decimal
+                digits of accuracy. IEEE 754 double precision (64 bit) has 15
+                decimal digits of accuracy.</para>
+              </listitem>
+
+              <listitem>
+                <para>_fn Floating point type with at least n decimal digits
+                of accuracy. If the system supports such a precision, it
+                resolves to the smallest C type based on the values of
+                FLT_MANT_DIG, DBL_MANT_DIG, or LDBL_MANT_DIG.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Integer</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Denoted with suffix <replaceable>_i</replaceable> which is
+            one or more of the types:<itemizedlist>
+                <listitem>
+                  <para>_c (char)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_uc (unsigned char)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_si (short int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_us (unsigned short int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_i (int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_u (unsigned int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_li (long int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_ul (unsigned long int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_ll (long long int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_ull (unsigned long long int)</para>
+                </listitem>
+
+                <listitem>
+                  <para>_vi (unsigned long int)</para>
+                </listitem>
+              </itemizedlist></para>
+          </listitem>
+
+          <listitem>
+            <para>Portable precision types</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Of at least n bits:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>_il8 int of at least 8 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_il16 int of at least 16 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_il32 int of at least 32 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_il64 int of at least 64 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_iln int of at least n bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ul8 unsigned int of at least 8 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ul16 unsigned int of at least 16 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ul32 unsigned int of at least 32 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ul64 unsigned int of at least 64 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_uln unsigned int of at least n bits</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+
+              <listitem>
+                <para>Of exactly n bits:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>_ie8 int of exactly 8 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ie16 int of exactly 16 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ie32 int of exactly 32 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ie64 int of exactly 64 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ien int of exactly n bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ue8 unsigned int of exactly 8 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ue16 unsigned int of exactly 16 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ue32 unsigned int of exactly 32 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ue64 unsigned int of exactly 64 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_uen unsigned int of exactly n bits</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+
+              <listitem>
+                <para>Fastest type of at least n bits:</para>
+
+                <itemizedlist>
+                  <listitem>
+                    <para>_if8 fastest int of at least 8 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_if16 fastest int of at least 16 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_if32 fastest int of at least 32 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_if64 fastest int of at least 64 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ifn fastest int of at least n bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_uf8 unsigned fastest int of at least 8 bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_uf16 unsigned fastest int of at least 16
+                    bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_uf32 unsigned fastest int of at least 32
+                    bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_uf64 unsigned fastest int of at least 64
+                    bits</para>
+                  </listitem>
+
+                  <listitem>
+                    <para>_ufn unsigned fastest int of at least n bits</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Integer or Floating point</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Denoted with suffix <replaceable>_p</replaceable>, which is
+            the union of <replaceable>_f</replaceable> and
+            <replaceable>_i</replaceable>.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Boolean</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Logical false for zero, and logical true for
+            non-zero.</para>
+          </listitem>
+
+          <listitem>
+            <para>Denoted with suffix: _bl</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Vector Index</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Unsigned integer denoting the index of a vector element. The
+            vector index of the element <inlineequation>
+                <m:math display="inline">
+                  <m:msub>
+                    <m:mi>x</m:mi>
+
+                    <m:mi>i</m:mi>
+                  </m:msub>
+                </m:math>
+              </inlineequation> is i.</para>
+          </listitem>
+
+          <listitem>
+            <para>Denoted with suffix: _vi</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Matrix Index</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Unsigned integer denoting the index of a matrix element. The
+            matrix index of the element <inlineequation>
+                <m:math display="inline">
+                  <m:msub>
+                    <m:mi>x</m:mi>
+
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mi>j</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                </m:math>
+              </inlineequation>, is the 2-tuple <inlineequation>
+                <m:math display="inline">
+                  <m:mrow>
+                    <m:mo>{</m:mo>
+
+                    <m:mi>i</m:mi>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mi>j</m:mi>
+
+                    <m:mo>}</m:mo>
+                  </m:mrow>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Denoted with suffix: _mi</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Tensor Index</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Unsigned integer denoting the index of a 3-tensor element.
+            The tensor index of the element <inlineequation>
+                <m:math display="inline">
+                  <m:msub>
+                    <m:mi>x</m:mi>
+
+                    <m:mrow>
+                      <m:mi>i</m:mi>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mi>j</m:mi>
+
+                      <m:mo>,</m:mo>
+
+                      <m:mi>k</m:mi>
+                    </m:mrow>
+                  </m:msub>
+                </m:math>
+              </inlineequation> is the 3-tuple <inlineequation>
+                <m:math display="inline">
+                  <m:mrow>
+                    <m:mo>{</m:mo>
+
+                    <m:mi>i</m:mi>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mi>j</m:mi>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mi>k</m:mi>
+
+                    <m:mo>}</m:mo>
+                  </m:mrow>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Denoted with suffix: _ti</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Scalar</title>
+
+    <section>
+      <title>Real Scalar</title>
+
+      <xi:include href="code/real_scalar.h"/>
+    </section>
+
+    <section>
+      <title>Complex Scalar</title>
+
+      <xi:include href="code/complex_scalar.h"/>
+    </section>
+
+    <section>
+      <title>Boolean</title>
+
+      <xi:include href="code/boolean.h"/>
+
+      <para>However, just as in ANSI C, testing equality of booleans that are
+      true may not result in a logical true.</para>
+
+      <programlisting>vsip_bool a;
+vsip_bool b;
+…
+/* a and b may both be true, but the logical test may return false */
+if(a == b) 
+{
+  /* true */
+  …
+} 
+else 
+{
+  /* false */
+  …
+}</programlisting>
+    </section>
+
+    <section>
+      <title>Index</title>
+
+      <para>Vector index</para>
+
+      <synopsis>typedef unsigned long int vsip_scalar_vi;</synopsis>
+
+      <para>Matrix index</para>
+
+      <synopsis>typedef struct { vsip_scalar_vi r,c;} vsip_scalar_mi;</synopsis>
+
+      <para>Tensor index</para>
+
+      <synopsis>typedef struct { vsip_scalar_vi z,y,x;} vsip_scalar_ti;</synopsis>
+
+      <para>Element index; a synonym for vector index</para>
+
+      <synopsis>typedef vsip_scalar_vi vsip_index;
+#define VSIP_MAX_SCALAR_VI ULONG_MAX
+#define VSIP_MIN_SCALAR_VI 0</synopsis>
+    </section>
+
+    <section>
+      <title>Offset, Stride, Length</title>
+
+      <para>Unsigned offset in elements</para>
+
+      <synopsis>typedef vsip_scalar_vi vsip_offset;</synopsis>
+
+      <para>Stride in elements between successive elements in memory along a
+      dimensions (row, column for matrices, or X, Y, Z for tensors)</para>
+
+      <synopsis>typedef signed long int vsip_stride;</synopsis>
+
+      <para>Unsigned length in elements, a synonym for vector index</para>
+
+      <synopsis>typedef vsip_scalar_vi vsip_length;</synopsis>
+    </section>
+  </section>
+
+  <section>
+    <title>Random Number Generator</title>
+
+    <para>Object type for the random number generator’s state
+    information.</para>
+
+    <synopsis>struct vsip_randomstate;
+typedef struct vsip_randomstate vsip_randstate;</synopsis>
+
+    <para>Enumerated type for the preferred random number generator.</para>
+
+    <synopsis>typedef enum 
+{
+  VSIP_PRNG = 0, /* Portable random number generator */
+  VSIP_NPRNG = 1 /* Non-portable random number generator */
+} vsip_rng;</synopsis>
+  </section>
+
+  <section>
+    <title>Block Object</title>
+
+    <para>Hint used when allocating VSIPL data memory for a block
+    object.</para>
+
+    <synopsis>typedef enum 
+{
+  VSIP_MEM_NONE = 0,          /* No hint */
+  VSIP_MEM_RDONLY = 1,        /* Read Only */
+  VSIP_MEM_CONST = 2,         /* Constant */
+  VSIP_MEM_SHARED = 3,        /* Shared */
+  VSIP_MEM_SHARED_RDONLY = 4, /* Shared, Read Only */
+  VSIP_MEM_SHARED_CONST = 5   /* Shared, Constant */
+} vsip_memory_hint;</synopsis>
+
+    <para>Enumerated type for the preferred memory storage layout of complex
+    data.</para>
+
+    <synopsis>typedef enum 
+{
+  VSIP_CMPLX_INTERLEAVED = 0, /* Interleaved */
+  VSIP_CMPLX_SPLIT = 1,       /* Split, separate real and imaginary */
+  VSIP_CMPLX_NONE = 2         /* No preferred storage layout */
+} vsip_cmplx_mem;</synopsis>
+
+    <para>Object type for a block of boolean data.</para>
+
+    <synopsis>struct vsip_blockobject_bl;
+typedef struct vsip_blockobject_bl vsip_block_bl;</synopsis>
+
+    <para>Object type for a block of vector index data.</para>
+
+    <synopsis>struct vsip_blockobject_vi;
+typedef struct vsip_blockobject_vi vsip_block_vi;</synopsis>
+
+    <para>Object type for a block of matrix index data.</para>
+
+    <synopsis>struct vsip_blockobject_mi;
+typedef struct vsip_blockobject_mi vsip_block_mi</synopsis>
+
+    <para>Object type for a block of tensor index data.</para>
+
+    <synopsis>struct vsip_blockobject_ti;
+typedef struct vsip_blockobject_ti vsip_block_ti;</synopsis>
+
+    <para>Object type for a block of integer, floating point data.</para>
+
+    <synopsis>struct vsip_blockobject_i;
+typedef struct vsip_blockobject_i vsip_block_i;
+struct vsip_blockobject_f;
+typedef struct vsip_blockobject_f vsip_block_f;</synopsis>
+
+    <para>Object type for a block of complex integer, or complex floating
+    point data.</para>
+
+    <synopsis>struct vsip_cblockobject_i;
+typedef struct vsip_cblockobject_i vsip_cblock_i;
+struct vsip_cblockobject_f;
+typedef struct vsip_cblockobject_f vsip_cblock_f;</synopsis>
+  </section>
+
+  <section>
+    <title>Vector View</title>
+
+    <section>
+      <title>Real Vector View Object</title>
+
+      <para>Attribute structure for a vector view of vector indices.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_block_vi *block;
+} vsip_vattr_vi;</synopsis>
+
+      <para>Object type for a vector view of vector indices.</para>
+
+      <synopsis>struct vsip_vviewobject_vi;
+typedef struct vsip_vviewobject_vi vsip_vview_vi;</synopsis>
+
+      <para>Attribute structure for a vector view of matrix indices.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_block_mi *block;
+} vsip_vattr_mi;</synopsis>
+
+      <para>Object type for a vector view of matrix indices.</para>
+
+      <synopsis>struct vsip_vviewobject_mi;
+typedef struct vsip_vviewobject_mi vsip_vview_mi;</synopsis>
+
+      <para>Attribute structure for a vector view of tensor indices.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_block_ti *block;
+} vsip_vattr_ti;</synopsis>
+
+      <para>Object type for a vector view of tensor indices.</para>
+
+      <synopsis>struct vsip_vviewobject_ti;
+typedef struct vsip_vviewobject_ti vsip_vview_ti;</synopsis>
+
+      <para>Attribute structure for a vector view of booleans.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_block_bl *block;
+} vsip_vattr_bl;</synopsis>
+
+      <para>Object type for a vector view of booleans.</para>
+
+      <synopsis>struct vsip_vviewobject_bl;
+typedef struct vsip_vviewobject_bl vsip_vview_bl;</synopsis>
+
+      <para>Attribute structure for a vector view of integer data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_block_i *block;
+} vsip_vattr_i;</synopsis>
+
+      <para>Object type for a vector view of integer data.</para>
+
+      <synopsis>struct vsip_vviewobject_i;
+typedef struct vsip_vviewobject_i vsip_vview_i;</synopsis>
+
+      <para>Attribute structure for a vector view of floating point
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_block_f *block;
+} vsip_vattr_f;</synopsis>
+
+      <para>Object type for a vector view of floating point data.</para>
+
+      <synopsis>struct vsip_vviewobject_f;
+typedef struct vsip_vviewobject_f vsip_vview_f;</synopsis>
+    </section>
+
+    <section>
+      <title>Complex Vector View</title>
+
+      <para>Attribute structure for a vector view of complex integer
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_cblock_i *block;
+} vsip_cvattr_i;</synopsis>
+
+      <para>Object type for a vector view of complex integer data.</para>
+
+      <synopsis>struct vsip_cvviewobject_i;
+typedef struct vsip_cvviewobject_i vsip_cvview_i;</synopsis>
+
+      <para>Attribute structure for a vector view of complex floating point
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride stride;
+  vsip_length length;
+  vsip_cblock_f *block;
+} vsip_cvattr_f;</synopsis>
+
+      <para>Object type for a vector view of complex floating point
+      data.</para>
+
+      <synopsis>struct vsip_cvviewobject_f;
+typedef struct vsip_cvviewobject_f vsip_cvview_f;</synopsis>
+    </section>
+  </section>
+
+  <section>
+    <title>Matrix View</title>
+
+    <synopsis>/* Indicates the major memory direction, along rows, or columns.*/
+typedef enum 
+{
+  VSIP_ROW = 0, /* Row, C style */
+  VSIP_COL = 1  /* Column, FORTRAN style */
+} vsip_major;</synopsis>
+
+    <section>
+      <title>Real Matrix View Object</title>
+
+      <para>Attribute structure for a matrix view of booleans.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride col_stride;
+  vsip_length col_length;
+  vsip_stride row_stride;
+  vsip_length row_length;
+  vsip_block_bl *block;
+} vsip_mattr_bl;</synopsis>
+
+      <para>Object type for a matrix view of booleans.</para>
+
+      <synopsis>struct vsip_mviewobject_bl;
+typedef struct vsip_mviewobject_bl vsip_mview_bl;</synopsis>
+
+      <para>Attribute structure for a matrix view of integer data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride col_stride;
+  vsip_length col_length;
+  vsip_stride row_stride;
+  vsip_length row_length;
+  vsip_block_i *block;
+} vsip_mattr_i;</synopsis>
+
+      <para>Object type for a matrix view of integer data.</para>
+
+      <synopsis>struct vsip_mviewobject_i;
+typedef struct vsip_mviewobject_i vsip_mview_i;</synopsis>
+
+      <para>Attribute structure for a matrix view of floating point
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride col_stride;
+  vsip_length col_length;
+  vsip_stride row_stride;
+  vsip_length row_length;
+  vsip_block_f *block;
+} vsip_mattr_f;</synopsis>
+
+      <para>Object type for a matrix view of floating point data.</para>
+
+      <synopsis>struct vsip_mviewobject_f;
+typedef struct vsip_mviewobject_f vsip_mview_f;</synopsis>
+    </section>
+
+    <section>
+      <title>Complex Matrix View Object</title>
+
+      <para>Object type for a matrix view of complex integer or floating point
+      data.</para>
+
+      <synopsis>struct vsip_cmviewobject_p;
+typedef struct vsip_cmviewobject_p vsip_cmview_p;</synopsis>
+
+      <para>Attribute structure for a matrix view of complex integer
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride col_stride;
+  vsip_length col_length;
+  vsip_stride row_stride;
+  vsip_length row_length;
+  vsip_cblock_i *block;
+} vsip_cmattr_i;</synopsis>
+
+      <para>Object type for a matrix view of complex integer data.</para>
+
+      <synopsis>struct vsip_cmviewobject_i;
+typedef struct vsip_cmviewobject_i vsip_cmview_i;</synopsis>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride col_stride;
+  vsip_length col_length
+  vsip_stride row_stride;
+  vsip_length row_length;
+  vsip_cblock_f *block;
+} vsip_mattr_f;</synopsis>
+
+      <para>Object type for a matrix view of complex floating point
+      data.</para>
+
+      <synopsis>struct vsip_cmviewobject_f;
+typedef struct vsip_cmviewobject_f vsip_cmview_f;</synopsis>
+    </section>
+  </section>
+
+  <section>
+    <title>Tensor View</title>
+
+    <xi:include href="code/tensor.h"/>
+
+    <section>
+      <title>Real Tensor View Object</title>
+
+      <para>Attribute structure for a tensor view of booleans.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride z_length;
+  vsip_length z_stride;
+  vsip_stride y_length;
+  vsip_length y_stride;
+  vsip_stride x_length;
+  vsip_length x_stride;
+  vsip_block_bl *block;
+} vsip_tattr_bl;</synopsis>
+
+      <para>Object type for a tensor view of booleans.</para>
+
+      <synopsis>struct vsip_tviewobject_bl;
+typedef struct vsip_tviewobject_bl vsip_tview_bl;</synopsis>
+
+      <para>Attribute structure for a tensor view of integer data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride z_length;
+  vsip_length z_stride;
+  vsip_stride y_length;
+  vsip_length y_stride;
+  vsip_stride x_length;
+  vsip_length x_stride;
+  vsip_block_i *block;
+} vsip_tattr_i;</synopsis>
+
+      <para>Object type for a tensor view of integer data.</para>
+
+      <synopsis>struct vsip_tviewobject_i;
+typedef struct vsip_tviewobject_i vsip_tview_i;</synopsis>
+
+      <para>Attribute structure for a tensor view of floating point
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride z_length;
+  vsip_length z_stride;
+  vsip_stride y_length;
+  vsip_length y_stride;
+  vsip_stride x_length;
+  vsip_length x_stride;
+  vsip_block_f *block;
+} vsip_tattr_f;</synopsis>
+
+      <para>Object type for a tensor view of floating point data.</para>
+
+      <synopsis>struct vsip_tviewobject_f;
+typedef struct vsip_tviewobject_f vsip_tview_f;</synopsis>
+    </section>
+
+    <section>
+      <title>Complex Tensor View Object</title>
+
+      <para>Object type for a tensor view of complex integer or floating point
+      data.</para>
+
+      <synopsis>struct vsip_ctviewobject_p;
+typedef struct vsip_ctviewobject_p vsip_ctview_p;</synopsis>
+
+      <para>Attribute structure for a tensor view of complex integer
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride z_length;
+  vsip_length z_stride;
+  vsip_stride y_length;
+  vsip_length y_stride;
+  vsip_stride x_length;
+  vsip_length x_stride;
+  vsip_cblock_i *block;
+} vsip_ctattr_i;</synopsis>
+
+      <para>Object type for a tensor view of complex integer data.</para>
+
+      <synopsis>struct vsip_ctviewobject_i;
+typedef struct vsip_ctviewobject_i vsip_ctview_i;</synopsis>
+
+      <para>Attribute structure for a tensor view of complex floating point
+      data.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_offset offset;
+  vsip_stride z_length;
+  vsip_length z_stride;
+  vsip_stride y_length;
+  vsip_length y_stride;
+  vsip_stride x_length;
+  vsip_length x_stride;
+  vsip_cblock_f *block;
+} vsip_ctattr_f;</synopsis>
+
+      <para>Object type for a tensor view of complex floating point
+      data.</para>
+
+      <synopsis>struct vsip_ctviewobject_f;
+typedef struct vsip_ctviewobject_f vsip_ctview_f;</synopsis>
+    </section>
+  </section>
+
+  <section>
+    <title>Signal Processing</title>
+
+    <xi:include href="code/signal.h"/>
+
+    <section>
+      <title>FFT</title>
+
+      <xi:include href="code/fft.h"/>
+    </section>
+
+    <section>
+      <title>Filtering</title>
+
+      <xi:include href="code/filter.h"/>
+    </section>
+
+    <section>
+      <title>Convolution</title>
+
+      <xi:include href="code/convolution.h"/>
+    </section>
+
+    <section>
+      <title>Correlation</title>
+
+      <xi:include href="code/correlation.h"/>
+    </section>
+
+    <section>
+      <title>Histogram</title>
+
+      <xi:include href="code/histogram.h"/>
+    </section>
+  </section>
+
+  <section>
+    <title>Linear Algebra</title>
+
+    <xi:include href="code/linalg.h"/>
+
+    <section>
+      <title>Solvers</title>
+
+      <section>
+        <title>LU</title>
+
+        <xi:include href="code/lu.h"/>
+      </section>
+
+      <section>
+        <title>Cholesky</title>
+
+        <xi:include href="code/cholesky.h"/>
+      </section>
+
+      <section>
+        <title>QR</title>
+
+        <xi:include href="code/qr.h"/>
+      </section>
+
+      <section>
+        <title>SVD</title>
+
+        <xi:include href="code/svd.h"/>
+      </section>
+    </section>
+  </section>
+</chapter>

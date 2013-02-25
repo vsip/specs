@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="dpp" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Data Parallel Programs</title>
+
+  <titleabbrev>dpp</titleabbrev>
+
+  <section xml:id="dpp.defn">
+    <title>Definitions</title>
+
+    <titleabbrev>dpp.defn</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A <emphasis>local view</emphasis> is stored on the local
+        processor and visible only to the local processor. Views of blocks
+        with map type Local_map and other map types specified by the
+        implementation are local views.</para>
+      </listitem>
+
+      <listitem>
+        <para>A <emphasis>distributed view</emphasis> is globally visible to
+        all processors executing a data-parallel VSIPL++ program. It
+        represents data that is distributed over one or more processors. Views
+        of blocks with map type Map, Replicated_map, and other map types
+        specified by the implementation are distributed views.</para>
+
+        <para>Implementations will specify their level of support (0 through
+        3) for distributed views as indicated in [dpp.distlevel].</para>
+      </listitem>
+
+      <listitem>
+        <para>Subviews of a view retain the same local/distributed status as
+        the original view.</para>
+      </listitem>
+
+      <listitem>
+        <para>For distributed views, the local() member function returns the
+        local subblock view. This is a local view to the distributed view’s
+        subblock stored on the local processor.</para>
+      </listitem>
+
+      <listitem>
+        <para>For local views, the local() member function returns the view
+        itself.</para>
+      </listitem>
+
+      <listitem>
+        <para>An assignment operation is one that assigns a new value to
+        either a scalar variable or a view variable (with multiple element
+        values) that is the result of performing a computation on one or more
+        scalar and view values.</para>
+      </listitem>
+
+      <listitem>
+        <para>A local assignment is one where all views in the assignment
+        (both source and destination) are local.</para>
+      </listitem>
+
+      <listitem>
+        <para>A distributed assignment is one where all views in the
+        assignment (both source and destination) are distributed.</para>
+
+        <para>Implementations will specify their level of support (0 through
+        2) for distributed operations as indicated in [dpp.oplevel].</para>
+      </listitem>
+
+      <listitem>
+        <para>Assignments must not mix both local and distributed views, with
+        the following exception: a distributed view may be used in an
+        expression with local views if its local subblock view is being
+        accessed via the local() member function.</para>
+      </listitem>
+
+      <listitem>
+        <para>The processor set of a distributed assignment is the union of
+        processor sets for the maps of the distributed views in the
+        assignment.</para>
+      </listitem>
+
+      <listitem>
+        <para>A distributed assignment is a <emphasis>valid data-parallel
+        assignment</emphasis> if all processors in the assignment’s processor
+        set execute the assignment with the same <emphasis>context</emphasis>,
+        where context means all local variables used to index an element of a
+        distributed view, used to specify a subview of a distributed view, or
+        used as a value affecting the result of an expression with distributed
+        views.</para>
+
+        <para>This includes, but is not limited to, indices used for get/put
+        element-wise access of distributed views, indices used to select
+        sub-dimensional subviews of distributed views, domains used to select
+        same-dimensional subviews of distributed views, and scalar values used
+        in scalar-view element-wise expressions.</para>
+
+        <para>It is the library user’s responsibility to ensure that all
+        processors have the same context. Otherwise, behavior is
+        undefined.</para>
+      </listitem>
+
+      <listitem>
+        <para>A program is said to be a <emphasis>valid data-parallel
+        program</emphasis> if it meets the following conditions:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Each assignment performed by the program is either a valid
+            data-parallel assignment or a local assignment.</para>
+          </listitem>
+
+          <listitem>
+            <para>For each subset of processors S in the program’s global
+            processor set, all valid data-parallel assignments with processor
+            sets that have a non-empty intersection with S are executed in the
+            same order by all processors in the set S.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>The result of a valid data-parallel program is independent of
+        the mappings applied to its distributed views, modulo precision
+        differences.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="dpp.distlevel">
+    <title>Distributed Data Support Levels</title>
+
+    <titleabbrev>dpp.distlevel</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>For distribution of data, implementations shall provide one of
+        the following support levels:</para>
+
+        <variablelist>
+          <varlistentry>
+            <term>Level 0:</term>
+
+            <listitem>
+              <para>Distribution of data is not supported (not a parallel
+              implementation).</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Level 1:</term>
+
+            <listitem>
+              <para>One dimension of data may be block distributed.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Level 2:</term>
+
+            <listitem>
+              <para>Any and all dimensions of data may have block
+              distributions.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Level 3:</term>
+
+            <listitem>
+              <para>Any and all dimensions of data may have block
+              distributions or cyclic distributions.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> Each level is a superset of the
+        previous level. ]</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="dpp.oplevel">
+    <title>Distributed Operation Support Levels</title>
+
+    <titleabbrev>dpp.oplevel</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>For distributed operation types, implementations shall provide
+        one of the following support levels:</para>
+
+        <variablelist>
+          <varlistentry>
+            <term>Level 0:</term>
+
+            <listitem>
+              <para>No distributed operations supported (not a parallel
+              implementation).</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Level 1:</term>
+
+            <listitem>
+              <para>Distributed element-wise operations supported.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Level 2:</term>
+
+            <listitem>
+              <para>Distributed element-wise operations supported (same as
+              level 1) and selected distributed non-elementwise operations
+              supported as stated by the implementation.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <para>Implementation providing level 1 or level 2 support for
+        distributed operation types shall also define distributed data
+        locality support level:</para>
+
+        <variablelist>
+          <varlistentry>
+            <term>Level 1:</term>
+
+            <listitem>
+              <para>All data required to perform the operation must be on the
+              local processor.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Level 2:</term>
+
+            <listitem>
+              <para>Data required to perform the operation can be located on
+              any processor.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> Each level is a superset of the
+        previous level. ]</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

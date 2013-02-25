@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<slides xmlns="http://docbook.org/ns/slides">
+  <slidesinfo>
+    <title>My Slides</title>
+
+    <author>
+      <firstname>Stefan</firstname>
+
+      <surname>Seefeld</surname>
+
+      <affiliation>
+        <orgname></orgname>
+      </affiliation>
+    </author>
+
+    <pubdate></pubdate>
+  </slidesinfo>
+
+  <foilgroup>
+    <title>First group</title>
+
+    <foil>
+      <title>First slide</title>
+
+      <para>blabla</para>
+    </foil>
+  </foilgroup>
+</slides>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="intro" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Introduction</title>
+
+  <titleabbrev>intro</titleabbrev>
+
+  <section xml:id="intro.scope">
+    <title>Scope</title>
+
+    <titleabbrev>intro.scope</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>This document specifies requirements for implementations of the
+        VSIPL++ Library.</para>
+      </listitem>
+
+      <listitem>
+        <para>The VSIPL++ Library is a C++ programming interface for
+        performing linear algebra and signal processing computations.</para>
+      </listitem>
+
+      <listitem>
+        <para>For classes and class templates, this document specifies partial
+        definitions. Private members are not specified, but each
+        implementation shall supply them to complete the definitions according
+        to the descriptions given herein.</para>
+      </listitem>
+
+      <listitem>
+        <para>For functions, function templates, objects, and values, this
+        document specifies complete or partial declarations. Implementations
+        shall supply definitions consistent with the descriptions given
+        herein.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="intro.refs">
+    <title>Normative references</title>
+
+    <titleabbrev>intro.refs</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>The following standard contains provisions which, through
+        reference in this text, constitute provisions of this standard. At the
+        time of publication, the editions indicated were valid. All standards
+        are subject to revision, and users of this standard are encouraged to
+        investigate the possibility of applying the most recent editions of
+        the standard indicated below.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>ISO/IEC 14882, Programming languages — C++</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>The VSIPL++ Parallel Specification is incorporated via
+        reference.</para>
+      </listitem>
+
+      <listitem>
+        <para>References to “VSIPL” or the “VSIPL
+        specification” refer to the VSIPL specification at <link
+        xlink:href="http://www.omg.org/spec/VSIPL/">http://www.omg.org/spec/VSIPL/</link><ulink
+        href="http://www.omg.org/spec/VSIPL/"/></para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="intro.compliance">
+    <title>Compliance</title>
+
+    <titleabbrev>intro.compliance</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Most functions in this specification are
+        parametrized for the value-types they operate on. The individual
+        function specifications indicate which value-types need to be
+        supported in a compliant implementation.</para>
+      </listitem>
+
+      <listitem>
+        <para>Compliance criteria relating to the VSIPL++ Parallel
+        specification are listed in <olink targetdoc="vsiplxx-par"
+        targetptr="dpp.oplevel"/></para>
+      </listitem>
+
+      <listitem>
+        <para>All implementations must define the macro VSIP_HAS_EXCEPTIONS in
+        &lt;vsip/support.hpp&gt; to a constant-expression such that in:</para>
+
+        <para><code>#if VSIP_HAS_EXCEPTIONS</code></para>
+
+        <para><constant>VSIP_HAS_EXCEPTIONS</constant> evaluates to a non-zero
+        value if and only if the implementation throws the exceptions
+        indicated by “Throws” clauses in this specification.</para>
+
+        <para>If <constant>VSIP_HAS_EXCEPTIONS</constant> evaluates to zero,
+        then, in all situations where this specification would otherwise
+        require that an exception be thrown, the behavior is undefined.
+        Implementations that do not support exceptions must provide an
+        implementation-defined way to report memory allocation errors to the
+        user.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="intro.ack">
+    <title>Acknowledgements</title>
+
+    <titleabbrev>intro.ack</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>The VSIPL++ Library as described in this standard is based on
+        the VSIPL 1.3 API by David A. Schwartz, Randall R. Judd, William J.
+        Harrod, and Dwight P. Manley, 2002 June 11, as approved by the VSIPL
+        Forum, copyright © 1999–2002 Georgia Tech Research Corporation.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

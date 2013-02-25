@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="sort" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Sort Functions</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The goal of this clause is to define functionality for sorting VSIPL
+    vectors. No matrix sort is currently defined although it is
+    straightforward to write user functions which will accomplish simple sorts
+    by row or column using the vector sort.</para>
+
+    <section>
+      <title>Sort Fundamentals</title>
+
+      <para>All sort functionality in VSIPL is defined only on data of type
+      real. Vectors of type complex may be sorted using gather functionality
+      and an index vector (see select sort section below).</para>
+
+      <para>Sorts are done in place. If the original vector is desired, it
+      must be copied to a new vector before calling the function.</para>
+
+      <para>If an index vector which records the sort permutation is desired,
+      then an index vector should be created and passed in as an argument. If
+      the index vector argument is NULL, then the sort permutation is not
+      recorded. A bool argument of VSIP_TRUE for fill indicates that the
+      (nonnull) index vector should be initialized as a ramp starting at zero
+      with a unit increment. A bool argument of VSIP_FALSE for fill means the
+      input index vector values should not be modified. The input index vector
+      is permuted element-wise to match the permutation of the data
+      vector.</para>
+
+      <para>Note that, for instance, a returned index vector that was
+      initialized with the fill argument set to true will allow the
+      permutation of an associated vector by using VSIPL gather
+      functionality.</para>
+
+      <section>
+        <title>Select Sort</title>
+
+        <para>A function called select sort was originally envisioned for this
+        section; however it quickly became complicated. The API was
+        complicated to design, and the function was hard to write and
+        difficult to use. The ideas behind select sort are straightforward and
+        easy to implement using other library functionality, and performance
+        gains from a dedicated function don’t seem to be worthwhile. So
+        instead of select sort this section is included as a clue to better
+        optimize your sorts. The section also supplies clues on why we have
+        included the index vector as part of the sort functionality.</para>
+
+        <para>There are many different requirements for sorting which are
+        application specific. In particular one may have a very large amount
+        of data to sort through even though only a small portion is of
+        interest. For instance data greater than some value; or there may be
+        some other condition or a set of conditions which define the data of
+        interest.</para>
+
+        <para>The point here is that it is computationally expensive to sort
+        data and sorting data of no interest is not efficient. Before doing
+        the sort first the application should prune off unwanted values using
+        logical and/or selection operations. Boolean vector result of
+        true/false values from the logical operators can be turned into index
+        vectors using the indexbool function (see selection operations from
+        the main specification). Gather functionality allows the collection of
+        the proper data to be sorted. If an index relationship back to the
+        original data is required, then the index vector from the boolean
+        operation which is used to gather the boolean data is passed in as the
+        index argument and the fill flag is set to false. This index vector is
+        permuted to match the data permutation and the index relationship of
+        the sorted data back to the original vector is maintained.</para>
+
+        <para>This type sorting is also used for sorting complex vectors.
+        Since only vectors of type real may be sorted the implication is that
+        the complex vector must have some operation on it that converts it
+        from complex to real. By maintaining an index vector through all the
+        operations and passing this into sort then the sort results may be
+        translated back to the complex data.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Type Definitions for Sort</title>
+
+      <para>The following are type definitions for VSIPL sort
+      functionality.</para>
+
+      <synopsis>typedef enum 
+{
+  VSIP_SORT_ASCENDING = 0,
+  VSIP_SORT_DESCENDING = 1
+} vsip_sort_dir;
+typedef enum 
+{
+  VSIP_SORT_BYVALUE = 0,
+  VSIP_SORT_BYMAGNITUDE = 1,
+} vsip_sort_mode;</synopsis>
+
+      <para>The enumerated value VSIP_SORT_ASCENDING will cause a sort so that
+      the smaller value after the mode condition is evaluated has the smaller
+      index (smallest to largest).</para>
+
+      <para>The enumerated value VSIP_SORT_DESCENDING will cause a sort so
+      that the largest value after the mode condition is evaluated has the
+      smaller index (largest to smallest).</para>
+
+      <para>The enumerated value VSIP_SORT_BYVALUE will cause the value to be
+      sorted as is.</para>
+
+      <para>The enumerated value VSIP_SORT_BYMAGNITUDE will cause the sort to
+      be done on the absolute value.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Sort</title>
+
+    <para>The following man pages represent sort operations defined in
+    VSIPL.</para>
+
+    <informaltable>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry><function>vsip_vsortip_p</function></entry>
+
+            <entry>Vector sort in-place.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    <section xml:id="vsortip">
+      <title>vsip_vsortip_<replaceable>p</replaceable></title>
+
+      <para>Sort data in a vector.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Sort a data vector in ascending or descending order either
+            by value or by magnitude. If a valid index vector is included as
+            the index argument, then that vector is permuted to match the
+            permutation of the data vector. If the boolean fill argument is
+            true and the index vector is valid, then the index vector is
+            initialized with a ramp index starting at zero with increment one.
+            If the index vector is null, it and the fill flag are
+            ignored.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>void vsip_vsortip_p(const vsip_vview_p *a, vsip_sort_mode mode, 
+                    vsip_sort_dir dir, vsip_bool fill, const vsip_vview_vi *index);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>a</term>
+
+                <listitem>
+                  <para>Vector/Matrix view of input/output data.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>mode</term>
+
+                <listitem>
+                  <para>Sort type.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>dir</term>
+
+                <listitem>
+                  <para>Sort direction.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>fill</term>
+
+                <listitem>
+                  <para>Indicates if the function should initialize the index
+                  vector (VSIP_TRUE); or assume the index vector has already
+                  been initialized (VSIP_FALSE).</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>index</term>
+
+                <listitem>
+                  <para>An index vector of the proper type to store the
+                  original index of the sorted values or null if no index
+                  vector is desired. The length of a non-null index vector
+                  index length must match the total number of values in the
+                  input views.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <orderedlist>
+              <listitem>
+                <para>The index argument must be a valid index vector or
+                NULL.</para>
+              </listitem>
+
+              <listitem>
+                <para>The views must be conformant.</para>
+              </listitem>
+
+              <listitem>
+                <para>The view objects must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>Arguments for mode, dir, and fill must be valid.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para>This example creates a complex vector of random values and
+            then sorts the vector according to magnitude.</para>
+
+            <programlisting><xi:include href="examples/sort.c" parse="text"/></programlisting>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

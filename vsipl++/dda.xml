@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xreflabel="[dda]" xml:id="dda"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Direct Data Access</title>
+
+  <titleabbrev>dda</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>Direct Data Access (DDA) provides the means to access block data
+      via raw pointers, independent of how the block holds the data. This
+      proxy access can be used to bridge locally with code expecting raw
+      pointers without breaking the block abstraction.</para>
+    </listitem>
+
+    <listitem>
+      <para>These proxy objects take an optional Layout parameter, which
+      allows users to express a particular layout requirement. The
+      implementation may provide direct access to the block's own storage if
+      the storage layout matches the layout requirement, or a temporary copy
+      may be created by the proxy object.</para>
+    </listitem>
+  </orderedlist>
+
+  <para>Header <emphasis>&lt;vsip/dda.hpp&gt;</emphasis> synopsis:</para>
+
+  <xi:include href="code/dda.hpp" />
+
+  <section xml:id="dda.sync">
+    <title>Synchronization Policies</title>
+
+    <titleabbrev>dda.sync</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Blocks may be accessed as input (read-only), output
+        (write-only), or input and output (read-write). In addition, temporary
+        storage may be provided through which the block data is to be
+        accessed. These characteristics are expressed through a
+        synchronization policy.</para>
+
+        <synopsis>typedef unsigned <emphasis role="bold">sync_policy</emphasis>;
+
+sync_policy const <emphasis role="bold">in</emphasis> = 0x01;          // treat block as input
+sync_policy const <emphasis role="bold">out</emphasis> = 0x02;         // treat block as output
+sync_policy const <emphasis role="bold">inout</emphasis> = in | out;   // treat block as input and output
+sync_policy const <emphasis role="bold">copy</emphasis> = 0x04;        // force access through temporary storage</synopsis>
+      </listitem>
+
+      <listitem>
+        <para>Policy flags may be OR'ed together. A sync_policy with neither
+        <constant>in</constant> nor <constant>out</constant> flag set is
+        invalid.</para>
+      </listitem>
+
+      <listitem>
+        <para>An <constant>in</constant> policy expresses that the block is
+        treated as input. Data is synchronized during construction of the
+        proxy object.</para>
+      </listitem>
+
+      <listitem>
+        <para>An <constant>out</constant> policy expresses that the block is
+        treated as output. The block is synchronized with the proxy object at
+        the proxy object's destruction time.</para>
+
+        <para>[Note: if the out policy is used without the in policy, the
+        proxy data may not be initialized, and should be treated as
+        write-only.]</para>
+      </listitem>
+
+      <listitem>
+        <para>A <constant>copy</constant> policy expresses that the block
+        should be copied into temporary storage, even if the implementation
+        would otherwise provide a pointer to block-internal storage.</para>
+
+        <para>[Note: Users may provide their own temporary storage, for
+        example to make the block data accessible through a particular type of
+        storage.]</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="dda.func">
+    <title>Helper functions</title>
+
+    <titleabbrev>dda.func</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para><synopsis>template &lt;typename Layout, typename Block&gt;
+length_type <emphasis role="bold">required_buffer_size</emphasis>(Block const &amp;b, bool forced_copy = false);
+
+template &lt;typename Block&gt;
+length_type <emphasis role="bold">required_buffer_size</emphasis>(Block const &amp;b, bool forced_copy = false);</synopsis><variablelist>
+            <varlistentry>
+              <term>Returns</term>
+
+              <listitem>
+                <para>the size of a buffer required to hold b's data while it
+                is accessed via DDA.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Notes</term>
+
+              <listitem>
+                <para>The return value is zero if no buffer is required
+                because the DDA object will provide a pointer to the block's
+                internal storage rather than creating a copy.</para>
+
+                <para>The <parameter>forced_copy</parameter> parameter
+                corresponds to the <constant>copy</constant> sync-policy.
+                Setting it to true expresses that the DDA object should
+                operate on block-external storage, and thus in this case a
+                buffer is always required.</para>
+
+                <para>If called with a <parameter>layout</parameter> template
+                argument, the function will report the buffer required to
+                access the block with the specified layout. Without it, the
+                block's own layout is used.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist></para>
+      </listitem>
+
+      <listitem>
+        <synopsis>template &lt;typename Layout, typename Block&gt;
+int <emphasis role="bold">cost</emphasis>(Block const &amp;b);
+
+template &lt;typename Block&gt;
+int <emphasis role="bold">cost</emphasis>(Block const &amp;b);</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>A numeric value representing the cost of accessing the
+              data via DDA.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Notes:</term>
+
+            <listitem>
+              <para>If called with a layout template argument, the function
+              will report the cost of accessing the block with the specified
+              layout. Without it, the block's own layout is used.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="dda.data">
+    <title>Data</title>
+
+    <titleabbrev>dda.data</titleabbrev>
+
+    <section xml:id="dda.data.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>dda.data.template</titleabbrev>
+
+      <synopsis>typename Block</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The type of the block that is to be accessed.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>sync_policy</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>A sync_policy.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>typename Layout = <emphasis>unspecified</emphasis></synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>the constraints on the layout. By default, the layout is
+            unconstrained.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="dda.data.types">
+      <title>Types and compile-time constants</title>
+
+      <titleabbrev>dda.data.types</titleabbrev>
+
+      <synopsis>typedef <emphasis>unspecified</emphasis> const_ptr_type;
+typedef <emphasis>unspecified</emphasis> ptr_type;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The return types of the <function>ptr()</function> member
+            function.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>static int const ct_cost = <emphasis>unspecified</emphasis>;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>An estimate (upper boundary) of the cost of accessing the
+            block through an object of this type. If the access is guaranteed
+            at compile-time to be possible without temporary storage and
+            copies, this value is 0, a positive value otherwise.</para>
+
+            <para>[<emphasis>Note</emphasis>: The actual cost may be lower, if
+            not enough information is available at compile-time to determine
+            the cost accurately.]</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="dda.data.constructors">
+      <title>Constructors, destructor, and synchronization functions</title>
+
+      <titleabbrev>dda.data.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Data</emphasis>(Block const &amp;block, ptr_type buffer = ptr_type());</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>This constructor is available only for Data specializations
+            using an <constant>in</constant> sync_policy (where the
+            sync_policy parameter does not include the
+            <constant>out</constant> flag).</para>
+
+            <para>If a buffer is provided, it needs to have a size at least as
+            large as reported by the <function>required_buffer_size</function>
+            function.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a non-modifiable Data proxy object aliasing
+            <parameter>block</parameter>. The implementation may copy the data
+            into temporary storage. In that case, if a buffer is provided,
+            that storage will be used to hold the data over the lifetime of
+            this Data object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>Applications may require data to be accessible through a
+            particular type of memory. This can be accomplished by using the
+            <constant>copy</constant> sync-policy, together with an
+            appropriate buffer argument, into which the data will be
+            transferred:</para>
+
+            <synopsis>typedef Data&lt;Block, inout|copy&gt; dda_type;
+typedef dda_type::ptr_type shared_memory = ...;
+dda_type data(block, shared_memory); // construct DDA proxy
+process_data(data.ptr());            // access data through shared memory pointer</synopsis>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">Data</emphasis>(Block &amp;block, ptr_type buffer = ptr_type());</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>This constructor is available only for Data specializations
+            using an <constant>out</constant> sync_policy.</para>
+
+            <para>If a buffer is provided, it needs to have a size at least as
+            large as reported by the <function>required_buffer_size</function>
+            function.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs a modifiable Data proxy object aliasing
+            block.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis><emphasis role="bold">~Data</emphasis>();</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Destroys the Data proxy object.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void sync_in();</synopsis>
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+          <listitem>
+            <para>Synchronizes data from the aliased block. This function is only present
+	    if <code>sync_policy &amp; in</code> evaluates to <constant>true</constant>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void sync_out();</synopsis>
+      <variablelist>
+        <varlistentry>
+          <term>Effects:</term>
+          <listitem>
+            <para>Synchronizes data to the aliased block. This function is only present
+	    if <code>sync_policy &amp; out</code> evaluates to <constant>true</constant>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+    </section>
+
+    <section xml:id="dda.data.access">
+      <title>Accessors</title>
+
+      <titleabbrev>dda.data.access</titleabbrev>
+
+      <synopsis>ptr_type <emphasis role="bold">ptr</emphasis>();</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>a pointer to the data.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>const_ptr_type <emphasis role="bold">ptr</emphasis>() const;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>a pointer to the data.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>stride_type <emphasis role="bold">stride</emphasis>(dimension_type) const;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>the stride along the given direction.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">size</emphasis>(dimension_type d) const;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>the size in the given dimension. This is equivalent to
+            <code>block-&gt;size(d)</code> where <varname>block</varname> is
+            the block this Data object is constructed with.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">size</emphasis>() const;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>the size in the given dimension. This is equivalent to
+            <code>block-&gt;size()</code> where <varname>block</varname> is
+            the block this Data object is constructed with.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">storage_size</emphasis>() const;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>the size in bytes that is required to hold the data in the
+            provided layout.</para>
+
+            <para>[Note: Some layouts may require padding, in which case the
+            storage_size would be larger than <code>size() *
+            sizeof(value_type)</code>.]</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="dda.data.aliasing">
+      <title>Aliasing rules</title>
+
+      <titleabbrev>dda.data.aliasing</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>Multiple <constant>in</constant> Data objects may access a
+          given block at any given point in time. Example:</para>
+
+          <programlisting>Vector&lt;float, Block&gt; v = ...;
+Data&lt;Block, in&gt; data1(v.block());
+Data&lt;Block, in&gt; data2(v.block());
+// these are all the same:
+float v1 = v.get(0);
+float v2 = data1.ptr()[0];
+float v3 = data2.ptr()[0];</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>Modifications that are applied to the block after the creation of a <type>Data</type> 
+	  object are only guaranteed to be visible through the Data object after a call to 
+	  <function>sync_in</function>. Example:</para>
+
+          <programlisting>Vector&lt;float, Block&gt; v = ...;
+Data&lt;Block, in&gt; data(v.block());
+v = ...;
+float v1 = data.ptr()[0]; // Error: data not synchronized
+data.sync_in();
+float v2 = data.ptr()[0]; // OK: data is in sync with block.</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>Only one <constant>out</constant> Data object may access a
+          given block at any given point in time. As long as a block is being
+          referenced through an <constant>out</constant> Data object, the
+          block may not be modified through any other means. Example:</para>
+
+          <programlisting>Vector&lt;float, Block&gt; v = ...;
+Data&lt;Block, in&gt; in_data(v.block());
+Data&lt;Block, out&gt; out_data(v.block());
+v.put(0, 0.f);                         // Error: v's data is owned by 'out_data'.</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>If an <constant>out</constant> Data object references a
+          <emphasis>sub-block</emphasis> of a given block, the block's
+          non-aliased elements may still be written to by other means,
+          including other Data objects. Example:</para>
+
+          <programlisting>typedef Vector&lt;complex&lt;float&gt;, Block&gt; view_type;
+typedef view_type::realview_type::block_type realblock_type;
+typedef view_type::imagview_type::block_type imagblock_type;
+view_type v = ...;
+Data&lt;realblock_type, out&gt; real_data(v.real().block());
+Data&lt;imagblock_type, out&gt; imag_data(v.imag().block()); // OK: imag_data and real_data 
+                                                       //     don't alias the same values</programlisting>
+        </listitem>
+
+        <listitem>
+          <para>Any changes to a block through a Data object are only
+          guaranteed to be synchronized back after a call to <function>sync_out</function>
+	  or after the Data object's lifetime
+          has ended. Accessing a block's values that have been modified
+          through anything but the Data object itself thus results in
+          undefined behavior. Example:</para>
+
+          <programlisting>Vector&lt;float, Block&gt; v = ...;
+{
+  Data&lt;Block, in&gt; in_data(v.block());
+  Data&lt;Block, out&gt; out_data(v.block());
+  out_data.ptr()[0] = 0.f;
+  float x1 = in_data.ptr()[1];   // OK: This element hasn't been changed yet.
+  float x0a = in_data.ptr()[0];  // Error: undefined behavior: This element has been 
+                                 //        modified through 'out_data'
+  float x0b = out_data.ptr()[0]; // OK: This element has been modified, but is accessed
+                                 //     through the same proxy object.
+  out_data.ptr()[0] = 1.;        // modify out_data
+  out_data.sync_out();           // synchronize block from out_data
+  in_data.sync_in();             // synchronize in_data from block
+  float x0c = in_data.ptr()[0];  // OK: Data has been synchronised.
+}
+v.put(0, 0.f); // OK: At this point all changes made through 'out_data' 
+               //     are synchronized back into 'v'.</programlisting>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+</chapter>

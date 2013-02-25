@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="changes" 
+	 xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Specification Changes</title>
+
+  <titleabbrev>changes</titleabbrev>
+
+  <revhistory>
+    <revision>
+      <revnumber>1.0</revnumber>
+
+      <date>2006-04-07</date>
+
+      <revdescription>
+        <para>Initial VSIPL++ parallel specification.</para>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.1</revnumber>
+
+      <date>2011-10-08</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para>Change the document title.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="map.replicatedmap.accessors" /><xref
+            linkend="map.replicatedmap.gridfn" />: Fix Replicated_map accessor
+            semantics (objects may be replicated only on some
+            processors).</para>
+          </listitem>
+
+          <listitem>
+            <para>Split <xref linkend="view" /> into <xref linkend="block" />
+            and <xref linkend="view" />.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="support.types" />: Relax restrictions on
+            <type>processor_type</type> and remove superfluous
+            <type>processor_difference_type</type> definition.</para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+    <revision>
+      <revnumber>1.2</revnumber>
+
+      <date>2012-12-10</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para>Various formatting changes are applied as part of the
+	    adoption of the specification by the Object Management Group.</para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+  </revhistory>
+</chapter>

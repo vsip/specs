@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+  <namespace ns="http://docbook.org/ns/docbook" uri="/path/to/docbook.rnc"/>
+  <uri resource="initfin.xml" typeId="DocBook"/>
+  <uri resource="conventions.xml" typeId="DocBook"/>
+</locatingRules>

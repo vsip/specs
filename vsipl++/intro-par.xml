@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="intro" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Introduction</title>
+
+  <titleabbrev>intro</titleabbrev>
+
+  <section xml:id="intro.scope">
+    <title>Scope</title>
+
+    <titleabbrev>intro.scope</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>This document specifies requirements for implementations of the
+        VSIPL++ Library suitable for a multi-processor environment.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="intro.refs">
+    <title>Normative references</title>
+
+    <titleabbrev>intro.refs</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>This document “VSIPL++ Parallel Specification (1.2)” is
+        part of the VSIPL++ Specification and is incorporated via reference
+        into the “VSIPL++ Specification (1.2)”.</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> This document and the other VSIPL++
+        specification documents use the same clause notation even though the
+        clause and sub-clause numbers may differ. ]</para>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>

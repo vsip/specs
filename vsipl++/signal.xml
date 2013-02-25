@@ -1,0 +1,4225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="signal" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Signal processing</title>
+
+  <titleabbrev>signal</titleabbrev>
+
+  <orderedlist>
+    <listitem>
+      <para>This clause specifies classes and functions for signal
+      processing.</para>
+    </listitem>
+
+    <listitem>
+      <para>[<emphasis>Note: </emphasis> The VSIPL specification Signal Processing
+      introduction contains references to signal processing books and
+      articles. ]</para>
+
+      <para>Header <emphasis>&lt;vsip/signal.hpp&gt;</emphasis>
+      synopsis</para>
+
+      <xi:include href="code/signal.hpp"/>
+    </listitem>
+  </orderedlist>
+
+  <section xml:id="signal.hint">
+    <title>Implementation hints</title>
+
+    <titleabbrev>signal.hint</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>An implementation may use alg_hint_type or an integer to
+        indicate how to optimize its computation or resource use. The 
+	VSIPL specification for an implementation’s
+        use of the hints are incorporated by reference.</para>
+
+        <xi:include href="code/signal-hint.hpp"/>
+
+        <para>[<emphasis>Note: </emphasis> The VSIPL API specifies an unsigned
+        integer’s value indicates the probable number of uses, with a value of
+        zero indicating semi-infinity, i.e., many times. The alg_hint_type
+        value indicates whether total execution time, total execution memory,
+        or numeric noise should be minimized. ]</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="signal.fft">
+    <title>Single fast Fourier transformations</title>
+
+    <titleabbrev>signal.fft</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Applying an Fft object on a view performs a single fast Fourier
+        transform on the entire view. [<emphasis>Note: </emphasis> Multiple
+        fast Fourier transforms are specified in <xref
+        linkend="signal.fftm"/>.]</para>
+      </listitem>
+
+      <listitem>
+        <para>All VSIPL API
+        complexity requirements for FFTs are incorporated by reference.</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> For mathematical descriptions of
+        FFTs, see the VSIPL description of vsip_ccfftop_f, vsip_crfftop_f,
+        vsip_rcfftop_f, vsip_ccfftop_create_f, vsip_ccfft2dop_f,
+        vsip_crfft2dop_f, vsip_rcfft2dop_f, vsip_ccfft2dop_create_f,
+        vsip_ccfft3dop_f, vsip_crfft3dop_f, vsip_rcfft3dop_f, and
+        vsip_ccfft3dop_create_f. ]</para>
+      </listitem>
+
+      <listitem xml:id="signal-fft-single-table">
+        <para>For transformations of the entire view, Fft supports different
+        computations dependent on the input element type, output element type,
+        a specified direction or a special dimension (“sd”), and the
+        dimensionalities of the input and output views. They must satisfy one
+        of these criteria:</para>
+
+        <informaltable>
+          <col align="center"/>
+
+          <col/>
+
+          <col align="center"/>
+
+          <col align="center"/>
+
+          <tr>
+            <th>input type / output type</th>
+
+            <th>sd</th>
+
+            <th>input size</th>
+
+            <th>output size</th>
+          </tr>
+
+          <tr>
+            <td>complex&lt;T&gt;/complex&lt;T&gt;</td>
+
+            <td>fft_fwd</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>fft_inv</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td>T/complex&lt;T&gt;</td>
+
+            <td>0</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>M</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mrow>
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mi>M</m:mi>
+
+                    <m:mo stretchy="false">/</m:mo>
+
+                    <m:mn>2</m:mn>
+
+                    <m:mo>+</m:mo>
+
+                    <m:mn>1</m:mn>
+
+                    <m:mo stretchy="false">)</m:mo>
+
+                    <m:mo>×</m:mo>
+
+                    <m:mi>N</m:mi>
+                  </m:mrow>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mrow>
+                    <m:mi>M</m:mi>
+
+                    <m:mo>×</m:mo>
+
+                    <m:mi>N</m:mi>
+
+                    <m:mo>×</m:mo>
+
+                    <m:mi>P</m:mi>
+                  </m:mrow>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>M</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>1</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mrow>
+                    <m:mi>M</m:mi>
+
+                    <m:mo>×</m:mo>
+
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mi>N</m:mi>
+
+                    <m:mo stretchy="false">/</m:mo>
+
+                    <m:mn>2</m:mn>
+
+                    <m:mo>+</m:mo>
+
+                    <m:mn>1</m:mn>
+
+                    <m:mo stretchy="false">)</m:mo>
+
+                    <m:mo>×</m:mo>
+
+                    <m:mi>P</m:mi>
+                  </m:mrow>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>2</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>P</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td>complex&lt;T&gt;/T</td>
+
+            <td>0</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>M</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>M</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>M</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>1</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mrow>
+                    <m:mi>M</m:mi>
+
+                    <m:mo>×</m:mo>
+
+                    <m:mi>N</m:mi>
+                  </m:mrow>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td/>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>2</td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>P</m:mi>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+
+            <td><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>N</m:mi>
+
+                      <m:mo>×</m:mo>
+
+                      <m:mi>P</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation></td>
+          </tr>
+        </informaltable>
+
+        <para><inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>, and <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>P</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> are length_types indicating the number of rows,
+        columns, and depth, respectively. [<emphasis>Note: </emphasis> To
+        simplify the table, a row does not repeat a column entry if it is the
+        same as in the previous row. ]</para>
+
+        <para>[<emphasis>Note: </emphasis> If the input and output types are
+        both complex, then the specific direction indicates whether a fft_fwd
+        (forward) transform using positive exponentials or fft_inv (inverse)
+        transform using negative exponentials should occur. ]</para>
+
+        <para>Some criteria have input and output views whose corresponding
+        dimensions differ in size. The special dimension (“sd”) column
+        indicates this dimension. For such a dimension, the larger dimension
+        size <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>Q</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> must be even so <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>Q</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> is integral. T must be a type such that
+        complex&lt;T&gt; can be instantiated.</para>
+
+        <para>[<emphasis>Example: </emphasis> An Fft using Vectors of
+        cscalar_fs for both input and output requires the input and output
+        Vectors to have the same size <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>. An Fft using Vectors with input type scalar_f and
+        output type cscalar_f requires the input Vector to have size
+        <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> and the output to have size <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>. <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> must be even. ]</para>
+
+        <para>[<emphasis>Note: </emphasis> The special cases for non-complex
+        input or output type permits reducing the computation time by about a
+        factor of two. ] For the special dimension, the complex views for
+        these cases conceptually have length <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> but only the first <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mo>⌊</m:mo>
+
+                  <m:mi>N</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>⌋</m:mo>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> must be supplied or will be returned, as
+        appropriate. The other values are specified by the identity
+        <inlineequation>
+            <m:math>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>x</m:mi>
+
+                  <m:mi>n</m:mi>
+                </m:msub>
+
+                <m:mo>=</m:mo>
+
+                <m:msubsup>
+                  <m:mi>x</m:mi>
+
+                  <m:mrow>
+                    <m:mi>N</m:mi>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+
+                  <m:mo>*</m:mo>
+                </m:msubsup>
+              </m:mrow>
+            </m:math>
+          </inlineequation> for <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mo>⌊</m:mo>
+
+                  <m:mi>N</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>⌋</m:mo>
+
+                  <m:mo>&lt;</m:mo>
+
+                  <m:mi>n</m:mi>
+
+                  <m:mo>&lt;</m:mo>
+
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>. For these complex views, the complex value at
+        index position 0 represents the zero (DC) frequency and must have zero
+        imaginary part. The complex value at index position <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>N</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> represents the Nyquist frequency (one half the
+        sample rate value) and must also be non-complex.</para>
+
+        <xi:include href="code/signal-fft.hpp"/>
+      </listitem>
+
+      <listitem>
+        <para>const_View::dim indicates the dimensionality of const_View
+        .</para>
+      </listitem>
+
+      <listitem>
+        <para>The template Fft class has seven template parameters and
+        eighteen specializations corresponding to <xref
+        linkend="signal-fft-single-table"/>. Specifications for the function
+        and data members of these specializations are the same so they are
+        presented only once below using <type>I</type> for the input type and
+        <type>O</type> for the output type. View::dim indicates the
+        dimensionality of the view.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="signal.fft.constants">
+      <title>Constants</title>
+
+      <titleabbrev>signal.fft.constants</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The constants fft_fwd and fft_inv correspond to the forward
+          and inverse transforms, respectively.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="signal.fft.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>signal.fft.template</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The effect of instantiating the template class Fft for any
+          template const_View parameter other than const_Vector, const_Matrix,
+          or const_Tensor is unspecified.</para>
+        </listitem>
+
+        <listitem>
+          <para><type>I</type> and <type>O</type> must obey the table above.
+          The only specializations which must be supported have T equal to
+          scalar_f. An implementation is permitted to prevent other
+          instantiations. [<emphasis>Note: </emphasis> If T is scalar_f,
+          complex&lt;T&gt; is cscalar_f. ]</para>
+
+          <synopsis>int S</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>If I and O differ, 0 &lt;= S &amp;&amp; S &lt;
+                const_View::dim . Otherwise, S must be either fft_fwd or
+                fft_inv.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>If I and O differ, its value indicates which dimension
+                has different input and output sizes. If I and O are the same,
+                this indicates whether a forward or inverse transform should
+                occur.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> The return_mechanism_type values
+          indicate whether operators yield values by returning them by value
+          while others use an “output” parameter.
+          <constant>by_value</constant> and <constant>by_reference</constant>
+          respectively describe each. ]</para>
+
+          <synopsis>unsigned N</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>This value indicates the anticipated number of times the
+                object will be used. A value of zero indicates semi-infinity,
+                i.e., many times.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <synopsis>alg_hint_type H</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>A alg_hint_type value.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>This value indicates how an implementation should
+                optimize its computation or resource use.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="signal.fft.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>signal.fft.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Fft</emphasis>(Domain&lt;const_View::dim&gt; const&amp; dom, scalar_f scale) VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>dom must obey <xref linkend="signal-fft-single-table"/> as
+            determined by the template arguments.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs an object of class Fft .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;input_size()</code> and<code>
+            this-&gt;output_size()</code> correspond to the appropriate row in
+            <xref linkend="signal-fft-single-table"/>. <code>this-&gt;scale()
+            == scale</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon a memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_ccfftop_create_f</function>,
+            <function>vsip_ccfftip_create_f</function>,
+            <function>vsip_crfftop_create_f</function>,
+            <function>vsip_rcfftop_create_f</function>,
+            <function>vsip_ccfft2dop_create_f</function>,
+            <function>vsip_ccfft2dip_create_f</function>,
+            <function>vsip_crfft2dop_create_f</function>,
+            <function>vsip_rcfft2dop_create_f</function>,
+            <function>vsip_ccfft3dop_create_f</function>,
+            <function>vsip_ccfft3dip_create_f</function>,
+            <function>vsip_crfft3dop_create_f</function>, and
+            <function>vsip_rcfft3dop_create_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.fft.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>signal.fft.accessors</titleabbrev>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">input_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain object with first indices of zero, unit strides,
+            and size equal to the input size in the appropriate row in <xref
+            linkend="signal-fft-single-table"/>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">output_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain object with first indices of zero, unit strides,
+            and size equal to the output size in the appropriate row in <xref
+            linkend="signal-fft-single-table"/>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>scalar_f <emphasis role="bold">scale</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The scalar multiple, as specified in the object’s
+            constructor.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>bool <emphasis role="bold">forward</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>An indication whether the transform is a forward or inverse
+            transform.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.fft.operators">
+      <title>Operators</title>
+
+      <titleabbrev>signal.fft.operators</titleabbrev>
+
+      <synopsis>template &lt;typename Block&gt;
+const_View&lt;O, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">operator()</emphasis>(const_View&lt;I, Block&gt; source) VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><type>R</type> must be <constant>by_value</constant> .<type>
+            I</type> and <type>O</type> must obey the appropriate row of <xref
+            linkend="signal-fft-single-table"/>. <code>source.size()</code>
+            and <code>this-&gt;input_size()</code> are
+            element-conformant.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The fast Fourier transform of source. This is
+            element-conformant to this-&gt;output_size() and has unit stride
+            in dimension SD .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon a memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements the functionality of the VSIPL
+            functions <function>vsip_ccfftop_f</function>,
+            <function>vsip_ccfftip_f</function>,
+            <function>vsip_crfftop_f</function>,
+            <function>vsip_rcfftop_f</function>,
+            <function>vsip_ccfft2dop_f</function>,
+            <function>vsip_ccfft2dip_f</function>,
+            <function>vsip_crfft2dop_f</function>,
+            <function>vsip_rcfft2dop_f</function>,
+            <function>vsip_ccfft3dop_f</function>,
+            <function>vsip_ccfft3dip_f</function>,
+            <function>vsip_crfft3dop_f</function>, and
+            <function>vsip_rcfft3dop_f</function>. Unlike VSIPL, there are no
+            restrictions on strides.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;typename Block0,
+          typename Block1&gt;
+View&lt;O, Block1&gt;
+<emphasis role="bold">operator()</emphasis>(const_View&lt;I, Block0&gt; source, View&lt;O, Block1&gt; destination) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><type>R</type> must be by_reference .<type> I</type> and
+            <type>O</type> must obey a row of <xref
+            linkend="signal-fft-single-table"/>. <code>source.size()</code>
+            and <code>this-&gt;input_size()</code> are element-conformant.
+            <code>destination.size()</code> and<code>
+            this-&gt;output_size()</code> are element-conformant. source’s
+            block and destination’s block must not overlap.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The fast Fourier transform of source .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Stores the returned value in destination .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements the functionality of the VSIPL
+            functions <function>vsip_ccfftop_f</function>,
+            <function>vsip_ccfftip_f</function>,
+            <function>vsip_crfftop_f</function>,
+            <function>vsip_rcfftop_f</function>,
+            <function>vsip_ccfft2dop_f</function>,
+            <function>vsip_ccfft2dip_f</function>,
+            <function>vsip_crfft2dop_f</function>,
+            <function>vsip_rcfft2dop_f</function>,
+            <function>vsip_ccfft3dop_f</function>,
+            <function>vsip_ccfft3dip_f</function>,
+            <function>vsip_crfft3dop_f</function>, and
+            <function>vsip_rcfft3dop_f</function>. Unlike VSIPL, there are no
+            restrictions on strides.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;typename Block&gt;
+View&lt;O, Block&gt;
+<emphasis role="bold">operator()</emphasis>(View&lt;O, Block&gt; source_and_destination) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>R must be by_reference .<type> I</type> and <type>O</type>
+            must be the same.<type> I</type> and <type>O</type> must obey a
+            row of <xref linkend="signal-fft-single-table"/>.<code>
+            source_and_destination.size()</code> and
+            <code>this-&gt;input_size()</code> are element-conformant.
+            <code>source_and_destination.size()</code> and<code>
+            this-&gt;output_size()</code> are element-conformant. Block must
+            be modifiable.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The fast Fourier transform of source_and_destination
+            .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Stores the returned value in source_and_destination, which
+            is overwritten.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements the functionality of the VSIPL
+            functions <function>vsip_ccfftop_f</function>,
+            <function>vsip_ccfftip_f</function>,
+            <function>vsip_crfftop_f</function>,
+            <function>vsip_rcfftop_f</function>,
+            <function>vsip_ccfft2dop_f</function>,
+            <function>vsip_ccfft2dip_f</function>,
+            <function>vsip_crfft2dop_f</function>,
+            <function>vsip_rcfft2dop_f</function>,
+            <function>vsip_ccfft3dop_f</function>,
+            <function>vsip_ccfft3dip_f</function>,
+            <function>vsip_crfft3dop_f</function>, and
+            <function>vsip_rcfft3dop_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="signal.fftm">
+    <title>Multiple fast Fourier transformations</title>
+
+    <titleabbrev>signal.fftm</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>Applying an Fftm object on a Matrix performs multiple fast
+        Fourier transforms on the rows or columns of a Matrix. A Multiple FFT
+        treats a matrix as a collection of either rows or columns and applies
+        an FFT to each row or column. [<emphasis>Note: </emphasis> Stacked
+        FFTs and vector FFTs are alternate names for multiple FFTs. Single
+        fast Fourier transforms are specified in <xref linkend="signal.fft"/>.
+        ]</para>
+      </listitem>
+
+      <listitem>
+        <para>All VSIPL API
+        complexity requirements for multiple FFTs are incorporated by
+        reference.</para>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> For mathematical descriptions of
+        multiple FFTs, see the VSIPL description of vsip_ccfftmop_f,
+        vsip_crfftmop_f, vsip_rcfftmop_f, and vsip_ccfftmop_create_f. ]</para>
+      </listitem>
+
+      <listitem xml:id="signal-fft-multiple-table">
+        <para>For multiple transformations of subsets of the entire Matrix,
+        Fftm supports different computations dependent on the input element
+        type, output element type, a special dimension (“sd”), and a special
+        direction. They must satisfy one of these criteria:</para>
+
+        <informaltable>
+          <col align="center"/>
+
+          <col/>
+
+          <col/>
+
+          <col align="center"/>
+
+          <col align="center"/>
+
+          <tr>
+            <th><para>input type / output type</para></th>
+
+            <th><para>sd</para></th>
+
+            <th><para>direction</para></th>
+
+            <th><para>input size</para></th>
+
+            <th><para>output size</para></th>
+          </tr>
+
+          <tr>
+            <td>complex&lt;T&gt; / complex&lt;T&gt;</td>
+
+            <td>0 or 1</td>
+
+            <td>forward</td>
+
+            <td>M×N</td>
+
+            <td>M×N</td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>0 or 1</td>
+
+            <td>inverse</td>
+
+            <td>M×N</td>
+
+            <td>M×N</td>
+          </tr>
+
+          <tr>
+            <td>T / complex&lt;T&gt;</td>
+
+            <td>0</td>
+
+            <td>forward</td>
+
+            <td>M×N</td>
+
+            <td>M×(N/2+1)</td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>1</td>
+
+            <td>forward</td>
+
+            <td>M×N</td>
+
+            <td>(M/2+1)×N</td>
+          </tr>
+
+          <tr>
+            <td>complex&lt;T&gt; / T</td>
+
+            <td><para>0</para></td>
+
+            <td>inverse</td>
+
+            <td>M×(N/2+1)</td>
+
+            <td>M×N.</td>
+          </tr>
+
+          <tr>
+            <td/>
+
+            <td>1</td>
+
+            <td>inverse</td>
+
+            <td>(M/2+1)×N</td>
+
+            <td>M×N</td>
+          </tr>
+        </informaltable>
+
+        <para><inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> and <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> indicate length_types indicating the number of
+        rows and columns, respectively. [<emphasis>Note: </emphasis> To
+        simplify the table, a row does not repeat a column entry if it is the
+        same as in the previous row. ]</para>
+
+        <para>T must be a type such that complex&lt;T&gt; can be instantiated.
+        For a dimension that has different input and output sizes, the larger
+        dimension size <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>Q</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> must be even so <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>Q</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> is integral. The special dimension (“sd”)
+        indicates in which dimension the multiple FFTs should occur. Dimension
+        0 (or row) indicates row-wise FFTs should occur. Dimension 1 (or col)
+        indicates column-wise FFTs should occur.</para>
+
+        <para>[<emphasis>Example: </emphasis> An Fftm using Matrixes of
+        cscalar_fs for both input and output requires the input and output
+        Matrixes to have the same size <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+
+                  <m:mo>×</m:mo>
+
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>. An Fftm using Matrixes with input type scalar_f
+        and output type cscalar_f and special dimension one requires the input
+        Matrix to have size <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+
+                  <m:mo>×</m:mo>
+
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> and the output to have size <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mo stretchy="false">(</m:mo>
+
+                  <m:mi>M</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+
+                  <m:mo stretchy="false">)</m:mo>
+
+                  <m:mo>×</m:mo>
+
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>. <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>M</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> must be even. ]</para>
+
+        <para>[<emphasis>Note: </emphasis> The special cases for non-complex
+        input or output type permits reducing the computation time by about a
+        factor of two. ] For the specified dimension, the complex views for
+        these cases conceptually have length <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> but only the first <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mo>⌊</m:mo>
+
+                  <m:mi>N</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>⌋</m:mo>
+
+                  <m:mo>+</m:mo>
+
+                  <m:mn>1</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> must be supplied or will be returned, as
+        appropriate. The other values are specified by the identity
+        <inlineequation>
+            <m:math>
+              <m:mrow>
+                <m:msub>
+                  <m:mi>x</m:mi>
+
+                  <m:mi>n</m:mi>
+                </m:msub>
+
+                <m:mo>=</m:mo>
+
+                <m:msubsup>
+                  <m:mi>x</m:mi>
+
+                  <m:mrow>
+                    <m:mi>N</m:mi>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mi>n</m:mi>
+                  </m:mrow>
+
+                  <m:mo>*</m:mo>
+                </m:msubsup>
+              </m:mrow>
+            </m:math>
+          </inlineequation> for <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mo>⌊</m:mo>
+
+                  <m:mi>N</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+
+                  <m:mo>⌋</m:mo>
+
+                  <m:mo>&lt;</m:mo>
+
+                  <m:mi>n</m:mi>
+
+                  <m:mo>&lt;</m:mo>
+
+                  <m:mi>N</m:mi>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation>. For these complex views, the complex value at
+        index position 0 represents the zero (DC) frequency and must have zero
+        imaginary part. The complex value at index position <inlineequation>
+            <m:math>
+              <m:mstyle displaystyle="true">
+                <m:mrow>
+                  <m:mi>N</m:mi>
+
+                  <m:mo stretchy="false">/</m:mo>
+
+                  <m:mn>2</m:mn>
+                </m:mrow>
+              </m:mstyle>
+            </m:math>
+          </inlineequation> represents the Nyquist frequency (one half the
+        sample rate value) and must also be non-complex.</para>
+
+        <xi:include href="code/signal-fftm.hpp"/>
+      </listitem>
+
+      <listitem>
+        <para>The template Fftm class has seven template parameters and eight
+        specializations corresponding to the above table. Specifications for
+        the function and data members of these specializations are the same so
+        they are presented only once below using <type>I</type> for the input
+        type and <type>O</type> for the output type.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="signal.fftm.constants">
+      <title>Constants</title>
+
+      <titleabbrev>signal.fftm.constants</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The constants fft_fwd and fft_inv are specified in <xref
+          linkend="signal.fft.constants"/>.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="signal.fftm.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>signal.fftm.template</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para><type>I</type> and <type>O</type> must obey the table above.
+          The only specializations which must be supported have <type>T</type>
+          equal to <type>scalar_f</type>. An implementation is permitted to
+          prevent other instantiations. [<emphasis>Note: </emphasis> If
+          <type>T</type> is <type>scalar_f</type>,
+          <type>complex&lt;T&gt;</type> is <type>cscalar_f</type>. ]</para>
+
+          <synopsis>int S</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para><code>0 &lt;= S &amp;&amp; S &lt; 2</code> .</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>If S == 0, row-wise FFTs will occur. If S == 1,
+                column-wise FFTs will occur.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <synopsis>int D</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para><code>D == fft_fwd || D == fft_inv</code> .</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>If I and O differ, this value is ignored. If I and O are
+                the same, this indicates the direction of the transforms,
+                i.e., forward or inverse transforms.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+
+        <listitem>
+          <para>[<emphasis>Note: </emphasis> The return_mechanism_type values
+          indicate whether operators yield values by returning them by value
+          while others use an “output” parameter. by_value and by_reference
+          respectively describe each. ]</para>
+
+          <synopsis>unsigned N</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>This value indicates the anticipated number of times the
+                object will be used. A value of zero indicates semi-infinity,
+                i.e., many times.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <synopsis>alg_hint_type H</synopsis>
+
+          <variablelist>
+            <varlistentry>
+              <term>Requires:</term>
+
+              <listitem>
+                <para>An alg_hint_type value.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Note:</term>
+
+              <listitem>
+                <para>This value indicates how an implementation should
+                optimize its computation or resource use.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="signal.fftm.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>signal.fftm.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Fftm</emphasis>(Domain&lt;2&gt; const&amp; dom, scalar_f scale) VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>dom must obey <xref linkend="signal-fft-multiple-table"/> as
+            determined by the template arguments.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs an object of class Fftm .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;input_size()</code> and
+            <code>this-&gt;output_size()</code> correspond to the appropriate
+            row in <xref linkend="signal-fft-multiple-table"/>.
+            <code>this-&gt;scale() == scale</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon a memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_ccfftmop_create_f</function>,
+            <function>vsip_ccfftmip_create_f</function>,
+            <function>vsip_crfftmop_create_f</function>, and
+            <function>vsip_rcfftmop_create_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.fftm.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>signal.fftm.accessors</titleabbrev>
+
+      <synopsis>Domain&lt;2&gt; const &amp;<emphasis role="bold">input_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain object with first indices of zero, unit strides,
+            and size equal to the input size in the appropriate row in <xref
+            linkend="signal-fft-multiple-table"/>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&lt;2&gt; const &amp;<emphasis role="bold">output_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain object with first indices of zero, unit strides,
+            and size equal to the output size in the appropriate row in <xref
+            linkend="signal-fft-multiple-table"/>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>scalar_f<emphasis role="bold"> scale</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The scalar multiple, as specified in the object’s
+            constructor.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>bool <emphasis role="bold">forward</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>An indication whether the transform is a forward or inverse
+            transform.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the behavior of the VSIPL
+            function vsip_fft<emphasis>n</emphasis>_attr_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.fftm.operators">
+      <title>Operators</title>
+
+      <titleabbrev>signal.fftm.operators</titleabbrev>
+
+      <synopsis>template &lt;typename Block&gt;
+const_Matrix&lt;O, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">operator()</emphasis>(const_Matrix&lt;I, Block&gt; source) VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><type>R</type> must be <constant>by_value</constant> .<type>
+            I</type> and <type>O</type> must obey the appropriate row of <xref
+            linkend="signal-fft-multiple-table"/>. <code>source.size()</code>
+            and <code>this-&gt;input_size()</code> are
+            element-conformant.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The multiple fast Fourier transforms of source which is
+            element-conformant and using <code>this-&gt;output_size()</code>
+            with unit stride in dimension <type>S</type>. If <code>S ==
+            row</code>, a separate transform applies to each row of source. If
+            <code>S == col</code>, a separate transform applies to each column
+            of source.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon a memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements the functionality of the VSIPL
+            functions <function>vsip_ccfftmop_f</function>,
+            <function>vsip_ccfftmip_f</function>,
+            <function>vsip_crfftmop_f</function>, and
+            <function>vsip_rcfftmop_f</function>. Unlike VSIPL, there are no
+            restrictions on strides.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;typename Block0,
+          typename Block1&gt;
+Matrix&lt;O, Block1&gt;
+<emphasis role="bold">operator()</emphasis>(const_Matrix&lt;I, Block0&gt; source, Matrix&lt;O, Block1&gt; destination) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><type>R</type> must be <constant>by_reference</constant> .
+            <type>I</type> and <type>O</type> must obey the appropriate row of
+            <xref linkend="signal-fft-multiple-table"/>.
+            <code>source.size()</code> and <code>this-&gt;input_size()</code>
+            are element-conformant. <code>destination.size()</code> and
+            <code>output_size()</code> are element-conformant. destination
+            must be modifiable. source’s block and destination’s block must
+            not overlap. Block1 must be modifiable.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The multiple fast Fourier transform of source in destination
+            . If <code>S == ro</code>w, a separate transform applies to each
+            row of source. If <code>S == col</code>, a separate transform
+            applies to each column of source.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Stores the returned value in destination .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements the functionality of the VSIPL
+            functions <function>vsip_ccfftmop_f</function>,
+            <function>vsip_ccfftmip_f</function>,
+            <function>vsip_crfftmop_f</function>, and
+            <function>vsip_rcfftmop_f</function>. Unlike VSIPL, there are no
+            restrictions on strides.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>template &lt;typename Block&gt;
+Matrix&lt;O, Block&gt;
+<emphasis role="bold">operator()</emphasis>(Matrix&lt;O, Block&gt; source_and_destination) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><type>R</type> must be <constant>by_reference</constant>
+            .<type> I</type> and<type> O</type> must be the same.<type>
+            I</type> and <type>O</type> must obey a row of <xref
+            linkend="signal-fft-multiple-table"/>.
+            <code>source_and_destination.size()</code> and
+            <code>this-&gt;input_size()</code> are element-conformant.
+            <code>source_and_destination.size()</code> and
+            <code>this-&gt;output_size()</code> are element-conformant. Block
+            must be modifiable.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The multiple fast Fourier transform of
+            source_and_destination . If <code>S == row</code>, a separate
+            transform applies to each row of source_and_destination. If
+            <code>S == col</code>, a separate transform applies to each column
+            of source_and_destination.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Stores the returned value in source_and_destination, which
+            is overwritten.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements the functionality of the VSIPL
+            functions <function>vsip_ccfftmop_f</function>,
+            <function>vsip_ccfftmip_f</function>,
+            <function>vsip_crfftmop_f</function>, and
+            <function>vsip_rcfftmop_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="signal.convol">
+    <title>Convolutions</title>
+
+    <titleabbrev>signal.convol</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A Convolution object performs decimated convolution filtering.
+        [<emphasis>Note: </emphasis> For a mathematical description, see
+        <function>vsip_conv1d_create_f</function> and
+        <function>vsip_conv2d_create_f</function> in the VSIPL API. ]</para>
+
+        <xi:include href="code/signal-convol.hpp"/>
+      </listitem>
+
+      <listitem>
+        <para>const_View::dim indicates the dimensionality of const_View
+        .</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="signal.convol.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>signal.convol.template</titleabbrev>
+
+      <synopsis>template &lt;typename, typename&gt; class const_View</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>const_View&lt;T, Block&gt; must be a valid C++ class for
+            various values of Block including at least Dense . The class must
+            support copy construction. The only specializations which must be
+            supported are const_View the same as const_Vector or const_Matrix
+            . An implementation is permitted to prevent instantiation for
+            other choices of const_View .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>typename T</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The only specialization which must be supported has T the
+            same as scalar_f . An implementation is permitted to prevent
+            instantiation for other choices of T .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>unsigned N</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates the anticipated number of times the
+            object will be used. A value of zero indicates semi-infinity,
+            i.e., many times.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>alg_hint_type H</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates how an implementation should optimize
+            its computation or resource use.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.convol.enum">
+      <title>Enumerations</title>
+
+      <titleabbrev>signal.convol.enum</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The enum <type>support_region_type</type> values indicate the
+          <emphasis>region of support</emphasis> which is the number of output
+          points for each dimension. support_full support has <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mo>⌊</m:mo>
+
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mi>N</m:mi>
+
+                    <m:mo>+</m:mo>
+
+                    <m:mi>M</m:mi>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mn>2</m:mn>
+
+                    <m:mo stretchy="false">)</m:mo>
+
+                    <m:mo stretchy="false">/</m:mo>
+
+                    <m:mi>D</m:mi>
+
+                    <m:mo>⌋</m:mo>
+
+                    <m:mo>+</m:mo>
+
+                    <m:mn>1</m:mn>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> output points. support_same support has
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mo>⌊</m:mo>
+
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mi>N</m:mi>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mn>1</m:mn>
+
+                    <m:mo stretchy="false">)</m:mo>
+
+                    <m:mo stretchy="false">/</m:mo>
+
+                    <m:mi>D</m:mi>
+
+                    <m:mo>⌋</m:mo>
+
+                    <m:mo>+</m:mo>
+
+                    <m:mn>1</m:mn>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> output points. support_min support has
+          <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mo>⌊</m:mo>
+
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mi>N</m:mi>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mn>1</m:mn>
+
+                    <m:mo stretchy="false">)</m:mo>
+
+                    <m:mo stretchy="false">/</m:mo>
+
+                    <m:mi>D</m:mi>
+
+                    <m:mo>⌋</m:mo>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mo>⌊</m:mo>
+
+                    <m:mo stretchy="false">(</m:mo>
+
+                    <m:mi>M</m:mi>
+
+                    <m:mo>-</m:mo>
+
+                    <m:mn>1</m:mn>
+
+                    <m:mo stretchy="false">)</m:mo>
+
+                    <m:mo stretchy="false">/</m:mo>
+
+                    <m:mi>D</m:mi>
+
+                    <m:mo>⌋</m:mo>
+
+                    <m:mo>+</m:mo>
+
+                    <m:mn>1</m:mn>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> output points. <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>M</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> specifies the length of one dimension of the
+          kernel view, <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>N</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> specifies the length of one dimension of the
+          input view, and <inlineequation>
+              <m:math>
+                <m:mstyle displaystyle="true">
+                  <m:mrow>
+                    <m:mi>D</m:mi>
+                  </m:mrow>
+                </m:mstyle>
+              </m:math>
+            </inlineequation> specifies the template decimation factor.</para>
+        </listitem>
+
+        <listitem>
+          <para>The enum <type>symmetry_type</type> values indicate symmetry
+          and length for all dimensions of the view.
+          <constant>nonsym</constant> indicates non-symmetric.
+          <constant>sym_even_len_odd</constant> indicates even symmetric with
+          odd length. <constant>sym_even_len_even</constant> indicates even
+          symmetric with even length.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="signal.convol.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>signal.convol.constructors</titleabbrev>
+
+      <synopsis>template &lt;typename Block&gt;
+<emphasis role="bold">Convolution</emphasis>(const_View&lt;T, Block&gt; filter_coeffs,
+            Domain&lt;const_View&lt;T,Block&gt;::dim&gt; const input_size,
+            length_type decimation)
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para><code>decimation &gt;= 1</code> . If <code>symmetry ==
+            nonsym</code>,<code> filter_coeffs.size() &lt;=
+            input_size.length()</code> . Otherwise,
+            <code>filter_coeffs.size()*2 &lt;= input_size.length()</code>
+            .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs an object of class Convolution .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;kernel_size()</code> returns a domain with
+            first indices of zero, unit strides, and dimension lengths equal
+            to the dimension sizes of filter_coeffs. <code>this-&gt;symmetry()
+            == symmtry</code> .<code> this-&gt;input_size()</code> equals
+            <parameter>input_size</parameter> but having first indices of zero
+            and unit strides.<code> this-&gt;support() ==
+            supprt</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.convol.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>signal.convol.accessors</titleabbrev>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">kernel_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain having, for each dimension, the same length_type as
+            filter_coeffs’s domain but having first indices of zero and unit
+            strides.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">filter_order</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><code>this-&gt;kernel_size()</code> .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>symmetry_type <emphasis role="bold">symmetry</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><constant>symmtry</constant> .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">input_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain with first indices of zero and unit strides
+            indicating the required size of the operator’s input view.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">output_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain with first indices of zero and unit strides
+            indicating the size of the operator’s result.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>support_region_type <emphasis role="bold">support</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><constant>supprt</constant> .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">decimation</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The output decimation factor.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.convol.operators">
+      <title>Convolution operators</title>
+
+      <titleabbrev>signal.convol.operators</titleabbrev>
+
+      <synopsis>template &lt;typename Block0,
+          typename Block1&gt;
+typename ViewConversion&lt;View, T, Block1&gt;::view_type
+<emphasis role="bold">operator()</emphasis>(const_View&lt;T, Block&gt; v,
+           typename ViewConversion&lt;const_View, T, Block1&gt;::view_type out)
+  VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The domain of v and <code>this-&gt;input_size()</code> must
+            be element-conformant. The domain of out and<code>
+            this-&gt;output_size()</code> must be element-conformant. out must
+            be modifiable. v and out must not overlap.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>out .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>The convolution of the constructor argument filter_coeffs
+            and v as specified by the VSIPL API for <function>vsip_convolve1d_f</function> is
+            stored in out .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="signal.correl">
+    <title>Correlations</title>
+
+    <titleabbrev>signal.correl</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>A Correlation object computes correlations between a reference
+        view and a data view. [<emphasis>Note: </emphasis> For a mathematical
+        description, see <function>vsip_corr1d_create_f</function> and
+        <function>vsip_corr2d_create_f</function> in the VSIPL API. ]</para>
+
+        <xi:include href="code/signal-correl.hpp"/>
+      </listitem>
+
+      <listitem>
+        <para>const_View::dim abbreviates the dimensionality of const_View
+        .</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="signal.correl.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>signal.correl.template</titleabbrev>
+
+      <synopsis>template &lt;typename, typename&gt; class const_View</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>const_View&lt;T, Block&gt; must be a valid C++ class for
+            various values of Block including at least Dense . The class must
+            support copy construction. The only specializations which must be
+            supported are const_View the same as const_Vector or const_Matrix
+            . An implementation is permitted to prevent instantiation for
+            other choices of const_View .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>typename T = VSIP_DEFAULT_VALUE_TYPE</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The only specialization which must be supported has T the
+            same as scalar_f or cscalar_f . An implementation is permitted to
+            prevent instantiation for other choices of T .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>unsigned N</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates the anticipated number of times the
+            object will be used. A value of zero indicates semi-infinity,
+            i.e., many times.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>alg_hint_type H</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates how an implementation should optimize
+            its computation or resource use.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.correl.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>signal.correl.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Correlation</emphasis>(Domain&lt;const_View::dim&gt; const &amp;reference_size,
+            Domain&lt;const_View::dim&gt; const &amp;input_size)
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>For each dimension d, <code>reference_size[d].length() &lt;=
+            input_size[d].length()</code> .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs an object of class Correlation .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para><code>this-&gt;reference_size()</code> equals reference_size
+            but having first indices of zero and unit strides.
+            <code>this-&gt;input_size() == input_size</code> .
+            <code>this-&gt;support() == supprt </code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.correl.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>signal.correl.accessors</titleabbrev>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">reference_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain having, for each dimension, the same size() as the
+            reference_size domain given to the constructor but having first
+            indices of zero and unit strides.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">input_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain with first indices of zero and unit strides
+            indicating the required size of the operator’s input view.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>Domain&lt;const_View::dim&gt; const &amp;<emphasis role="bold">output_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A domain with first indices of zero and unit strides
+            indicating the size of the operator’s result.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>support_region_type <emphasis role="bold">support</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>supprt .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.correl.operators">
+      <title>Correlation operators</title>
+
+      <titleabbrev>signal.correl.operators</titleabbrev>
+
+      <synopsis>template &lt;typename Block0,
+          typename Block1,
+          typename Block2&gt;
+typename ViewConversion&lt;const_View, T, Block2&gt;::view_type
+<emphasis role="bold">operator()</emphasis>(bias_type output_bias,
+           const_View&lt;T, Block0&gt; reference_view,
+           const_View&lt;T, Block1&gt; v,
+           typename ViewConversion&lt;const_View, T, Block2&gt;::view_type out)
+  VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The domain of reference_view and this-&gt;reference_size()
+            must be element-conformant. The domain of v and
+            <code>this-&gt;input_size()</code> must be element-conformant. The
+            domain of out and <code>this-&gt;output_size()</code> are
+            element-conformant. out must be modifiable. out cannot overlap
+            reference_view or v .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>out .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>The correlation of the constructor argument reference_view
+            and v as specified by the VSIPL API for vsip_correlate1d_f is stored in out . If
+            <code>output_bias == biased</code>, then biased correlation
+            estimates are stored. If the constructor <code>output_bias ==
+            unbiased</code>, then unbiased correlation estimates are
+            stored.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="signal.windows">
+    <title>Window creation functions</title>
+
+    <titleabbrev>signal.windows</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>These functions create const_Vectors of window weights.</para>
+
+        <xi:include href="code/signal-windows.hpp"/>
+
+        <synopsis>const_Vector&lt;scalar_f, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">blackman</emphasis>(length_type len) VSIP_THROW((std::bad_alloc));</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para><code>len &gt; 1</code> .</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>A const_Vector initialized with Blackman window weights
+              and having length len .</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Throws:</term>
+
+            <listitem>
+              <para><type>std::bad_alloc</type> upon memory allocation
+              error.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>The function corresponds to VSIPL function
+              <function>vsip_vcreate_blackman_f</function>. See its
+              description for the mathematical formula.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+        <synopsis>const_Vector&lt;scalar_f, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">cheby</emphasis>(length_type len, scalar_f ripple) VSIP_THROW((std::bad_alloc));</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para><code>len &gt; 1</code> .</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>A const_Vector initialized with Dolph-Chebyshev window
+              weights and having length len .</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Throws:</term>
+
+            <listitem>
+              <para><type>std::bad_alloc</type> upon memory allocation
+              error.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>The function corresponds to VSIPL function
+              <function>vsip_vcreate_cheby_f</function>. See its description
+              for the mathematical formula.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+        <synopsis>const_Vector&lt;scalar_f, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">hanning</emphasis>(length_type len) VSIP_THROW((std::bad_alloc));</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para>len &gt; 1 .</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>A const_Vector initialized with Hanning window weights and
+              having length len . The formula is the same as for
+              <function>vsip_vcreate_hanning_f</function>.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Throws:</term>
+
+            <listitem>
+              <para><type>std::bad_alloc</type> upon memory allocation
+              error.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>The function corresponds to VSIPL function
+              vsip_vcreate_hanning_f. See its description for the mathematical
+              formula.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+        <synopsis>const_Vector&lt;scalar_f, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">kaiser</emphasis>(length_type len, scalar_f beta) VSIP_NOTHROW;</synopsis>
+
+        <variablelist>
+          <varlistentry>
+            <term>Requires:</term>
+
+            <listitem>
+              <para><code>len &gt; 1</code> .</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Returns:</term>
+
+            <listitem>
+              <para>A const_Vector initialized with Kaiser window weights with
+              transition width parameter beta and having length len .</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Note:</term>
+
+            <listitem>
+              <para>The function corresponds to VSIPL function
+              <function>vsip_vcreate_kaiser_f</function>. See its description
+              for the mathematical formula.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="signal.fir">
+    <title>FIR filters</title>
+
+    <titleabbrev>signal.fir</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>The template class Fir implements finite impulse response
+        filters. [<emphasis>Note: </emphasis> For a mathematical description,
+        see vsip_fir_create_f in the VSIPL specification. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>FIR filter objects support filtering long (semi-infinite) data
+        streams by storing internal state information. This state information
+        is incorporated from the VSIPL API by reference.</para>
+      </listitem>
+    </orderedlist>
+
+    <xi:include href="code/signal-fir.hpp"/>
+
+    <section xml:id="signal.fir.enum">
+      <title>Enumeration</title>
+
+      <titleabbrev>signal.fir.enum</titleabbrev>
+
+      <orderedlist>
+        <listitem>
+          <para>The enum obj_state value state_save indicates the filter will
+          be used repeatedly on consecutive input segments, each having the
+          same length, of a semi-infinite data stream. Thus, the filter needs
+          to save input state information between operations on input.
+          state_no_save indicates the filter will operate on independent input
+          segments.</para>
+        </listitem>
+      </orderedlist>
+    </section>
+
+    <section xml:id="signal.fir.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>signal.fir.template</titleabbrev>
+
+      <synopsis>typename T</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The only specializations which must be supported are T the
+            same as scalar_f or cscalar_f . An implementation is permitted to
+            prevent instantiation for other choices of T .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>unsigned N</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates the anticipated number of times the
+            object will be used. A value of zero indicates semi-infinity,
+            i.e., many times.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>alg_hint_type H</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates how an implementation should optimize
+            its computation or resource use.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.fir.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>signal.fir.constructors</titleabbrev>
+
+      <synopsis>template &lt;typename Block&gt;
+<emphasis role="bold">Fir</emphasis>(const_Vector&lt;T, Block&gt; kernel,
+    length_type input_size,
+    length_type decimation = 1)
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>Let <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation> be the kernel order. <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>≥</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>. <code>kernel.size() = M+1</code> if
+            <code>symm == nonsym</code>. <code>kernel.size() =
+            </code><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mo>⌈</m:mo>
+
+                      <m:mo stretchy="false">(</m:mo>
+
+                      <m:mi>M</m:mi>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+
+                      <m:mo stretchy="false">)</m:mo>
+
+                      <m:mo stretchy="false">/</m:mo>
+
+                      <m:mn>2</m:mn>
+
+                      <m:mo>⌉</m:mo>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation> if <code>symmetry == sym_even_len_odd ||
+            symmetry == sym_even_len_even</code>. <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>≥</m:mo>
+
+                      <m:mi>decimation</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>. <inlineequation>
+                <m:math>
+                  <m:mrow>
+                    <m:mi>input_size</m:mi>
+
+                    <m:mo>≥</m:mo>
+
+                    <m:mi>M</m:mi>
+                  </m:mrow>
+                </m:math>
+              </inlineequation>. decimation &gt;= 1.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs an object of class <type>Fir</type>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If <code>C == state_save</code>, then the save state will be
+            stored in the object and initialized to zeros.
+            <code>this-&gt;kernel_ size() == M</code>.
+            <code>this-&gt;symmetry() == symmetry</code>.
+            <code>this-&gt;input_size() == input_size</code>.
+            <code>this-&gt;continuous_filtering() == C</code>.
+            <code>this-&gt;decimation() == decimation</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para><type>std::bad_alloc</type> upon memory allocation
+            error.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The object must store any values from kernel separately from
+            the kernel argument. This function implements part of the
+            functionality of the VSIPL functions
+            <function>vsip_fir_create_f</function> and
+            <function>vsip_cfir_create_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.fir.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>signal.fir.accessors</titleabbrev>
+
+      <synopsis>length_type <emphasis role="bold">kernel_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mi>M</m:mi>
+
+                      <m:mo>+</m:mo>
+
+                      <m:mn>1</m:mn>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_fir_getattr_f</function> and
+            <function>vsip_cfir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">filter_order</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>kernel_size() .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_fir_getattr_f</function> and
+            <function>vsip_cfir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>symmetry_type <emphasis role="bold">symmetry</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The symmetry_type template argument.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_fir_getattr_f</function> and
+            <function>vsip_cfir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">input_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The required size of the operator’s input vector.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_fir_getattr_f</function> and
+            <function>vsip_cfir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">output_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The size of the filtering operator’s result vector, i.e.,
+            ceil(input_size()/decimation) .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The returned value may exceed the number of computed values
+            in the result vector by one. This function implements part of the
+            functionality of the VSIPL functions
+            <function>vsip_fir_getattr_f</function> and
+            <function>vsip_cfir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>obj_state <emphasis role="bold">continuous_filtering</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><constant>state_save</constant> iff the save state is stored
+            in the object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_fir_getattr_f</function> and
+            <function>vsip_cfir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">decimation</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The output decimation factor.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_fir_getattr_f</function> and
+            <function>vsip_cfir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.fir.operators">
+      <title>Filtering and state reset operators</title>
+
+      <titleabbrev>signal.fir.operators</titleabbrev>
+
+      <synopsis>
+template &lt;typename Block0, typename Block1&gt;
+length_type
+<emphasis role="bold">operator()</emphasis>(const_Vector&lt;T, Block&gt; data, Vector&lt;T, Block1&gt; out) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The domain of data and this-&gt;input_size() must be
+            element-conformant. out and<code> this-&gt;output_size()</code>
+            must be element-conformant. out must be modifiable. data and out
+            must not overlap.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The number of computed values.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>The result of applying the FIR filter to the data is stored
+            in out .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If <code>this-&gt;continuous_filtering() ==
+            state_save</code>, the save state is updated. The returned vector
+            has<code> this-&gt;size() == output_size()</code> .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions <function>vsip_firflt_f</function> and
+            <function>vsip_cfirflt_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">reset</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If<code> this-&gt;continuous_filtering() ==
+            state_save</code>, then the save state is initialized to
+            zeros.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL functions vsip_fir_reset_f and vsip_cfir_reset_f.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="signal.iir">
+    <title>IIR filters</title>
+
+    <titleabbrev>signal.iir</titleabbrev>
+
+    <orderedlist>
+      <listitem>
+        <para>The template class Iir implements infinite impulse response
+        filters. [<emphasis>Note: </emphasis> For a mathematical description,
+        see vsip_iir_create_f in the VSIPL API. ]</para>
+      </listitem>
+
+      <listitem>
+        <para>IIR filter objects support filtering long (semi-infinite) data
+        streams by storing internal state information. This state information
+        is incorporated from the VSIPL API by reference.</para>
+
+        <xi:include href="code/signal-iir.hpp"/>
+      </listitem>
+
+      <listitem>
+        <para>[<emphasis>Note: </emphasis> See <xref
+        linkend="signal.fir.enum"/> for a description of enum obj_state.
+        ]</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="signal.iir.template">
+      <title>Template parameters</title>
+
+      <titleabbrev>signal.iir.template</titleabbrev>
+
+      <synopsis>typename T</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The only specialization which must be supported is T the
+            same as scalar_f . An implementation is permitted to prevent
+            instantiation for other choices of T .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>unsigned N</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates the anticipated number of times the
+            object will be used. A value of zero indicates semi-infinity,
+            i.e., many times.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>alg_hint_type H</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This value indicates how an implementation should optimize
+            its computation or resource use.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.iir.constructors">
+      <title>Constructors, copy, assignment, and destructor</title>
+
+      <titleabbrev>signal.iir.constructors</titleabbrev>
+
+      <synopsis>
+template &lt;typename Block0,
+          typename Block1&gt;
+<emphasis role="bold">Iir</emphasis>(const_Matrix&lt;T, Block0&gt; B,
+    const_Matrix&lt;T, Block1&gt; A,
+    const length_type input_size)
+  VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>For an order <inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation> filter, <code>B.size(0) = M</code>,
+            <code>B.size(1) = 3</code>, <code>A.size(0) = M</code>, and
+            <code>A.size(1) = 2</code>. <code>input_ size &gt;=
+            2*M</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs an object of class Iir .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If C == state_save, then the save state will be stored in
+            the object and initialized to zeros. <code>this-&gt;kernel_ size()
+            = 2*M</code>. <code>this-&gt;input_size() == input_size</code>.
+            <code>this-&gt;continuous_filtering() == C</code>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>The object must store any values from B and A separately
+            from the arguments. This function implements part of the
+            functionality of the VSIPL function
+            <function>vsip_iir_create_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.iir.accessors">
+      <title>Accessors</title>
+
+      <titleabbrev>signal.iir.accessors</titleabbrev>
+
+      <synopsis>length_type <emphasis role="bold">kernel_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para><inlineequation>
+                <m:math>
+                  <m:mstyle displaystyle="true">
+                    <m:mrow>
+                      <m:mn>2</m:mn>
+
+                      <m:mi>M</m:mi>
+                    </m:mrow>
+                  </m:mstyle>
+                </m:math>
+              </inlineequation>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL function <function>vsip_iir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">filter_order</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>this-&gt;kernel_size() .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL function <function>vsip_iir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">input_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>The required size of the operator’s input vector.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL function <function>vsip_iir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>length_type <emphasis role="bold">output_size</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>this-&gt;input_size() .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL function <function>vsip_iir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>obj_state <emphasis role="bold">continuous_filtering</emphasis>() const VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>state_save iff the save state is stored in the
+            object.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL function <function>vsip_iir_getattr_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.iir.operators">
+      <title>Filtering and state reset operators</title>
+
+      <titleabbrev>signal.iir.operators</titleabbrev>
+
+      <synopsis>
+template &lt;typename Block0, typename Block1&gt;
+Vector&lt;T, Block1&gt;
+<emphasis role="bold">operator()</emphasis>(const_Vector&lt;T, Block0&gt; data, Vector&lt;T, Block1&gt; out) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>The domain of data and<code> this-&gt;input_size()</code>
+            must be element-conformant. out and
+            <code>this-&gt;output_size()</code> must be element-conformant.
+            data and out must not overlap.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>out .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>The result of applying the IIR filter to the data is stored
+            in out .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If <code>continuous_filtering() == state_save</code>, the
+            save state is updated. The returned vector has <code>size() ==
+            this-&gt;output_size().</code></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL function <function>vsip_iirflt_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+      <synopsis>void <emphasis role="bold">reset</emphasis>() VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Postconditions:</term>
+
+          <listitem>
+            <para>If<code> this-&gt;continuous_filtering() ==
+            state_save</code>, then the save state is initialized to
+            zeros.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This function implements part of the functionality of the
+            VSIPL function <function>vsip_iir_reset_f</function>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="signal.histo">
+    <title>Histograms</title>
+
+    <titleabbrev>signal.histo</titleabbrev>
+
+    <xi:include href="code/signal-histo.hpp"/>
+
+    <orderedlist>
+      <listitem>
+        <para>The template class <type>Histogram</type> supports computing the
+        histogram of its input data.</para>
+      </listitem>
+
+      <listitem>
+        <para>The only specializations of <type>Histogram</type> which must be
+        supported are for const_View the same as const_Vector or const_Matrix
+        and T the same as scalar_f or scalar_i . An implementation is
+        permitted to prevent other instantiations.</para>
+      </listitem>
+    </orderedlist>
+
+    <section xml:id="signal.histo.constructors">
+      <title>Constructor and destructor</title>
+
+      <titleabbrev>signal.histo.constructors</titleabbrev>
+
+      <synopsis><emphasis role="bold">Histogram</emphasis>(T min_value, T max_value, length_type num_bin) VSIP_THROW((std::bad_alloc));</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Requires:</term>
+
+          <listitem>
+            <para>min_value &lt; max_value . num_bin &gt;= 3 .</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Constructs an object of class Histogram with zero values in
+            all num_bin bins.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Throws:</term>
+
+          <listitem>
+            <para>std::bad_alloc if the memory allocation for the returned
+            const_Vector fails.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section xml:id="signal.histo.operators">
+      <title>Histogram operators</title>
+
+      <titleabbrev>signal.histo.operators</titleabbrev>
+
+      <synopsis>
+template &lt;typename Block&gt;
+const_Vector&lt;scalar_i, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">operator()</emphasis>(const_View&lt;T, Block&gt; data, bool accumulate = false) VSIP_NOTHROW;</synopsis>
+
+      <variablelist>
+        <varlistentry>
+          <term>Returns:</term>
+
+          <listitem>
+            <para>A histogram of data with num_bin-2 bins distributed linearly
+            over the range <inlineequation>
+                <m:math>
+                  <m:mrow>
+                    <m:mo stretchy="false">[</m:mo>
+
+                    <m:mi>min_value</m:mi>
+
+                    <m:mo>,</m:mo>
+
+                    <m:mi>max_value</m:mi>
+
+                    <m:mo stretchy="false">)</m:mo>
+                  </m:mrow>
+                </m:math>
+              </inlineequation>. Bins with indices 0 and num_bin-1 accumulate
+            values less than min_value and greater than or equal to max_value,
+            respectively. If accumulate is true, values from data increment
+            previously computed values. If accumulate is false, previously
+            computed values are zeroed before values from data increment these
+            values.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Effects:</term>
+
+          <listitem>
+            <para>Stores the returned values internally. num_bin, i.e., the
+            output length specified in the constructor.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Note:</term>
+
+          <listitem>
+            <para>This functionality is similar to VSIPL functions
+            <function>vsip_vhisto_f</function>,
+            <function>vsip_vhisto_i</function>,
+            <function>vsip_mhisto_f</function>, and
+            <function>vsip_mhisto_i</function>. See the VSIPL
+	    specification for a mathematical description.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section xml:id="signal.freqswap">
+    <title>Frequency swap functions</title>
+
+    <titleabbrev>signal.freqswap</titleabbrev>
+
+    <xi:include href="code/signal-freqswap.hpp"/>
+
+    <orderedlist>
+      <listitem>
+        <para>The only specializations of <function>freqswap</function> which
+        must be supported are for const_View the same as const_Vector or
+        const_Matrix and T the same as scalar_f or cscalar_f . An
+        implementation is permitted to prevent other instantiations.</para>
+      </listitem>
+    </orderedlist>
+
+    <synopsis>
+template &lt;template &lt;typename, typename&gt; class const_View, typename T, typename Block&gt;
+const_View&lt;T, <emphasis>unspecified</emphasis>&gt;
+<emphasis role="bold">freqswap</emphasis>(const_View&lt;T, Block&gt; source) VSIP_NOTHROW;</synopsis>
+
+    <variablelist>
+      <varlistentry>
+        <term>Requires:</term>
+
+        <listitem>
+          <para>The block of the returned const_View must either not overlap
+          <code>source.block()</code> or be exactly the same.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Returns:</term>
+
+        <listitem>
+          <para>If const_View is const_Vector, a const_Vector with the two
+          halves of source swapped. If const_View is const_Matrix, a
+          const_Matrix with the upper left and lower right quadrants of source
+          swapped. Given an odd-length, the left half has one more value than
+          the right-half.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Note:</term>
+
+        <listitem>
+          <para>This functionality is similar to VSIPL functions
+          <function>vsip_vfreqswap_f</function>,
+          <function>vsip_cvfreqswap_i</function>,
+          <function>vsip_mfreqswap_f</function>, and
+          <function>vsip_cmfreqswap_i</function>. See the VSIPL
+	  specification for a mathematical description.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+</chapter>

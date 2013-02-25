@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appendix version="5.0" xml:id="changes" xmlns="http://docbook.org/ns/docbook"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Specification Changes</title>
+
+  <titleabbrev>changes</titleabbrev>
+
+  <revhistory>
+    <revision>
+      <revnumber>1.0</revnumber>
+
+      <date>2005-03-09</date>
+
+      <revdescription>
+        <para>Initial VSIPL++ specification.</para>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.01</revnumber>
+
+      <date>2005-06-23</date>
+
+      <revdescription>
+        <para>Change all-capital class, enumeration, and variable names to
+        avoid potential macro collisions with C libraries.</para>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.02</revnumber>
+
+      <date>2010-06-03</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para>Additional overloads for view composite assignments
+            (20).</para>
+          </listitem>
+
+          <listitem>
+            <para>Correct sumsqval signature (45).</para>
+          </listitem>
+
+          <listitem>
+            <para>In <xref linkend="domains.domainone.constructors"/>, <xref
+            linkend="block.dense.constructors"/>, and <xref
+            linkend="block.dense.userdata"/>: Indicate default arguments in
+            function signatures.</para>
+          </listitem>
+
+          <listitem>
+            <para>In <xref linkend="selgen.selection.scatter"/>, <xref
+            linkend="signal.convol.constructors"/>, <xref
+            linkend="signal.convol.operators"/>, <xref
+            linkend="signal.correl.operators"/>, <xref
+            linkend="signal.fir.operators"/>, and <xref
+            linkend="signal.iir.operators"/>. Remove reference to non-existent
+            View::domain() and Block::domain() members.</para>
+          </listitem>
+
+          <listitem>
+            <para>In <xref linkend="view.view"/> view requirements table,
+            correct block type expression.</para>
+          </listitem>
+
+          <listitem>
+            <para>In <xref linkend="support"/> and <xref
+            linkend="support.types.domain"/> add enumeration
+            whole_domain_type.</para>
+          </listitem>
+
+          <listitem>
+            <para>In <xref linkend="view.tensor"/>, <xref
+            linkend="view.tensor.subview_types"/>, and <xref
+            linkend="view.tensor.subviews"/>, change vector and matrix subview
+            types to support compile-time fixed dimensions and
+            whole-domains.</para>
+          </listitem>
+
+          <listitem>
+            <para>In <xref linkend="view.tensor"/>, <xref
+            linkend="view.tensor.subview_types"/>, and <xref
+            linkend="view.tensor.transpose"/>, change transpose subview types
+            to support compile-time permutations of dimensions.</para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+
+    <revision>
+      <revnumber>1.1</revnumber>
+
+      <date>2011-10-08</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para><xref linkend="support.types"/>: Remove mapping from
+            cscalar_i to std::complex&lt;integral-type&gt;, since the latter
+            isn’t defined by ISO/IEC 14882:1998 Programming Languages —
+            C++.</para>
+          </listitem>
+
+          <listitem>
+            <para>Fix typos in <xref linkend="selgen"/>.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="domains"/>: Allow domains to be empty.</para>
+          </listitem>
+
+          <listitem>
+            <para>Split <xref linkend="view"/> into <xref linkend="block"/>
+            and <xref linkend="view"/>.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="block.layout"/>: New section</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="block.dense"/>: Add storage_format
+            members.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="block.dense.userdata"/>: Remove preconditions
+            on user_storage() for rebind().</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="block.dense.userdata"/>: Add overloads for
+            constructor, release(), find(), rebind() accepting a
+            std::pair&lt;uT*,uT*&gt;.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="block.dense.userdata"/>: Add overloads to
+            rebind() that allow block size(s) to change.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="dda"/>: New section.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="view.view"/>: Rename section from “View
+            Requirements” to “View Definitions”.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="view.vector"/>, <xref
+            linkend="view.matrix"/>: Add new whole_domain call-operator
+            overloads to Vector and Matrix classes to prevent accidental
+            implicit casts from whole_domain to index_type.</para>
+          </listitem>
+
+          <listitem>
+            <para><xref linkend="serialization"/>: New section.</para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+    <revision>
+      <revnumber>1.2</revnumber>
+
+      <date>2012-12-10</date>
+
+      <revdescription>
+        <itemizedlist>
+          <listitem>
+            <para>Various formatting changes are applied as part of the
+	    adoption of the specification by the Object Management Group.</para>
+          </listitem>
+	</itemizedlist>
+      </revdescription>
+    </revision>
+  </revhistory>
+</appendix>
