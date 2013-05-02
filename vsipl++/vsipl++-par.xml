@@ -6,21 +6,6 @@
     <title>VSIPL++ Parallel</title>
     <subtitle>Version 1.2</subtitle>
     <titleabbrev>VSIPL++ Parallel 1.2</titleabbrev>
-    <authorgroup>
-      <author>
-        <orgname>
-	  <inlinemediaobject>
-            <imageobject>
-              <imagedata fileref="images/omg-logo.svg" format="SVG"/>
-            </imageobject>
-            <imageobject>
-              <imagedata fileref="images/omg-logo.png" format="PNG"/>
-            </imageobject>
-          </inlinemediaobject>
-	</orgname>
-      </author>
-    </authorgroup>
-
     <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
   </info>
 

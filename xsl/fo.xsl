@@ -13,7 +13,7 @@
 </xsl:template>
 
 <xsl:param name="double.sided" select="1"/>
-<xsl:param name="target.database.document">/home/stefan/work/vxx/sitemap.fo.xml</xsl:param>
+<xsl:param name="target.database.document"></xsl:param>
 <xsl:param name="variablelist.as.blocks" select="1"></xsl:param> 
 <xsl:param name="section.autolabel" select="1"></xsl:param>
 

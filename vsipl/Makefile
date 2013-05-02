@@ -37,8 +37,8 @@ pdf: $(pdf)
 # Dependencies
 ########################################################################
 
-vispl.xhtml.xref: $(vsipl_src)
-vispl.fo.xref: $(vsipl_src)
+vsipl.xhtml.xref: $(vsipl_src)
+vsipl.fo.xref: $(vsipl_src)
 
 $(xhtml): $(xhtml_xref)
 $(fo): $(fo_xref)

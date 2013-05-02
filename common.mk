@@ -44,6 +44,7 @@ define generate_fo
 mkdir -p $(@D)
 $(xsltproc) --stringparam target.database.document sitemap.fo.xml \
   --stringparam use.extensions 1 \
+  --stringparam logo.path $(xsl) \
   --nonet --xinclude --output $@ $(xsl)/fo.xsl $<
 endef
 

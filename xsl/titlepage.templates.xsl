@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook"
-xmlns:exsl="http://exslt.org/common" version="1.0" exclude-result-prefixes="exsl d">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+		xmlns:d="http://docbook.org/ns/docbook"
+		xmlns:fo="http://www.w3.org/1999/XSL/Format"
+		xmlns:exsl="http://exslt.org/common" 
+		version="1.0" exclude-result-prefixes="exsl d">
 
-<!-- This stylesheet was created by template/titlepage.xsl-->
+<xsl:param name="logo.path"></xsl:param>
 
 <xsl:template mode="book.titlepage.recto.auto.mode" match="d:preface[@xml:id='title1']">
   <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"
@@ -16,7 +19,7 @@ xmlns:exsl="http://exslt.org/common" version="1.0" exclude-result-prefixes="exsl
 </xsl:template>
 
 <xsl:template mode="book.titlepage.recto.auto.mode" match="d:preface[@xml:id='title2']">
-  <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format">
+  <fo:block>
     <!-- Hack: DB5 requires prefaces to have titles, but we really don't want one here. -->
     <xsl:apply-templates select="d:para" />
   </fo:block>
@@ -24,6 +27,12 @@ xmlns:exsl="http://exslt.org/common" version="1.0" exclude-result-prefixes="exsl
 
 <xsl:template name="book.titlepage.recto">
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:pubdate"/>
+  <fo:block text-align="left">
+    <fo:external-graphic src="url({concat($logo.path,'/omg-logo.svg')})" 
+			 width="auto" height="auto" 
+			 content-width="auto" content-height="auto" 
+			 content-type="content-type:image/svg+xml"/>
+  </fo:block>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:corpauthor"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:corpauthor"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:authorgroup"/>

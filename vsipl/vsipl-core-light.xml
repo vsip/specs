@@ -6,22 +6,6 @@
     <title>VSIPL Core Light Profile</title>
     <subtitle>Version 1.4</subtitle>
     <titleabbrev>VSIPL Core Light Profile 1.4</titleabbrev>
-
-    <authorgroup>
-      <author>
-        <orgname>
-	  <inlinemediaobject>
-            <imageobject>
-              <imagedata fileref="images/omg-logo.svg" format="SVG"/>
-            </imageobject>
-            <imageobject>
-              <imagedata fileref="images/omg-logo.png" format="PNG"/>
-            </imageobject>
-          </inlinemediaobject>
-	</orgname>
-      </author>
-    </authorgroup>
-
     <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
   </info>
 
