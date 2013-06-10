@@ -39,3 +39,9 @@ span.titleabbrev { float: right; padding-right: 1em;}
     border-bottom: none;
     border-right: 1px solid black;
 }
+
+div.added
+{
+    text-decoration: none;
+    background-color: #99ff99;
+}

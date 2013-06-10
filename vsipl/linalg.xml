@@ -10103,6 +10103,134 @@ int vsip_csvd_destroy_f(vsip_csv_f *svd);</synopsis>
       </variablelist>
     </section>
 
+    <section revisionflag="added" xml:id="dsvd_getattr">
+      <title>vsip_<replaceable>d</replaceable>svd_getattr_<replaceable>p</replaceable></title>
+
+      <para>Returns the attributes of an SVD object.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Functionality</term>
+
+          <listitem>
+            <para>Returns the attributes of an SVD object in structure passed
+            by reference.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Prototypes</term>
+
+          <listitem>
+            <synopsis>typedef enum 
+{
+  VSIP_SVD_UVNOS = 0,  // no columns of U/rows of VT (VH) are computed
+  VSIP_SVD_UVFULL = 1, // all columns of U/rows of VT (VH) are computed
+  VSIP_SVD_UVPART = 2  // first min(M,N) columns of U/rows of VT (VH) are computed
+} vsip_svd_uv;
+
+typedef struct 
+{
+  vsip_length m;     // The number of rows for the input matrix A
+  vsip_length n;     // The number of columns for the input matrix A
+  vsip_svd_uv Usave; // Specifies the options for computing U
+  vsip_svd_uv Vsave; // Specifies the options for computing VT (VH)
+} vsip_dsv_attr_f;
+
+void vsip_svd_getattr_f(vsip_sv_f const *svd, vsip_sv_attr_f *attr);
+void vsip_csvd_getattr_f(vsip_csv_f const *svd, vsip_csv_attr_f *attr);</synopsis>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Arguments</term>
+
+          <listitem>
+            <variablelist>
+              <varlistentry>
+                <term>svd</term>
+
+                <listitem>
+                  <para>Pointer to an SVD object, created by
+                  <function>vsip_<replaceable>d</replaceable>svd_create_<replaceable>f</replaceable></function>.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>attr</term>
+
+                <listitem>
+                  <para>Pointer to output attribute structure.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Return value</term>
+
+          <listitem>
+            <para>None</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Restrictions</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Errors</term>
+
+          <listitem>
+            <para>The arguments must conform to the following:</para>
+
+            <orderedlist>
+              <listitem>
+                <para>The SVD object must be valid.</para>
+              </listitem>
+
+              <listitem>
+                <para>The attribute pointer must be valid - non-null.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Notes/References</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Examples</term>
+
+          <listitem>
+            <para/>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>See Also</term>
+
+          <listitem>
+            <para><function>vsip_<replaceable>d</replaceable>svd_create_<replaceable>p</replaceable></function>,
+            <function>vsip_<replaceable>d</replaceable>svdprodu_<replaceable>p</replaceable></function>,
+            <function>vsip_<replaceable>d</replaceable>svdprodv_<replaceable>p</replaceable></function>,
+            and
+            <function>vsip_<replaceable>d</replaceable>svd_destroy_<replaceable>p</replaceable></function></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
     <section xml:id="dsvdprodu">
       <title>vsip_<replaceable>d</replaceable>svdprodu_<replaceable>p</replaceable></title>
 
