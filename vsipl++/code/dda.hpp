@@ -28,6 +28,7 @@ namespace dda
   class Data
   {
   public:
+    typedef <emphasis>unspecified</emphasis> layout_type;
     typedef <emphasis>unspecified</emphasis> const_ptr_type;
     typedef <emphasis>unspecified</emphasis> ptr_type;
 

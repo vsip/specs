@@ -212,6 +212,21 @@ int <emphasis role="bold">cost</emphasis>(Block const &amp;b);</synopsis>
 
       <titleabbrev>dda.data.types</titleabbrev>
 
+      <synopsis revisionflag="added">typedef <emphasis>unspecified</emphasis> layout_type;</synopsis>
+
+      <variablelist revisionflag="added">
+        <varlistentry>
+          <term>Value:</term>
+
+          <listitem>
+            <para>The actual layout type used.</para>
+
+            <para>[Note: The actual layout may differ from the requested
+            layout, in particular if the latter is unconstrained.]</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
       <synopsis>typedef <emphasis>unspecified</emphasis> const_ptr_type;
 typedef <emphasis>unspecified</emphasis> ptr_type;</synopsis>
 
