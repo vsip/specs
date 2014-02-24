@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book version="5.0 OMG" xml:id="vsipl" xmlns="http://docbook.org/ns/docbook"
-      xmlns:xi="http://www.w3.org/2001/XInclude"
-      xmlns:ns="http://docbook.org/ns/docbook">
+<book version="5.0 OMG" xml:id="vsipl"
+      xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
   <info>
     <title>VSIPL</title>
-
-    <subtitle revisionflag="changed">Version 1.5 Beta 1</subtitle>
-
-    <titleabbrev revisionflag="changed">VSIPL 1.5 Beta 1</titleabbrev>
-
-    <pubdate>
-      <?dbtimestamp format="Y-m-d"?>
-    </pubdate>
+    <subtitle>Version 1.5 Beta 1</subtitle>
+    <titleabbrev>VSIPL 1.5b1</titleabbrev>
+    <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
   </info>
 
   <preface role="not.in.toc" xml:id="title1">
@@ -19,48 +14,30 @@
 
     <title/>
 
-    <para revisionflag="changed"><emphasis role="bold">OMG Document
-    Number:</emphasis> TBD</para>
+    <para><emphasis role="bold">OMG Document Number:</emphasis>
+    ptc/2014-02-19</para>
 
     <para><emphasis role="bold">Normative reference:</emphasis>
     http://www.omg.org/spec/VSIPL</para>
   </preface>
 
   <xi:include href="legal.xml"/>
-
   <toc/>
-
   <xi:include href="preface.xml"/>
-
   <xi:include href="intro.xml"/>
-
   <xi:include href="types.xml"/>
-
   <xi:include href="support.xml"/>
-
   <xi:include href="dda.xml"/>
-
   <xi:include href="scalar.xml"/>
-
   <xi:include href="random.xml"/>
-
   <xi:include href="vector.xml"/>
-
   <xi:include href="signal.xml"/>
-
   <xi:include href="linalg.xml"/>
-
   <xi:include href="interp.xml"/>
-
   <xi:include href="perm.xml"/>
-
   <xi:include href="sort.xml"/>
-
   <xi:include href="io.xml"/>
-
   <xi:include href="impl.xml"/>
-
   <xi:include href="glossary.xml"/>
-
   <xi:include href="changes.xml"/>
 </book>
