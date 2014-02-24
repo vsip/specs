@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<appendix version="5.0" xml:id="changes" xmlns="http://docbook.org/ns/docbook"
+<appendix version="5.0" xml:id="changes"
+	  xmlns="http://docbook.org/ns/docbook"
           xmlns:xlink="http://www.w3.org/1999/xlink"
           xmlns:xi="http://www.w3.org/2001/XInclude"
-          xmlns:ns5="http://www.w3.org/2000/svg"
-          xmlns:ns3="http://www.w3.org/1999/xhtml"
-          xmlns:ns="http://docbook.org/ns/docbook"
           xmlns:m="http://www.w3.org/1998/Math/MathML">
   <title>Specification Changes</title>
 
@@ -33,14 +31,12 @@
 
           <listitem>
             <para>Added complex to elementwise logical equal
-            (<function>vsip_<replaceable>ds</replaceable>leq_<replaceable>p</replaceable></function>).
-            </para>
+            (<function>vsip_<replaceable>ds</replaceable>leq_<replaceable>p</replaceable></function>).</para>
           </listitem>
 
           <listitem>
             <para>Added complex to elementwise logical not equal
-            (<function>vsip_<replaceable>ds</replaceable>lne_<replaceable>p</replaceable></function>).
-            </para>
+            (<function>vsip_<replaceable>ds</replaceable>lne_<replaceable>p</replaceable></function>).</para>
           </listitem>
 
           <listitem>
@@ -49,8 +45,8 @@
             and
             <function>vsip_fftm_setwindow_<replaceable>f</replaceable></function>
             routines to FFT section. Modified functionality table in FFT
-            section and signal processing introduction to reflect additions.
-            </para>
+            section and signal processing introduction to reflect
+            additions.</para>
           </listitem>
 
           <listitem>
@@ -58,13 +54,13 @@
             <function>vsip_<replaceable>d</replaceable>svdmatu_<replaceable>f</replaceable></function>
             and
             <function>vsip_<replaceable>d</replaceable>svdmatv_<replaceable>f</replaceable></function>.
-            Modified functionality table in SVD section to reflect additions.
-            </para>
+            Modified functionality table in SVD section to reflect
+            additions.</para>
           </listitem>
 
           <listitem>
-            <para>Added chapter for implementation dependent input and output.
-            </para>
+            <para>Added chapter for implementation dependent input and
+            output.</para>
           </listitem>
         </itemizedlist>
       </revdescription>
@@ -84,7 +80,7 @@
             <function>vsip_<replaceable>ds</replaceable>copyfrom_user_<replaceable>p</replaceable></function>
             to support copying data from user memory to the data space
             referenced by a view, and copying data referenced by a view
-            directly to user memory. </para>
+            directly to user memory.</para>
           </listitem>
 
           <listitem>
@@ -98,7 +94,7 @@
             operations. Although these functions may be done in place or
             copied to a float output, sometimes the output is desired to be
             integer. The naming convention is used to support a type change in
-            the output view to integer. </para>
+            the output view to integer.</para>
           </listitem>
 
           <listitem>
@@ -106,13 +102,13 @@
             integer type. This means that any defined function supporting
             integer calculations may be implemented to support vector index
             view types. This makes vector index manipulations easier and
-            eliminates the need for copies to and from other integer types.
-            </para>
+            eliminates the need for copies to and from other integer
+            types.</para>
           </listitem>
 
           <listitem>
-            <para>Added section in Change Notes for Deprecated Functions
-            </para>
+            <para>Added section in Change Notes for Deprecated
+            Functions</para>
           </listitem>
 
           <listitem>
@@ -120,7 +116,7 @@
             <function>vsip_cstorage_<replaceable>p</replaceable></function>.
             Deprecated vsip_cstorage. Allows the use of different complex
             storage for different types. Also note changes to public header
-            file defined on the new complex storage page. </para>
+            file defined on the new complex storage page.</para>
           </listitem>
         </itemizedlist>
       </revdescription>
@@ -136,17 +132,17 @@
           <listitem>
             <para>Added short section allowing new functionality to be added
             to VSIPL in companion documents not part of this main document.
-            (See additonal functions below). </para>
+            (See additonal functions below).</para>
           </listitem>
 
           <listitem>
             <para>Added gather and scatter functionality for matrix index
-            vectors. </para>
+            vectors.</para>
           </listitem>
 
           <listitem>
-            <para>Added scalar vector/matrix compares to Logical Operations
-            </para>
+            <para>Added scalar vector/matrix compares to Logical
+            Operations</para>
           </listitem>
         </itemizedlist>
       </revdescription>
@@ -167,6 +163,50 @@
             <para>Additional APIs from the "Addendum" chapter have been
             properly integrated into the main body of the
             specification.</para>
+          </listitem>
+        </itemizedlist>
+      </revdescription>
+    </revision>
+
+    <revision revisionflag="added">
+      <revnumber>1.5</revnumber>
+
+      <date>2014-2-21</date>
+
+      <revdescription>
+        <para>Added block layout types, including:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Storage format,</para>
+          </listitem>
+
+          <listitem>
+            <para>Packing,</para>
+          </listitem>
+
+          <listitem>
+            <para>Dimension order, and</para>
+          </listitem>
+
+          <listitem>
+            <para>Layout Attributes.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Added a Direction Data Access (DDA) API, including:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Synchronization policies and aliasing rules,</para>
+          </listitem>
+
+          <listitem>
+            <para>Data object and data object attributes, and</para>
+          </listitem>
+
+          <listitem>
+            <para>Functions for DDA.</para>
           </listitem>
         </itemizedlist>
       </revdescription>

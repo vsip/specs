@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section revisionflag="added" version="5.0"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:m="http://www.w3.org/1998/Math/MathML">
+  <title>Block Layout</title>
+
+  <section>
+    <title>Type Definitions</title>
+
+    <section>
+      <title>Storage Format</title>
+
+      <para>There are multiple ways to store complex data in memory. The
+      storage format describes how data is stored in the corresponding memory,
+      or how data should be handled by the corresponding function.</para>
+
+      <synopsis>typdef enum
+{
+  VSIP_STORAGE_FORMAT_ANY = 3,
+  VSIP_STORAGE_FORMAT_ARRAY = 2,               /* VSIP_CMPLX_NONE */
+  VSIP_STORAGE_FORMAT_SPLIT_COMPLEX = 1,       /* VSIP_CMPLX_SPLIT */
+  VSIP_STORAGE_FORMAT_INTERLEAVED_COMPLEX = 0  /* VSIP_CMPLX_INTERLEAVED */
+} <emphasis role="bold">vsip_storage_format</emphasis>;</synopsis>
+
+      <note>
+        <para>The <type>vsip_storage_format</type> enumeration literals are
+        defined in terms of the <type>vsip_cmplx_mem</type> enumeration
+        literals for backward compatibility. Once the latter is removed from
+        the specification, this restriction will be lifted.</para>
+      </note>
+
+      <para>A <constant>VSIP_STORAGE_FORMAT_ANY</constant> format indicates to
+      the implementation that any storage format can be used. Once the
+      implementation makes a determination as to which storage format will be
+      used, the corresponding run-time layout attributes will be updated with
+      the actual storage format used.</para>
+
+      <para>The storage format of real-valued data is always
+      <constant>VSIP_STORAGE_FORMAT_ARRAY</constant>.</para>
+
+      <para>For complex data, a <constant>VSIP_STORAGE_FORMAT_ARRAY</constant>
+      format indicates that the complex data is held in an array of type
+      <function>vsip_cscalar_<replaceable>p</replaceable>[]</function>.</para>
+
+      <para>A <constant>VSIP_STORAGE_FORMAT_SPLIT_COMPLEX</constant> format
+      indicates that the complex data is held in two distinct arrays of type
+      <function><replaceable>p</replaceable>[]</function>, with one array
+      containing the real values and the other containing the imaginary
+      values.</para>
+
+      <para>A <constant>VSIP_STORAGE_FORMAT_INTERLEAVED_COMPLEX</constant>
+      format indicates that the complex data is held in an array of type
+      <function><replaceable>p</replaceable>[]</function>, with real and
+      imaginary values alternating.</para>
+    </section>
+
+    <section>
+      <title>Packing</title>
+
+      <para>The packing type is used to specify how data is arranged within
+      the block.</para>
+
+      <synopsis>typedef enum
+{
+  VSIP_PACK_TYPE_ANY,
+  VSIP_PACK_TYPE_UNIT_STRIDE,
+  VSIP_PACK_TYPE_DENSE,
+  VSIP_PACK_TYPE_ALIGNED,
+  VSIP_PACK_TYPE_ALIGNED_8,
+  VSIP_PACK_TYPE_ALIGNED_16,
+  VSIP_PACK_TYPE_ALIGNED_32,
+  VSIP_PACK_TYPE_ALIGNED_64,
+  VSIP_PACK_TYPE_ALIGNED_128,
+  VSIP_PACK_TYPE_ALIGNED_256,
+  VSIP_PACK_TYPE_ALIGNED_512,
+  VSIP_PACK_TYPE_ALIGNED_1024
+} <emphasis role="bold">vsip_pack_type</emphasis>;</synopsis>
+    </section>
+
+    <section>
+      <title>Dimension Order</title>
+
+      <para>The dimension order type is used to specify the order in which
+      logical dimensions are used to address memory. Logical dimensions are
+      numbered from major to minor, starting with zero. Dimensions not
+      relevant to the data object are ignored.</para>
+
+      <synopsis>typedef vsip_scalar_vi vsip_dim;
+
+typedef struct
+{
+  vsip_dim dim0;
+  vsip_dim dim1;
+  vsip_dim dim2;
+} <emphasis role="bold">vsip_dim_order</emphasis>;
+
+static vsip_dim_order const <emphasis role="bold">VSIP_DIM_ORDER_VROW_MAJOR</emphasis> = {0, 1, 2};
+static vsip_dim_order const <emphasis role="bold">VSIP_DIM_ORDER_MROW_MAJOR</emphasis> = {0, 1, 2};
+static vsip_dim_order const <emphasis role="bold">VSIP_DIM_ORDER_TROW_MAJOR</emphasis> = {0, 1, 2};
+
+static vsip_dim_order const <emphasis role="bold">VSIP_DIM_ORDER_VCOL_MAJOR</emphasis> = {0, 1, 2};
+static vsip_dim_order const <emphasis role="bold">VSIP_DIM_ORDER_MCOL_MAJOR</emphasis> = {1, 0, 2};
+static vsip_dim_order const <emphasis role="bold">VSIP_DIM_ORDER_TCOL_MAJOR</emphasis> = {2, 1, 0};</synopsis>
+    </section>
+
+    <section>
+      <title>Layout Attributes</title>
+
+      <para>How the implementation lays out the data in a block or buffer may
+      be specified with layout attributes.</para>
+
+      <para>The data layout attributes are defined as follows.</para>
+
+      <synopsis>typedef struct 
+{
+  vsip_length dim;
+  vsip_storage_format storage_format;
+  vsip_pack_type packing;
+  vsip_dim_order order;
+} <emphasis role="bold">vsip_datalayout</emphasis>;</synopsis>
+    </section>
+  </section>
+</section>
