@@ -8,9 +8,7 @@
   <section>
     <title>Type - Introduction</title>
 
-    <para>Notes: <phrase revisionflag="deleted">Highlight (in the VSIPL TYPES
-    section only) denotes an implementation dependent name, type or value.
-    </phrase>ANSI C macros found in this section are defined in float.h and
+    <para>Notes: ANSI C macros found in this section are defined in float.h and
     limits.h. The basic scalar types are:</para>
 
     <itemizedlist>
@@ -32,8 +30,7 @@
               </listitem>
 
               <listitem>
-                <para>_l (<emphasis
-                revisionflag="changed">implementation-dependent</emphasis>)</para>
+                <para>_l (<emphasis>implementation-dependent</emphasis>)</para>
               </listitem>
             </itemizedlist>
           </listitem>
@@ -105,20 +102,17 @@
                 </listitem>
 
                 <listitem>
-                  <para>_ll (<emphasis
-                  revisionflag="changed">implementation-dependent</emphasis>
+                  <para>_ll (<emphasis>implementation-dependent</emphasis>
                   int)</para>
                 </listitem>
 
                 <listitem>
-                  <para>_ull (unsigned <emphasis
-                  revisionflag="changed">implementation-defined</emphasis>
+                  <para>_ull (unsigned <emphasis>implementation-defined</emphasis>
                   int)</para>
                 </listitem>
 
                 <listitem>
-                  <para>_vi (unsigned <emphasis
-                  revisionflag="changed">implementation-defined</emphasis>
+                  <para>_vi (unsigned <emphasis>implementation-defined</emphasis>
                   int)</para>
                 </listitem>
               </itemizedlist></para>
@@ -463,7 +457,7 @@ else
 
       <para>Vector index</para>
 
-      <synopsis>typedef unsigned <emphasis revisionflag="changed">implementation-defined</emphasis> vsip_scalar_vi;</synopsis>
+      <synopsis>typedef unsigned <emphasis>implementation-defined</emphasis> vsip_scalar_vi;</synopsis>
 
       <para>Matrix index</para>
 
@@ -476,7 +470,7 @@ else
       <para>Element index; a synonym for vector index</para>
 
       <synopsis>typedef vsip_scalar_vi vsip_index;
-#define VSIP_MAX_SCALAR_VI <emphasis revisionflag="changed">implementation-defined</emphasis>
+#define VSIP_MAX_SCALAR_VI <emphasis>implementation-defined</emphasis>
 #define VSIP_MIN_SCALAR_VI 0</synopsis>
     </section>
 
@@ -490,7 +484,7 @@ else
       <para>Stride in elements between successive elements in memory along a
       dimensions (row, column for matrices, or X, Y, Z for tensors)</para>
 
-      <synopsis>typedef signed <emphasis revisionflag="changed">implementation-defined</emphasis> vsip_stride;</synopsis>
+      <synopsis>typedef signed <emphasis>implementation-defined</emphasis> vsip_stride;</synopsis>
 
       <para>Unsigned length in elements, a synonym for vector index</para>
 
@@ -542,7 +536,7 @@ typedef struct vsip_randomstate vsip_randstate;</synopsis>
   VSIP_CMPLX_NONE = 2         /* No preferred storage layout */
 } vsip_cmplx_mem;</synopsis>
 
-    <warning revisionflag="added">
+    <warning>
       <para>This type was deprecated in version 1.5 of the specification and
       will be removed in a future revision; <type>vsip_storage_format</type>
       should be used instead.</para>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <synopsis version="5.0" xmlns="http://docbook.org/ns/docbook">
-#define VSIP_PI <emphasis revisionflag="changed">implementation-defined</emphasis>
-#define VSIP_MAX_SCALAR_L <emphasis revisionflag="changed">implementation-defined</emphasis>
+#define VSIP_PI <emphasis>implementation-defined</emphasis>
+#define VSIP_MAX_SCALAR_L <emphasis>implementation-defined</emphasis>
 #define VSIP_MAX_SCALAR_D DBL_MAX
 #define VSIP_MAX_SCALAR_F FLT_MAX
 #define VSIP_MAX_SCALAR_LI LONG_MAX
@@ -12,7 +12,7 @@
 #define VSIP_MAX_SCALAR_US USHRT_MAX
 #define VSIP_MAX_SCALAR_C CHAR_MAX
 #define VSIP_MAX_SCALAR_UC UCHAR_MAX
-#define VSIP_MIN_SCALAR_L <emphasis revisionflag="changed">implementation-defined</emphasis>
+#define VSIP_MIN_SCALAR_L <emphasis>implementation-defined</emphasis>
 #define VSIP_MIN_SCALAR_D DBL_MIN
 #define VSIP_MIN_SCALAR_F FLT_MIN
 #define VSIP_MIN_SCALAR_LI LONG_MIN

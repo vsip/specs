@@ -212,9 +212,9 @@ int <emphasis role="bold">cost</emphasis>(Block const &amp;b);</synopsis>
 
       <titleabbrev>dda.data.types</titleabbrev>
 
-      <synopsis revisionflag="added">typedef <emphasis>unspecified</emphasis> layout_type;</synopsis>
+      <synopsis>typedef <emphasis>unspecified</emphasis> layout_type;</synopsis>
 
-      <variablelist revisionflag="added">
+      <variablelist>
         <varlistentry>
           <term>Value:</term>
 

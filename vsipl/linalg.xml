@@ -10103,7 +10103,7 @@ int vsip_csvd_destroy_f(vsip_csv_f *svd);</synopsis>
       </variablelist>
     </section>
 
-    <section revisionflag="added" xml:id="dsvd_getattr">
+    <section xml:id="dsvd_getattr">
       <title>vsip_<replaceable>d</replaceable>svd_getattr_<replaceable>p</replaceable></title>
 
       <para>Returns the attributes of an SVD object.</para>
