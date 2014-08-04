@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section version="5.0" xml:id="concepts" xmlns="http://docbook.org/ns/docbook"
-         xmlns:ns6="http://www.w3.org/1999/xlink"
-         xmlns:ns5="http://www.w3.org/1999/xhtml"
-         xmlns:ns4="http://www.w3.org/1998/Math/MathML"
-         xmlns:ns3="http://www.w3.org/2000/svg"
-         xmlns:ns="http://docbook.org/ns/docbook">
+<section version="5.0" xml:id="concepts"
+	 xmlns="http://docbook.org/ns/docbook">
   <title>Basic VSIPL Concepts</title>
 
   <section>
@@ -219,7 +215,7 @@
     <para>A VSIPL program must initialize the VSIPL library with a call to
     vsip_init before calling any other VSIPL function. Any program that uses
     VSIPL and that terminates must call vsip_finalize before terminating. See
-    the Support chapter for additional conditions and restrictions on these
+    the Support clause for additional conditions and restrictions on these
     functions.</para>
   </section>
 </section>

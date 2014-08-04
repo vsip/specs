@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter version="5.0" xml:id="io" xmlns="http://docbook.org/ns/docbook"
          xmlns:xi="http://www.w3.org/2001/XInclude"
-         xmlns:ns6="http://www.w3.org/1999/xlink"
-         xmlns:ns5="http://www.w3.org/2000/svg"
-         xmlns:ns4="http://www.w3.org/1999/xhtml"
-         xmlns:ns="http://docbook.org/ns/docbook"
          xmlns:m="http://www.w3.org/1998/Math/MathML">
   <title>Implementation Dependent Input and Output</title>
 
@@ -19,7 +15,7 @@
 
     <para>It is desirable to be able to copy these objects into user memory so
     they may be stored for later use or sent to another process. The purpose
-    of this chapter is to define sufficient functionality so that all VSIPL
+    of this clause is to define sufficient functionality so that all VSIPL
     objects have a counterpart in user memory. Because these objects are
     implementation dependent the content of the user memory is not defined.
     Objects from different implementations are not required to be
@@ -1282,7 +1278,7 @@
           <term>Examples</term>
 
           <listitem>
-            <para>See example at the end of this chapter.</para>
+            <para>See example at the end of this clause.</para>
           </listitem>
         </varlistentry>
 
@@ -1387,7 +1383,7 @@
           <term>Examples</term>
 
           <listitem>
-            <para>See example at the end of this chapter.</para>
+            <para>See example at the end of this clause.</para>
           </listitem>
         </varlistentry>
 
@@ -1529,7 +1525,7 @@ vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_impor
           <term>Examples</term>
 
           <listitem>
-            <para>See example at the end of this chapter.</para>
+            <para>See example at the end of this clause.</para>
           </listitem>
         </varlistentry>
 
@@ -1629,7 +1625,7 @@ vsip_<replaceable>d</replaceable><replaceable>&lt;object&gt;</replaceable>_impor
           <term>Examples</term>
 
           <listitem>
-            <para>See example at the end of this chapter.</para>
+            <para>See example at the end of this clause.</para>
           </listitem>
         </varlistentry>
 

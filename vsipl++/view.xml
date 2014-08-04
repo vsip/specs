@@ -25,10 +25,9 @@
       suffice. A VSIPL++ implementation restricted to supporting only a single
       processor will probably just define empty map classes and will probably
       not define the view constructors in <olink targetdoc="vsiplxx-par"
-      targetptr="view.vector.constructors"></olink>, <olink
-      targetdoc="vsiplxx-par" targetptr="view.matrix.constructors"></olink>,
-      and <olink targetdoc="vsiplxx-par"
-      targetptr="view.tensor.constructors"></olink>. ]</para>
+      targetptr="view.vector.constructors"/>, <olink targetdoc="vsiplxx-par"
+      targetptr="view.matrix.constructors"/>, and <olink
+      targetdoc="vsiplxx-par" targetptr="view.tensor.constructors"/>. ]</para>
     </listitem>
   </orderedlist>
 
@@ -74,12 +73,12 @@
       </listitem>
 
       <listitem>
-        <para>Every view meets the requirements in <xref
-        linkend="viewreq" />. In <xref linkend="viewreq" />, V denotes a view
-        class of dimension D containing objects of type T with an underlying
-        D-dimensional block of type B, v denotes a value of type V, b denotes
-        a value of type B&amp;, d denotes a value of type dimension_type, and
-        i1, i2, . . . , iD denote D values of type index_type .</para>
+        <para>Every view meets the requirements in <xref linkend="viewreq"/>.
+        In <xref linkend="viewreq"/>, V denotes a view class of dimension D
+        containing objects of type T with an underlying D-dimensional block of
+        type B, v denotes a value of type V, b denotes a value of type B&amp;,
+        d denotes a value of type dimension_type, and i1, i2, . . . , iD
+        denote D values of type index_type .</para>
 
         <table xml:id="viewreq">
           <caption>View requirements</caption>
@@ -113,7 +112,7 @@
 
             <td>B::value_type</td>
 
-            <td></td>
+            <td/>
           </tr>
 
           <tr>
@@ -121,7 +120,7 @@
 
             <td>B::reference_type</td>
 
-            <td></td>
+            <td/>
           </tr>
 
           <tr>
@@ -129,13 +128,13 @@
 
             <td>B::const_reference_type</td>
 
-            <td></td>
+            <td/>
           </tr>
 
           <tr>
             <td>V(b)</td>
 
-            <td></td>
+            <td/>
 
             <td>Constructs V object</td>
           </tr>
@@ -145,7 +144,7 @@
 
             <td>B const &amp;</td>
 
-            <td></td>
+            <td/>
           </tr>
 
           <tr>
@@ -153,7 +152,7 @@
 
             <td>value_type</td>
 
-            <td></td>
+            <td/>
           </tr>
 
           <tr>
@@ -191,13 +190,12 @@
       </listitem>
 
       <listitem>
-        <para>Every modifiable view meets the
-        requirements in <xref linkend="modviewreq" /> in addition to the
-        requirements in <xref linkend="viewreq" />. In <xref
-        linkend="modviewreq" />, <type>V</type> denotes a modifiable view
-        class, v denotes an object of type <type>V</type>, t denotes a value
-        of type <type>T</type> and v2 denote a view object (possibly of a type
-        other than V).</para>
+        <para>Every modifiable view meets the requirements in <xref
+        linkend="modviewreq"/> in addition to the requirements in <xref
+        linkend="viewreq"/>. In <xref linkend="modviewreq"/>, <type>V</type>
+        denotes a modifiable view class, v denotes an object of type
+        <type>V</type>, t denotes a value of type <type>T</type> and v2 denote
+        a view object (possibly of a type other than V).</para>
 
         <table xml:id="modviewreq">
           <caption>Modifiable view requirements</caption>
@@ -344,7 +342,7 @@
         <para>Header <emphasis>&lt;vsip/vector.hpp&gt;</emphasis>
         synopsis</para>
 
-        <xi:include href="code/vector.hpp" />
+        <xi:include href="code/vector.hpp"/>
       </listitem>
     </orderedlist>
 
@@ -1474,8 +1472,7 @@ Vector &amp;<emphasis role="bold">operator^=</emphasis>(Vector&lt;T0, Block0&gt;
             </varlistentry>
           </variablelist>
 
-          <synopsis>const_Vector &amp;<emphasis
-              role="bold">operator()</emphasis>(whole_domain_type) const VSIP_NOTHROW;</synopsis>
+          <synopsis>const_Vector &amp;<emphasis role="bold">operator()</emphasis>(whole_domain_type) const VSIP_NOTHROW;</synopsis>
 
           <variablelist>
             <varlistentry>
@@ -1734,7 +1731,7 @@ block_type &amp;<emphasis role="bold">block</emphasis>() const VSIP_NOTHROW;</sy
         <para>Header <emphasis>&lt;vsip/matrix.hpp&gt;</emphasis>
         synopsis</para>
 
-        <xi:include href="code/matrix.hpp" />
+        <xi:include href="code/matrix.hpp"/>
       </listitem>
     </orderedlist>
 
@@ -2712,7 +2709,7 @@ Matrix &amp;<emphasis role="bold">operator ^=</emphasis>(Matrix&lt;T0, Block0&gt
       <titleabbrev>view.matrix.valaccess</titleabbrev>
 
       <para>[<emphasis>Note: </emphasis> The restrictions for get and put
-      follow from the view requirements in <xref linkend="view.view" />. Only
+      follow from the view requirements in <xref linkend="view.view"/>. Only
       additional restrictions occur here. ]</para>
 
       <synopsis>
@@ -2808,9 +2805,10 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>A subview <emphasis>Matrix</emphasis> object of *this
-                with domain <code>Domain&lt;2&gt;(d[0].size(),
-                d[1].size())</code> .</para>
+                <para>A subview <emphasis>Matrix</emphasis> object of
+                <code>*this</code> with domain
+                <code>Domain&lt;2&gt;(d[0].size(), d[1].size())</code>
+                .</para>
               </listitem>
             </varlistentry>
 
@@ -2831,8 +2829,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>*this must be a Matrix object. d is a subset of the
-                Matrix’s domain.</para>
+                <para><code>*this</code> must be a Matrix object. d is a
+                subset of the Matrix’s domain.</para>
               </listitem>
             </varlistentry>
 
@@ -2840,8 +2838,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>A subview Matrix object of *this with domain
-                <code>Domain&lt;2&gt;(d[0].size(), d[1].size())</code>
+                <para>A subview Matrix object of <code>*this</code> with
+                domain <code>Domain&lt;2&gt;(d[0].size(), d[1].size())</code>
                 .</para>
               </listitem>
             </varlistentry>
@@ -2850,8 +2848,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -2872,9 +2870,10 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>A subview <emphasis>Matrix</emphasis> object of *this
-                with domain <code>Domain&lt;2&gt;(d[0].size(),
-                d[1].size())</code> .</para>
+                <para>A subview <emphasis>Matrix</emphasis> object of
+                <code>*this</code> with domain
+                <code>Domain&lt;2&gt;(d[0].size(), d[1].size())</code>
+                .</para>
               </listitem>
             </varlistentry>
 
@@ -2882,8 +2881,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -2895,8 +2894,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>*this must be a Matrix object. <code>column_index &lt;
-                this-&gt;size(1)</code> .</para>
+                <para><code>*this</code> must be a Matrix object.
+                <code>column_index &lt; this-&gt;size(1)</code> .</para>
               </listitem>
             </varlistentry>
 
@@ -2914,8 +2913,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -2945,8 +2944,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3014,10 +3013,10 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>*this must be a Matrix object. If diagonal_offset is
-                positive, <code>diagonal_offset &lt; this-&gt;size(1)</code> .
-                If diagonal_offset is negative, <code>-diagonal_offset &lt;
-                this-&gt;size(0)</code> .</para>
+                <para><code>*this</code> must be a Matrix object. If
+                diagonal_offset is positive, <code>diagonal_offset &lt;
+                this-&gt;size(1)</code> . If diagonal_offset is negative,
+                <code>-diagonal_offset &lt; this-&gt;size(0)</code> .</para>
               </listitem>
             </varlistentry>
 
@@ -3025,15 +3024,16 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>If diagonal_offset == 0, a subview of the Matrix object
-                containing its diagonal values. If diagonal_offset &gt; 0,
-                return a subview of the Matrix object containing values in the
-                diagonal diagonal_offset above the main diagonal. Its domain
-                is <code>Domain&lt;1&gt;(min(this-&gt;size(0),
-                this-&gt;size(1) - diagonal_offset))</code>. If
-                diagonal_offset &lt; 0, return a subview of the Matrix object
-                containing values in the diagonal diagonal_offset below the
-                main diagonal. Its domain is
+                <para>If <code>diagonal_offset == 0</code>, a subview of the
+                Matrix object containing its diagonal values. If
+                <code>diagonal_offset &gt; 0</code>, return a subview of the
+                Matrix object containing values in the diagonal
+                diagonal_offset above the main diagonal. Its domain is
+                <code>Domain&lt;1&gt;(min(this-&gt;size(0), this-&gt;size(1) -
+                diagonal_offset))</code>. If <code>diagonal_offset &lt;
+                0</code>, return a subview of the Matrix object containing
+                values in the diagonal diagonal_offset below the main
+                diagonal. Its domain is
                 <code>Domain&lt;1&gt;(min(this-&gt;size(0) + diagonal_offset,
                 this-&gt;size(1)))</code>.</para>
               </listitem>
@@ -3043,8 +3043,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3056,9 +3056,9 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>If diagonal_offset is positive, diagonal_offset &lt;
-                this-&gt;size(1) . If diagonal_offset is negative,
-                -diagonal_offset &lt; this-&gt;size(0) .</para>
+                <para>If diagonal_offset is positive, <code>diagonal_offset
+                &lt; this-&gt;size(1)</code> . If diagonal_offset is negative,
+                <code>-diagonal_offset &lt; this-&gt;size(0)</code> .</para>
               </listitem>
             </varlistentry>
 
@@ -3066,18 +3066,19 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>If diagonal_offset == 0, a subview of the
+                <para>If <code>diagonal_offset == 0</code>, a subview of the
                 <emphasis>Matrix</emphasis> object containing its diagonal
-                values. If diagonal_offset &gt; 0, return a subview of the
-                <emphasis>Matrix</emphasis> object containing values in the
-                diagonal diagonal_offset above the main diagonal. Its domain
-                is <code>Domain&lt;1&gt;(min(this-&gt;size(0),
-                this-&gt;size(1) - diagonal_offset))</code>. If
-                diagonal_offset &lt; 0, return a subview of the
-                <emphasis>Matrix</emphasis> object containing values in the
-                diagonal diagonal_offset below the main diagonal. Its domain
-                is <code>Domain&lt;1&gt;(min(this-&gt;size(0) +
-                diagonal_offset, this-&gt;size(1)))</code>.</para>
+                values. If <code>diagonal_offset &gt; 0</code>, return a
+                subview of the <emphasis>Matrix</emphasis> object containing
+                values in the diagonal diagonal_offset above the main
+                diagonal. Its domain is
+                <code>Domain&lt;1&gt;(min(this-&gt;size(0), this-&gt;size(1) -
+                diagonal_offset))</code>. If <code>diagonal_offset &lt;
+                0</code>, return a subview of the <emphasis>Matrix</emphasis>
+                object containing values in the diagonal diagonal_offset below
+                the main diagonal. Its domain is
+                <code>Domain&lt;1&gt;(min(this-&gt;size(0) + diagonal_offset,
+                this-&gt;size(1)))</code>.</para>
               </listitem>
             </varlistentry>
 
@@ -3085,8 +3086,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3098,8 +3099,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>*this must be a Matrix object. row_index &lt;
-                this-&gt;size(0) .</para>
+                <para><code>*this</code> must be a Matrix object.
+                <code>row_index &lt; this-&gt;size(0)</code>.</para>
               </listitem>
             </varlistentry>
 
@@ -3117,8 +3118,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3130,7 +3131,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>row_index &lt; this-&gt;size(0) .</para>
+                <para><code>row_index &lt; this-&gt;size(0)</code> .</para>
               </listitem>
             </varlistentry>
 
@@ -3148,8 +3149,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3217,7 +3218,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>*this must be a Matrix object.</para>
+                <para><code>*this</code> must be a Matrix object.</para>
               </listitem>
             </varlistentry>
 
@@ -3236,8 +3237,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
 
@@ -3249,7 +3250,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
                 modifying values in the original view also changes values in
                 the subview. Many implementations will choose to implement
                 this subview by reordering indices. See <xref
-                linkend="math.matvec.transpose" /> for an alternate transpose
+                linkend="math.matvec.transpose"/> for an alternate transpose
                 implementation.</para>
               </listitem>
             </varlistentry>
@@ -3273,8 +3274,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
 
@@ -3285,7 +3286,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
                 <para>The result is a subview of the original view. Many
                 implementations will choose to implement this subview by
                 reordering indices. See <xref
-                linkend="math.matvec.transpose" /> for an alternate transpose
+                linkend="math.matvec.transpose"/> for an alternate transpose
                 implementation.</para>
               </listitem>
             </varlistentry>
@@ -3298,7 +3299,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>T must be a complex type.</para>
+                <para><type>T</type> must be a complex type.</para>
               </listitem>
             </varlistentry>
 
@@ -3306,9 +3307,9 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>A subview const_Matrix object of *this with the same
-                domain but accessing only the real parts of the complex values
-                of the object.</para>
+                <para>A subview <type>const_Matrix</type> object of
+                <code>*this</code> with the same domain but accessing only the
+                real parts of the complex values of the object.</para>
               </listitem>
             </varlistentry>
 
@@ -3316,8 +3317,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3329,7 +3330,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>T must be a complex type.</para>
+                <para><type>T</type> must be a complex type.</para>
               </listitem>
             </varlistentry>
 
@@ -3337,9 +3338,9 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>A subview <emphasis>Matrix</emphasis> object of *this
-                with the same domain but accessing only the real parts of the
-                complex values of the object.</para>
+                <para>A subview <emphasis>Matrix</emphasis> object of
+                <code>*this</code> with the same domain but accessing only the
+                real parts of the complex values of the object.</para>
               </listitem>
             </varlistentry>
 
@@ -3347,8 +3348,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3360,7 +3361,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>T must be a complex type.</para>
+                <para><type>T</type> must be a complex type.</para>
               </listitem>
             </varlistentry>
 
@@ -3368,9 +3369,9 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>A subview const_Matrix object of *this with the same
-                domain but accessing only the imaginary parts of the complex
-                values of the object.</para>
+                <para>A subview <type>const_Matrix</type> object of
+                <code>*this</code> with the same domain but accessing only the
+                imaginary parts of the complex values of the object.</para>
               </listitem>
             </varlistentry>
 
@@ -3378,8 +3379,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3391,7 +3392,7 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Requires:</term>
 
               <listitem>
-                <para>T must be a complex type.</para>
+                <para><type>T</type> must be a complex type.</para>
               </listitem>
             </varlistentry>
 
@@ -3399,9 +3400,10 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Returns:</term>
 
               <listitem>
-                <para>A subview <emphasis>Matrix</emphasis> object of *this
-                with the same domain but accessing only the imaginary parts of
-                the complex values of the object.</para>
+                <para>A subview <emphasis><type>Matrix</type></emphasis>
+                object of <code>*this</code> with the same domain but
+                accessing only the imaginary parts of the complex values of
+                the object.</para>
               </listitem>
             </varlistentry>
 
@@ -3409,8 +3411,8 @@ const_subview_type <emphasis role="bold">get</emphasis>(Domain&lt;2&gt; const&am
               <term>Throws:</term>
 
               <listitem>
-                <para>std::bad_alloc indicating memory allocation for the
-                underlying block failed.</para>
+                <para><type>std::bad_alloc</type> indicating memory allocation
+                for the underlying block failed.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -3432,9 +3434,10 @@ block_type &amp;<emphasis role="bold">block</emphasis>() const VSIP_NOTHROW;</sy
           <term>Returns:</term>
 
           <listitem>
-            <para>The matrix’s underlying block. const_Matrix::block() returns
-            a <code>block_type const&amp;</code> while Matrix::block() returns
-            a <code>block_type &amp;</code>.</para>
+            <para>The matrix’s underlying block.
+            <code>const_Matrix::block()</code> returns a <code>block_type
+            const&amp;</code> while <code>Matrix::block()</code> returns a
+            <code>block_type &amp;</code>.</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3500,9 +3503,10 @@ block_type &amp;<emphasis role="bold">block</emphasis>() const VSIP_NOTHROW;</sy
 
     <orderedlist>
       <listitem>
-        <para>The const_Tensor and Tensor classes are views implementing the
-        mathematical idea of tensors. A const_Tensor view is not modifiable,
-        but a Tensor view is modifiable.</para>
+        <para>The <type>const_Tensor</type> and <type>Tensor</type> classes
+        are views implementing the mathematical idea of tensors. A
+        <type>const_Tensor</type> view is not modifiable, but a
+        <type>Tensor</type> view is modifiable.</para>
       </listitem>
 
       <listitem>
@@ -3514,7 +3518,7 @@ block_type &amp;<emphasis role="bold">block</emphasis>() const VSIP_NOTHROW;</sy
         <para>Header <emphasis>&lt;vsip/tensor.hpp&gt;</emphasis>
         synopsis</para>
 
-        <xi:include href="code/tensor.hpp" />
+        <xi:include href="code/tensor.hpp"/>
       </listitem>
     </orderedlist>
 
@@ -4682,7 +4686,7 @@ typename transpose_view&lt;D0, D1, D2&gt;::type <emphasis role="bold">transpose<
       <titleabbrev>view.tensor.valaccess</titleabbrev>
 
       <para>[<emphasis>Note: </emphasis> The restrictions for get and put
-      follow from the view requirements in <xref linkend="view.view" />. Only
+      follow from the view requirements in <xref linkend="view.view"/>. Only
       additional restrictions occur here. ]</para>
 
       <synopsis>reference_type

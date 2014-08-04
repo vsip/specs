@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="support" xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="support"
+	 xmlns="http://docbook.org/ns/docbook"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:m="http://www.w3.org/1998/Math/MathML">
   <title>Support Functions</title>
@@ -228,7 +229,7 @@ int main()
       <title>Examples</title>
 
       <para>Examples in the Support section are, for the most part, code
-      fragments. For complete examples, see the chapter on Vector and
+      fragments. For complete examples, see the clause on Vector and
       Elementwise operations.</para>
     </section>
   </section>
@@ -9147,7 +9148,7 @@ vsip_mview_bl *vsip_mtransview_bl(const vsip_mview_bl *X);</synopsis>
             and<link linkend="dmtransview"><function>
             vsip_<replaceable>d</replaceable>mtransview_<replaceable>p</replaceable></function></link>
             <link
-            linkend="dtranspose"><function>vsip_<replaceable>d</replaceable>transpose_<replaceable>p</replaceable></function></link></para>
+            linkend="dmtrans"><function>vsip_<replaceable>d</replaceable>mtrans_<replaceable>p</replaceable></function></link></para>
           </listitem>
         </varlistentry>
       </variablelist>

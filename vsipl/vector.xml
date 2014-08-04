@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="vector" xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="vector"
+	 xmlns="http://docbook.org/ns/docbook"
          xmlns:xi="http://www.w3.org/2001/XInclude"
-         xmlns:ns6="http://www.w3.org/1999/xlink"
-         xmlns:ns5="http://www.w3.org/2000/svg"
-         xmlns:ns4="http://www.w3.org/1999/xhtml"
-         xmlns:ns="http://docbook.org/ns/docbook"
          xmlns:m="http://www.w3.org/1998/Math/MathML">
   <title>Vector &amp; Elementwise Operations</title>
 
@@ -1742,7 +1739,7 @@
     <section>
       <title>Example Programs</title>
 
-      <para>Many of the examples in this chapter are designed to be run-able,
+      <para>Many of the examples in this clause are designed to be run-able,
       although no guarantees are made. Note that all code requires including
       the standard VSIPL header file, "vsip.h".</para>
 
