@@ -4,8 +4,8 @@
       xmlns:xi="http://www.w3.org/2001/XInclude">
   <info>
     <title>VSIPL++ Parallel</title>
-    <subtitle>Version 1.2</subtitle>
-    <titleabbrev>VSIPL++ Parallel 1.2</titleabbrev>
+    <subtitle>Version 1.3</subtitle>
+    <titleabbrev>VSIPL++ Parallel 1.3</titleabbrev>
     <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
   </info>
 
@@ -15,29 +15,20 @@
     <title/>
 
     <para><emphasis role="bold">OMG Document Number:</emphasis>
-    formal/12-12-05</para>
+    formal/2014-08-07</para>
 
     <para><emphasis role="bold">Normative reference:</emphasis>
     http://www.omg.org/spec/VSIPL++</para>
   </preface>
 
   <xi:include href="legal.xml"/>
-
   <toc/>
-
   <xi:include href="foreword-par.xml"/>
-
   <xi:include href="intro-par.xml"/>
-
   <xi:include href="support-par.xml"/>
-
   <xi:include href="map.xml"/>
-
   <xi:include href="block-par.xml"/>
-
   <xi:include href="view-par.xml"/>
-
   <xi:include href="dpp.xml"/>
-
   <xi:include href="changes-par.xml"/>
 </book>

@@ -4,8 +4,8 @@
       xmlns:xi="http://www.w3.org/2001/XInclude">
   <info>
     <title>VSIPL</title>
-    <subtitle>Version 1.5 Beta 1</subtitle>
-    <titleabbrev>VSIPL 1.5b1</titleabbrev>
+    <subtitle>Version 1.5</subtitle>
+    <titleabbrev>VSIPL 1.5</titleabbrev>
     <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
   </info>
 
@@ -15,7 +15,7 @@
     <title/>
 
     <para><emphasis role="bold">OMG Document Number:</emphasis>
-    ptc/2014-02-18</para>
+    formal/2014-08-01</para>
 
     <para><emphasis role="bold">Normative reference:</emphasis>
     http://www.omg.org/spec/VSIPL</para>
