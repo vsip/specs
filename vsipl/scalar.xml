@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="scalar" 
+<chapter version="5.0" xml:id="scalar"
 	 xmlns="http://docbook.org/ns/docbook"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:m="http://www.w3.org/1998/Math/MathML">
@@ -1301,6 +1301,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mi>b</m:mi>
@@ -1391,6 +1392,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mi>b</m:mi>
@@ -1489,7 +1491,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -1579,7 +1581,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -1637,7 +1639,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -1699,7 +1701,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -1755,7 +1757,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -1811,7 +1813,7 @@ return (float)acos((double)x);
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 

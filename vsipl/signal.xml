@@ -1635,15 +1635,16 @@
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -2140,6 +2141,7 @@
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -2455,7 +2457,7 @@
                       <m:mi>e</m:mi>
 
                       <m:mrow>
-                        <m:mo>+</m:mo>
+                        <m:mo>-</m:mo>
 
                         <m:mrow>
                           <m:mrow>
@@ -2669,6 +2671,7 @@
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -2960,15 +2963,16 @@
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -3527,8 +3531,9 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -3536,6 +3541,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -3949,6 +3955,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                   </m:mrow>
 
                   <m:mtext>for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -4002,8 +4009,9 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -4011,6 +4019,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -4450,6 +4459,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -4648,6 +4658,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -4696,6 +4707,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -5361,6 +5373,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -5409,6 +5422,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -5846,8 +5860,9 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -5855,6 +5870,7 @@ vsip_crfftop_create_f(vsip_length N, vsip_scalar_f scale,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -5948,7 +5964,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
 
                           <m:mo>/</m:mo>
 
-                          <m:mi>N</m:mi>
+                          <m:mi>M</m:mi>
                         </m:mrow>
                       </m:math>
                     </inlineequation>, <inlineequation>
@@ -6556,6 +6572,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -6597,8 +6614,9 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
 
                       <m:mn>1</m:mn>
                     </m:mrow>
-
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -6606,6 +6624,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -6941,7 +6960,9 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                     </m:msup>
                   </m:mrow>
 
+		  <m:mspace width='.5em' />
                   <m:mtext>for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -6996,7 +7017,9 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -7004,6 +7027,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -7364,6 +7388,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -7614,6 +7639,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -7968,7 +7994,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                       <m:mi>e</m:mi>
 
                       <m:mrow>
-                        <m:mo>+</m:mo>
+                        <m:mo>-</m:mo>
 
                         <m:mrow>
                           <m:mrow>
@@ -7991,6 +8017,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                     </m:msup>
                   </m:mrow>
 
+		  <m:mspace width='.5em' />
                   <m:mtext>for P = M, N</m:mtext>
                 </m:math>
               </inlineequation></para>
@@ -8186,6 +8213,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -8223,6 +8251,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                   </m:msub>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>0</m:mi>
@@ -8250,7 +8279,9 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
 
                       <m:mn>1</m:mn>
 
+		      <m:mspace width='.5em' />
                       <m:mtext>and</m:mtext>
+		      <m:mspace width='.5em' />
                     </m:mrow>
                   </m:mrow>
 
@@ -8561,7 +8592,9 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -8569,6 +8602,7 @@ vsip_crfftmop_create_<replaceable>f</replaceable>(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -8662,7 +8696,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
 
                           <m:mo>/</m:mo>
 
-                          <m:mi>N</m:mi>
+                          <m:mi>M</m:mi>
                         </m:mrow>
                       </m:math>
                     </inlineequation>, <inlineequation>
@@ -8673,6 +8707,22 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                           <m:mo>/</m:mo>
 
                           <m:mi>N</m:mi>
+                        </m:mrow>
+                      </m:math>
+                    </inlineequation>, <inlineequation>
+                      <m:math display="inline">
+                        <m:mrow>
+                          <m:mn>1</m:mn>
+
+                          <m:mo>/</m:mo>
+
+                          <m:mrow>
+                            <m:mi>M</m:mi>
+
+                            <m:mo>⁢</m:mo>
+
+                            <m:mi>N</m:mi>
+                          </m:mrow>
                         </m:mrow>
                       </m:math>
                     </inlineequation> , <inlineequation>
@@ -8887,7 +8937,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                       <m:mrow>
                         <m:mi>N</m:mi>
 
-                        <m:mo/>
+                        <m:mo>∗</m:mo>
 
                         <m:msup>
                           <m:mi>M</m:mi>
@@ -8899,7 +8949,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
 
                         <m:mi>M</m:mi>
 
-                        <m:mo/>
+                        <m:mo>∗</m:mo>
 
                         <m:msup>
                           <m:mi>N</m:mi>
@@ -9213,7 +9263,9 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                     </m:msup>
                   </m:mrow>
 
+		  <m:mspace width='.5em' />
                   <m:mtext>for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>K</m:mi>
@@ -9254,7 +9306,9 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -9262,6 +9316,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -9653,6 +9708,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>K</m:mi>
@@ -10134,7 +10190,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                       <m:mi>e</m:mi>
 
                       <m:mrow>
-                        <m:mo>+</m:mo>
+                        <m:mo>-</m:mo>
 
                         <m:mrow>
                           <m:mrow>
@@ -10157,6 +10213,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                     </m:msup>
                   </m:mrow>
 
+		  <m:mspace width='.5em' />
                   <m:mtext>for K = M, N, P</m:mtext>
                 </m:math>
               </inlineequation></para>
@@ -10588,7 +10645,9 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for a forward transform or</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:mrow>
                       <m:mo>+</m:mo>
@@ -10596,6 +10655,7 @@ vsip_crfft2dop_create_f(vsip_length M, vsip_length N,
                       <m:mn>1</m:mn>
                     </m:mrow>
 
+		    <m:mspace width='.5em' />
                     <m:mtext>for an inverse transform</m:mtext>
                   </m:mrow>
                 </m:math>
@@ -11616,6 +11676,7 @@ void vsip_fft3d_getattr_<replaceable>f</replaceable>(const vsip_fft3d_<replaceab
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -11764,6 +11825,7 @@ void vsip_fft3d_getattr_<replaceable>f</replaceable>(const vsip_fft3d_<replaceab
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -11938,6 +12000,7 @@ void vsip_fft3d_getattr_<replaceable>f</replaceable>(const vsip_fft3d_<replaceab
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -12982,6 +13045,7 @@ void vsip_cconv1d_getattr_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -13130,6 +13194,7 @@ void vsip_cconv1d_getattr_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -13304,6 +13369,7 @@ void vsip_cconv1d_getattr_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -14211,6 +14277,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>X</m:mi>
@@ -14286,7 +14353,9 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                     <m:mn>1</m:mn>
                   </m:mrow>
 
+		  <m:mspace width='.5em' />
                   <m:mtext>by</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -14429,6 +14498,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -14455,6 +14525,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -14687,6 +14758,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -14709,6 +14781,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -14963,6 +15036,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                               <m:mi>u</m:mi>
 
                               <m:mtext>,</m:mtext>
+			      <m:mspace width='.5em' />
 
                               <m:mrow>
                                 <m:mrow>
@@ -15005,6 +15079,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -15049,6 +15124,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -15245,6 +15321,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -15261,6 +15338,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -15417,7 +15495,8 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
-
+		  <m:mspace width='.5em' />
+		    
                   <m:mrow>
                     <m:mi>P</m:mi>
 
@@ -15427,6 +15506,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>Q</m:mi>
@@ -15545,6 +15625,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                               <m:mi>u</m:mi>
 
                               <m:mtext>,</m:mtext>
+			      <m:mspace width='.5em' />
 
                               <m:mrow>
                                 <m:mrow>
@@ -15583,6 +15664,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>P</m:mi>
 
@@ -15591,6 +15673,7 @@ void vsip_cconvolve1d_f(const vsip_cconv1d_f *conv1d,
                   <m:mi>M</m:mi>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>Q</m:mi>
 
@@ -16287,6 +16370,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>X</m:mi>
@@ -16362,7 +16446,9 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                     <m:mn>1</m:mn>
                   </m:mrow>
 
+		  <m:mspace width='.5em' />
                   <m:mtext>by</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -16505,6 +16591,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -16531,6 +16618,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -16763,6 +16851,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -16785,6 +16874,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -17039,6 +17129,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                               <m:mi>u</m:mi>
 
                               <m:mtext>,</m:mtext>
+			      <m:mspace width='.5em' />
 
                               <m:mrow>
                                 <m:mrow>
@@ -17081,6 +17172,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -17125,6 +17217,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌊</m:mo>
@@ -17321,6 +17414,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -17337,6 +17431,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -17493,6 +17588,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -17503,6 +17599,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>Q</m:mi>
@@ -17621,6 +17718,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                               <m:mi>u</m:mi>
 
                               <m:mtext>,</m:mtext>
+			      <m:mspace width='.5em' />
 
                               <m:mrow>
                                 <m:mrow>
@@ -17659,6 +17757,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>P</m:mi>
 
@@ -17667,6 +17766,7 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                   <m:mi>M</m:mi>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>Q</m:mi>
 
@@ -17723,7 +17823,9 @@ void vsip_cconv2d_getattr_f(const vsip_cconv2d_f *conv2d,
                               <m:mi>M</m:mi>
                             </m:mrow>
 
-                            <m:mtext>and</m:mtext>
+			    <m:mspace width='.5em' />
+			    <m:mtext>and</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mi>0</m:mi>
@@ -18709,6 +18811,7 @@ vsip_mdestroy_f(flt_out);
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -18780,6 +18883,7 @@ vsip_mdestroy_f(flt_out);
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mn>0</m:mn>
@@ -18816,7 +18920,8 @@ vsip_mdestroy_f(flt_out);
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
-
+			    <m:mspace width='.5em' />
+		    
                             <m:mrow>
                               <m:mrow>
                                 <m:mi>M</m:mi>
@@ -18876,6 +18981,7 @@ vsip_mdestroy_f(flt_out);
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mn>N</m:mn>
@@ -18999,6 +19105,7 @@ vsip_mdestroy_f(flt_out);
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>N</m:mi>
@@ -19064,6 +19171,7 @@ vsip_mdestroy_f(flt_out);
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mn>0</m:mn>
@@ -19104,6 +19212,7 @@ vsip_mdestroy_f(flt_out);
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mrow>
@@ -19182,6 +19291,7 @@ vsip_mdestroy_f(flt_out);
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mn>N</m:mn>
@@ -19309,6 +19419,7 @@ vsip_mdestroy_f(flt_out);
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>N</m:mi>
 
@@ -20016,6 +20127,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -20087,7 +20199,8 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
-
+			    <m:mspace width='.5em' />
+		    
                             <m:mrow>
                               <m:mn>0</m:mn>
 
@@ -20123,6 +20236,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mrow>
@@ -20183,6 +20297,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mn>N</m:mn>
@@ -20306,6 +20421,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>N</m:mi>
@@ -20371,6 +20487,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mn>0</m:mn>
@@ -20411,6 +20528,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mrow>
@@ -20489,6 +20607,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                           <m:mtd>
                             <m:mtext>for</m:mtext>
+			    <m:mspace width='.5em' />
 
                             <m:mrow>
                               <m:mn>N</m:mn>
@@ -20616,6 +20735,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>, for n = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>N</m:mi>
 
@@ -21223,6 +21343,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -21300,6 +21421,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -21336,6 +21458,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -21396,6 +21519,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>P</m:mn>
@@ -21462,6 +21586,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -21498,6 +21623,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -21558,6 +21684,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>Q</m:mn>
@@ -21731,6 +21858,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -21814,6 +21942,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -21854,6 +21983,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -21938,6 +22068,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>P</m:mn>
@@ -22014,6 +22145,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -22054,6 +22186,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -22138,6 +22271,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -22266,6 +22400,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>P</m:mi>
 
@@ -22316,6 +22451,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mn>0</m:mn>
@@ -22342,6 +22478,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
                   </m:mrow>
 
                   <m:mtext>; for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mn>0</m:mn>
@@ -22415,7 +22552,9 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
 
                               <m:mi>P</m:mi>
 
+			      <m:mspace width='.5em' />
                               <m:mtext>and</m:mtext>
+			      <m:mspace width='.5em' />
 
                               <m:mrow>
                                 <m:mn>0</m:mn>
@@ -22625,7 +22764,7 @@ void vsip_ccorr1d_getattr_f(const vsip_ccorr1d_f *corr1d,
           <term>Notes/References</term>
 
           <listitem>
-            <para>Note:, support attributes apply uniformly to all
+            <para>Note: support attributes apply uniformly to all
             dimensions.</para>
 
             <para>The parameter ntimes in conjunction with the hint is used
@@ -23188,6 +23327,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
                   </m:mrow>
 
                   <m:mtext>, for j = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mrow>
@@ -23265,6 +23405,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -23301,6 +23442,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -23361,6 +23503,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>P</m:mn>
@@ -23427,6 +23570,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -23463,6 +23607,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -23523,6 +23668,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>Q</m:mn>
@@ -23696,6 +23842,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mi>P</m:mi>
@@ -23779,6 +23926,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -23819,6 +23967,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -23903,6 +24052,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>P</m:mn>
@@ -23979,6 +24129,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mn>0</m:mn>
@@ -24019,6 +24170,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -24103,6 +24255,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                                   <m:mtd>
                                     <m:mtext>for</m:mtext>
+				    <m:mspace width='.5em' />
 
                                     <m:mrow>
                                       <m:mrow>
@@ -24231,6 +24384,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
                   </m:mrow>
 
                   <m:mtext>, for i = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mi>P</m:mi>
 
@@ -24281,6 +24435,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
                   </m:mrow>
 
                   <m:mtext>, for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mn>0</m:mn>
@@ -24307,6 +24462,7 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
                   </m:mrow>
 
                   <m:mtext>; for</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mn>0</m:mn>
@@ -24380,7 +24536,9 @@ void vsip_ccorr2d_getattr_f(const vsip_ccorr2d_f *corr2d,
 
                               <m:mi>P</m:mi>
 
-                              <m:mtext>and</m:mtext>
+			      <m:mspace width='.5em' />
+			      <m:mtext>and</m:mtext>
+			      <m:mspace width='.5em' />
 
                               <m:mrow>
                                 <m:mn>0</m:mn>
@@ -25347,6 +25505,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                           </m:mrow>
 
                           <m:mtext>,</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mn>0</m:mn>
@@ -25437,6 +25596,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                           </m:mrow>
 
                           <m:mtext>,</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mn>0</m:mn>
@@ -25577,6 +25737,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                           </m:mrow>
 
                           <m:mtext>,</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mn>0</m:mn>
@@ -25707,6 +25868,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                           </m:mrow>
 
                           <m:mtext>,</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mrow>
@@ -25841,6 +26003,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                           </m:mrow>
 
                           <m:mtext>,</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mn>0</m:mn>
@@ -25971,6 +26134,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                           </m:mrow>
 
                           <m:mtext>,</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mrow>
@@ -26089,6 +26253,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                   </m:mrow>
 
                   <m:mtext>(FFT of</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:msub>
                     <m:mi>W</m:mi>
@@ -26270,6 +26435,7 @@ vsip_valldestroy_sp(blackman); vsip_valldestroy_sp(x);
                     </m:mrow>
 
                     <m:mtext>(Frequency swap of</m:mtext>
+		    <m:mspace width='.5em' />
 
                     <m:msub>
                       <m:mi>w</m:mi>
@@ -27214,6 +27380,7 @@ vsip_valldestroy_sp(kaiser); vsip_valldestroy_sp(x);</programlisting>
                   </m:mrow>
 
                   <m:mtext>, for k = 0, ...,</m:mtext>
+		  <m:mspace width='.5em' />
 
                   <m:mrow>
                     <m:mo>⌈</m:mo>
@@ -27874,7 +28041,9 @@ int vsip_cfir_destroy_f(vsip_cfir_f *filt);</synopsis>
                             <m:mo>⌋</m:mo>
                           </m:mrow>
 
-                          <m:mtext>or</m:mtext>
+			  <m:mspace width='.5em' />
+			  <m:mtext>or</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mo>⌈</m:mo>
@@ -28113,7 +28282,8 @@ vsip_fir_f *lowpass;
 vsip_blockadmit_f(kblk,VSIP_TRUE);
 /* Create lowpass filter: segment length N, decimate by 2
  * filter is linear phase (symmetric) with odd number of coefficients */
-lowpass = vsip_fir_create_f(kernel,VSIP_SYM_EVEN_LEN_ODD,N,2, FOREVER,VSIP_ALG_TIME);
+lowpass = vsip_fir_create_f(kernel, VSIP_SYM_EVEN_LEN_ODD, N, 2,
+                            FOREVER, VSIP_ALG_TIME);
 while{1) 
 {
   /* Wait until data ready in buf_ping (buf_pong) */
@@ -29945,6 +30115,7 @@ void vsip_mhisto_i(const vsip_mview_i *src,
                               </m:mrow>
 
                               <m:mtext>,</m:mtext>
+			      <m:mspace width='.5em' />
 
                               <m:mrow>
                                 <m:mrow>
@@ -29986,7 +30157,7 @@ void vsip_mhisto_i(const vsip_mview_i *src,
 
                       <m:mtd>
                         <m:mtext>for i = 0, 1, ..., M-1,</m:mtext>
-
+			<m:mspace width='.5em' />
                         <m:mtext>for j = 0, 1, ..., N-1</m:mtext>
                       </m:mtd>
                     </m:mtr>

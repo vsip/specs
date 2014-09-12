@@ -3068,7 +3068,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -3158,7 +3158,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -3256,7 +3256,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -3346,7 +3346,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -3404,7 +3404,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -3466,7 +3466,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -3522,7 +3522,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -3578,7 +3578,7 @@ void vsip_matan_f(vsip_mview_f const *a, vsip_mview_f const *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
-
+			  <m:mspace width='.5em' />
                           <m:mrow>
                             <m:mi>b</m:mi>
 
@@ -17558,6 +17558,12 @@ void vsip_cvsmsa_f(vsip_cvview_f const *a, vsip_cscalar_f beta,
                   </m:mtable>
                 </m:math>
               </inlineequation></para>
+
+            <para>where<inlineequation>
+                <m:math display="inline">
+                  <m:mo>⋀</m:mo>
+                </m:math>
+              </inlineequation>denotes logical "AND".</para>
           </listitem>
         </varlistentry>
 
@@ -17732,6 +17738,12 @@ vsip_scalar_bl vsip_malltrue_bl(const vsip_mview_bl *a);</synopsis>
                   </m:mtable>
                 </m:math>
               </inlineequation></para>
+
+            <para>where<inlineequation>
+                <m:math display="inline">
+                  <m:mo>⋁</m:mo>
+                </m:math>
+              </inlineequation>denotes logical "OR".</para>
           </listitem>
         </varlistentry>
 
@@ -17857,7 +17869,7 @@ vsip_scalar_bl vsip_manytrue_bl(const vsip_mview_bl *a);</synopsis>
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -17905,7 +17917,7 @@ vsip_scalar_bl vsip_manytrue_bl(const vsip_mview_bl *a);</synopsis>
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -18145,7 +18157,7 @@ void vsip_cmleq_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -18189,7 +18201,7 @@ void vsip_cmleq_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -18433,7 +18445,7 @@ void vsip_csmleq_f(vsip_cscalar_f alpha, const vsip_cmview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -18481,7 +18493,7 @@ void vsip_csmleq_f(vsip_cscalar_f alpha, const vsip_cmview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -18714,7 +18726,7 @@ void vsip_mlge_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -18758,7 +18770,7 @@ void vsip_mlge_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -18994,7 +19006,7 @@ void vsip_smlge_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -19042,7 +19054,7 @@ void vsip_smlge_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -19275,7 +19287,7 @@ void vsip_mlgt_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -19319,7 +19331,7 @@ void vsip_mlgt_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -19556,7 +19568,7 @@ void vsip_smlgt_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -19604,7 +19616,7 @@ void vsip_smlgt_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -19836,7 +19848,7 @@ void vsip_mlle_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -19880,7 +19892,7 @@ void vsip_mlle_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -20116,7 +20128,7 @@ void vsip_smlle_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -20164,7 +20176,7 @@ void vsip_smlle_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -20396,7 +20408,7 @@ void vsip_mllt_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -20440,7 +20452,7 @@ void vsip_mllt_f(const vsip_mview_f *a, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -20676,7 +20688,7 @@ void vsip_smllt_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -20724,7 +20736,7 @@ void vsip_smllt_f(vsip_scalar_f alpha, const vsip_mview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -20967,7 +20979,7 @@ void vsip_cmlne_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                             <m:mi>j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -21011,7 +21023,7 @@ void vsip_cmlne_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                             <m:mi>i,j</m:mi>
                           </m:msub>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -21824,7 +21836,7 @@ vsip_vclip_i16(x, alpha, beta, 0, 0, y);</programlisting></entry>
                     <entry><parameter>length</parameter></entry>
 
                     <entry>f(xj, yj) is false for all vector indices j, such
-                    that 0 2 j &lt; length where length is the length in
+                    that 0 &lt;= j &lt; length where length is the length in
                     elements of the vector view objects x and y</entry>
                   </row>
 
@@ -23483,7 +23495,7 @@ void vsip_mcmaxmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
-
+			<m:mspace width='.5em' />
                         <m:mrow>
                           <m:mi>index</m:mi>
 
@@ -23517,6 +23529,7 @@ void vsip_mcmaxmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -23581,7 +23594,7 @@ void vsip_mcmaxmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
 
                           <m:mi>max</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -23619,6 +23632,7 @@ void vsip_mcmaxmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -23655,7 +23669,7 @@ void vsip_mcmaxmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
 
                           <m:mi>max</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -23691,7 +23705,8 @@ void vsip_mcmaxmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
-
+			<m:mspace width='.5em' />
+			
                         <m:mrow>
                           <m:mi>index</m:mi>
 
@@ -23927,6 +23942,7 @@ vsip_scalar_f vsip_mcmaxmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -23957,6 +23973,7 @@ vsip_scalar_f vsip_mcmaxmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -24017,7 +24034,7 @@ vsip_scalar_f vsip_mcmaxmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
 
                           <m:mi>max</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -24051,6 +24068,7 @@ vsip_scalar_f vsip_mcmaxmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -24083,7 +24101,7 @@ vsip_scalar_f vsip_mcmaxmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
 
                           <m:mi>max</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -24115,6 +24133,7 @@ vsip_scalar_f vsip_mcmaxmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -24280,6 +24299,7 @@ vsip_scalar_f vsip_mmaxmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -24306,6 +24326,7 @@ vsip_scalar_f vsip_mmaxmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -24362,7 +24383,7 @@ vsip_scalar_f vsip_mmaxmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
 
                           <m:mi>max</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -24392,6 +24413,7 @@ vsip_scalar_f vsip_mmaxmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -24420,7 +24442,7 @@ vsip_scalar_f vsip_mmaxmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
 
                           <m:mi>max</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -24448,6 +24470,7 @@ vsip_scalar_f vsip_mmaxmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25372,6 +25395,7 @@ void vsip_mcminmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25406,6 +25430,7 @@ void vsip_mcminmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25470,7 +25495,7 @@ void vsip_mcminmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
 
                           <m:mi>min</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -25508,6 +25533,7 @@ void vsip_mcminmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25544,7 +25570,7 @@ void vsip_mcminmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
 
                           <m:mi>min</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -25580,6 +25606,7 @@ void vsip_mcminmg_f(const vsip_cmview_f *a, const vsip_cmview_f *b,
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25818,6 +25845,7 @@ vsip_scalar_f vsip_mcminmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25848,6 +25876,7 @@ vsip_scalar_f vsip_mcminmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25908,7 +25937,7 @@ vsip_scalar_f vsip_mcminmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
 
                           <m:mi>min</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -25942,6 +25971,7 @@ vsip_scalar_f vsip_mcminmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -25974,7 +26004,7 @@ vsip_scalar_f vsip_mcminmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
 
                           <m:mi>min</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -26006,6 +26036,7 @@ vsip_scalar_f vsip_mcminmgsqval_f(const vsip_cmview_f *a, vsip_scalar_mi *index)
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -26173,6 +26204,7 @@ vsip_scalar_f vsip_mminmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -26199,6 +26231,7 @@ vsip_scalar_f vsip_mminmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -26255,7 +26288,7 @@ vsip_scalar_f vsip_mminmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
 
                           <m:mi>min</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
 
@@ -26285,6 +26318,7 @@ vsip_scalar_f vsip_mminmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -26313,7 +26347,7 @@ vsip_scalar_f vsip_mminmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
 
                           <m:mi>min</m:mi>
                         </m:mrow>
-
+			<m:mspace width='.5em' />
                         <m:mtext>then</m:mtext>
                       </m:mtd>
                     </m:mtr>
@@ -26341,6 +26375,7 @@ vsip_scalar_f vsip_mminmgval_f(const vsip_mview_f *a, vsip_scalar_mi *index);</s
                         </m:mrow>
 
                         <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                         <m:mrow>
                           <m:mi>index</m:mi>
@@ -28740,6 +28775,7 @@ void vsip_vramp_f(vsip_scalar_f alpha vsip_scalar_f beta, const vsip_vview_f *r)
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
+			<m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mrow>
@@ -28800,6 +28836,7 @@ void vsip_vramp_f(vsip_scalar_f alpha vsip_scalar_f beta, const vsip_vview_f *r)
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:mrow>
@@ -29559,6 +29596,7 @@ void vsip_mimag_f(const vsip_cmview_f *a, const vsip_mview_f *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:msub>
@@ -29617,6 +29655,7 @@ void vsip_mimag_f(const vsip_cmview_f *a, const vsip_mview_f *r);</synopsis>
                           </m:mrow>
 
                           <m:mtext>;</m:mtext>
+			  <m:mspace width='.5em' />
 
                           <m:mrow>
                             <m:msub>
