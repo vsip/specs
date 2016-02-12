@@ -163,19 +163,31 @@
     exactly to a 16-bit type, while on a workstation during development the
     actual type used might have 32 bits of precision. VSIPL allows the same
     code to work on both platforms.</para>
-
-    <para>Two versions of the library are described, referred to as
-    development and performance libraries. These libraries operate the same
-    with the exception of error reporting and timing. Performance versions of
-    a VSIPL library are not guaranteed to provide any error detection or
-    handling except in the case of memory allocation. Other programming errors
-    under a VSIPL performance library may have unpredictable results, up to
-    and including complete system crashes. Development libraries are expected
-    to run slower than performance libraries but include more error detection
-    capabilities. Suppliers of VSIPL compliant libraries are not required to
-    provide both versions; they may choose to supply either version, both
-    versions, or a single library that supports both development and
-    performance modes, as desired.</para>
+    
+   <para>Function pages include a description of the functionality, prototypes, 
+   argument descriptions, return values, restrictions, errors, notes and references,
+   examples, and related functions.  The description of the functions, prototypes, 
+   argument descriptions, and return values specify the particular function and how to 
+   use it.  The example section shows how the function is used in an application.</para>
+   
+   <para>The intent of the sections on restrictions, errors, and notes and references
+   are to provide guidance to both the VSIPL user and VSIPL implementer.  VSIPL 
+   is capable of supporting a development mode to support code development as well as a
+   performance mode for the best performance.  Restrictions are errors that are unlikely to 
+   be checked by any implementation.  An example would be checking for a zero divide in
+   vsip_vdiv_f.  The restrictions also indicate that these errors may not have predictable 
+   results among implementations.  In the zero divde case, one implementation may cause a 
+   floating point exception while another might return 0.  Errors are programming errors 
+   that will likely be ignored by a performance mode implementation, but should be detected 
+   by a development mode implementation.  An example would be calling vsip_finalize((void *)0) 
+   without vsip_init(void *)0) being called before it.  A development mode implementation 
+   should communicate this problem to the user.  Notes and references are intended as 
+   guidance to the user.</para>
+   
+   <para>Suppliers of VSIPL compliant libraries are not required to implement both development and 
+   performance mode versions.  They may choose to implement either version, both versions, or a single library 
+   that supports both development and performance modes.  Development mode and performance mode versions should 
+   work similarly.</para>
   </section>
 
   <xi:include href="concepts.xml"/>
