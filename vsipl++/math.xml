@@ -10604,7 +10604,7 @@ bool <emphasis role="bold">lsqsol</emphasis>(const_Matrix&lt;T, Block0&gt; b, Ma
       </variablelist>
 
       <synopsis>template &lt;typename Block&gt;
-const_Vector&lt;scalar_f, <emphasis>unspecified</emphasis>&gt; <emphasis
+const_Vector&lt;<phrase revisionflag="changed"><emphasis>scalar-of</emphasis> T</phrase>, <emphasis>unspecified</emphasis>&gt; <emphasis
           role="bold">
 decompose</emphasis>(Matrix&lt;T, Block&gt; m) VSIP_THROW((std::bad_alloc, computation_error));</synopsis>
 
@@ -10868,7 +10868,7 @@ decompose</emphasis>(Matrix&lt;T, Block&gt; m) VSIP_THROW((std::bad_alloc, compu
       </variablelist>
 
       <synopsis>template &lt;typename Block0, typename Block1&gt; 
-bool <emphasis role="bold">decompose</emphasis>(Matrix&lt;T, Block0&gt; m, Vector&lt;scalar_f, Block1&gt; destination) VSIP_NOTHROW;</synopsis>
+bool <emphasis role="bold">decompose</emphasis>(Matrix&lt;T, Block0&gt; m, Vector&lt;<phrase revisionflag="changed"><emphasis>scalar-of</emphasis> T</phrase>, Block1&gt; destination) VSIP_NOTHROW;</synopsis>
 
       <variablelist>
         <varlistentry>

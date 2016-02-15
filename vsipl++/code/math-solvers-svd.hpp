@@ -23,7 +23,7 @@ namespace vsip
 
     // if ReturnMechanism is by_value:
     template &lt;typename Block&gt;
-    const_Vector&lt;scalar_f, <emphasis>unspecified</emphasis>&gt;
+    const_Vector&lt;<phrase revisionflag="changed"><emphasis>scalar-of</emphasis> T</phrase>, <emphasis>unspecified</emphasis>&gt;
     decompose(Matrix&lt;T, Block&gt;)
     VSIP_THROW((std::bad_alloc, computation_error));
 
@@ -43,7 +43,7 @@ namespace vsip
 
     // if ReturnMechanism is by_reference:
     template &lt;typename Block0, typename Block1&gt;
-    bool decompose(Matrix&lt;T, Block0&gt;, Vector&lt;scalar_f, Block1&gt;) VSIP_NOTHROW;
+    bool decompose(Matrix&lt;T, Block0&gt;, Vector&lt;<phrase revisionflag="changed"><emphasis>scalar-of</emphasis> T</phrase>, Block1&gt;) VSIP_NOTHROW;
 
     template &lt;mat_op_type tr, product_side_type ps,
               typename Block0, typename Block1&gt;
