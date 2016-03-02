@@ -5,7 +5,7 @@
 ########################################################################
 
 xsltproc := xsltproc
-fop := fop
+fop := /usr/local/Apache/fop-1.1/fop
 
 ########################################################################
 # Build instructions
@@ -18,6 +18,20 @@ endif
 ifeq ($(CHANGES),1)
 XSLTPROC_FLAGS += --param show.changes 1
 endif
+
+# Generate clean xml
+define generate_clean_xml
+$(xsltproc) --stringparam revision new \
+  --nonet --xinclude --xincludestyle \
+  --output $@ $(xsl)/revision.xsl $< 
+endef
+
+# Generate cb xml
+define generate_cb_xml
+$(xsltproc) --stringparam revision preserve \
+  --nonet --xinclude --xincludestyle \
+  --output $@ $(xsl)/revision.xsl $< 
+endef
 
 # Generate XHTML target db
 define generate_xhtml_xref
@@ -74,6 +88,12 @@ endef
 
 %/index.xhtml: %.xml $(xsl)/xhtml.xsl $(css)
 	$(generate_xhtml)
+
+%.clean.xml: %.xml
+	$(generate_clean_xml)
+
+%.cb.xml: %.xml
+	$(generate_cb_xml)
 
 %.fo.xref: %.xml
 	$(generate_fo_xref)

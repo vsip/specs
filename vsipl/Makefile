@@ -17,9 +17,10 @@ src:=$(vsipl_src)
 css:= ../css/style.css
 xsl:= ../xsl
 
-docs:= vsipl vsipl-core vsipl-core-light
-xhtml_xref:= vsipl.xhtml.xref
-fo_xref:= vsipl.fo.xref
+specs:= vsipl vsipl-core vsipl-core-light
+docs:=$(patsubst %, %.clean, $(specs)) $(patsubst %, %.cb, $(specs))
+xhtml_xref:= vsipl.clean.xhtml.xref vsipl.cb.xhtml.xref
+fo_xref:= vsipl.clean.fo.xref vsipl.cb.fo.xref
 xhtml:= $(docs)
 fo:= $(patsubst %, %.fo, $(docs))
 pdf:= $(patsubst %, %.pdf, $(docs))
@@ -27,6 +28,9 @@ pdf:= $(patsubst %, %.pdf, $(docs))
 targets:= $(pdf) $(xhtml)
 
 include ../common.mk
+
+debug:
+	@echo $(pdf)
 
 all: xhtml pdf
 
@@ -37,12 +41,13 @@ pdf: $(pdf)
 # Dependencies
 ########################################################################
 
-vsipl.xhtml.xref: $(vsipl_src)
-vsipl.fo.xref: $(vsipl_src)
-
+%.xref: $(vsipl_src)
 $(xhtml): $(xhtml_xref)
 $(fo): $(fo_xref)
 
-vsipl: vsipl/index.xhtml
-vsipl-core: vsipl-core/index.xhtml
-vsipl-core-light: vsipl-core-light/index.xhtml
+vsipl.clean: vsipl.clean/index.xhtml
+vsipl.cb: vsipl.cb/index.xhtml
+vsipl-core.clean: vsipl-core.clean/index.xhtml
+vsipl-core.cb: vsipl-core.cb/index.xhtml
+vsipl-core-light.clean: vsipl-core-light.clean/index.xhtml
+vsipl-core-light.cb: vsipl-core-light.cb/index.xhtml

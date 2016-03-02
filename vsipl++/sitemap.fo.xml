@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE targetset SYSTEM "http://docbook.sourceforge.net/release/xsl-ns/current/common/targetdatabase.dtd"
 [
-  <!ENTITY vxx SYSTEM "vsipl++.fo.xref">
-  <!ENTITY vxx-par SYSTEM "vsipl++-par.fo.xref">
+  <!ENTITY vxx SYSTEM "vsipl++.clean.fo.xref">
+  <!ENTITY vxx-par SYSTEM "vsipl++-par.clean.fo.xref">
 ]
 >
 <targetset xmlns:xi="http://www.w3.org/2003/XInclude">

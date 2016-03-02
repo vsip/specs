@@ -20,9 +20,10 @@ src:=$(vsiplxx_src) $(vsiplxx_par_src)
 css:= ../css/style.css
 xsl:= ../xsl
 
-docs:= vsipl++ vsipl++-par
-xhtml_xref:= vsipl++.xhtml.xref vsipl++-par.xhtml.xref
-fo_xref:= vsipl++.fo.xref vsipl++-par.fo.xref
+specs:= vsipl++ vsipl++-par
+docs:= $(patsubst %, %.clean, $(specs)) $(patsubst %, %.cb, $(specs))
+xhtml_xref:= $(patsubst %, %.xhtml.xref, $(docs))
+fo_xref:= $(patsubst %, %.fo.xref, $(docs))
 xhtml:= $(docs)
 fo:= $(patsubst %, %.fo, $(docs))
 pdf:= $(patsubst %, %.pdf, $(docs))
@@ -40,13 +41,11 @@ pdf: $(pdf)
 # Dependencies
 ########################################################################
 
-vispl++.xhtml.xref: $(vsiplxx_src)
-vispl++.fo.xref: $(vsiplxx_src)
-vispl++-par.xhtml.xref: $(vsiplxx_par_src)
-vispl++-par.fo.xref: $(vsiplxx_par_src)
-
+%.xref: $(vsiplxx_src)
 $(xhtml): $(xhtml_xref)
 $(fo): $(fo_xref)
 
-vsipl++: vsipl++/index.xhtml
-vsipl++-par: vsipl++-par/index.xhtml
+vsipl++.clean: vsipl++.clean/index.xhtml
+vsipl++.cb: vsipl++.cb/index.xhtml
+vsipl++-par.clean: vsipl++-par.clean/index.xhtml
+vsipl++-par.cb: vsipl++-par.cb/index.xhtml
